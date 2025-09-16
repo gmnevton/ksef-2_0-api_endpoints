@@ -1,0 +1,77 @@
+    "/api/v2/sessions/{referenceNumber}/invoices/{invoiceReferenceNumber}/upo": {
+      "get": {
+        "tags": [
+          "Status wysyłki i UPO"
+        ],
+        "summary": "Pobranie UPO faktury z sesji na podstawie numeru referencyjnego faktury",
+        "description": "Zwraca UPO faktury przesłanego w sesji na podstawie jego numeru KSeF.\n\nWymagane uprawnienia: `InvoiceWrite`.",
+        "parameters": [
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny sesji.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "invoiceReferenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny faktury.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceWrite"
+        ]
+      }
+    },
+
+
+
+request:  /api/v2/sessions/{referenceNumber}/invoices/{invoiceReferenceNumber}/upo: get: text/plain
+//{
+//}
+
+
+
+response: application/xml
+//{
+//}

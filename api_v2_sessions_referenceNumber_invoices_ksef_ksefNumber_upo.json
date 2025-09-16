@@ -1,0 +1,78 @@
+    "/api/v2/sessions/{referenceNumber}/invoices/ksef/{ksefNumber}/upo": {
+      "get": {
+        "tags": [
+          "Status wysyłki i UPO"
+        ],
+        "summary": "Pobranie UPO faktury z sesji na podstawie numeru KSeF",
+        "description": "Zwraca UPO faktury przesłanego w sesji na podstawie jego numeru KSeF.\n\nWymagane uprawnienia: `InvoiceWrite`.",
+        "parameters": [
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny sesji.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ksefNumber",
+            "in": "path",
+            "description": "Numer KSeF faktury.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                                                                        | \n|---------------------|-----------------------------------------------------|----------------------------------------------------------------------------------------------------------------|\n| 21178               | Nie znaleziono UPO dla podanych kryteriów.          | UPO o numerze KSeF {ksefNumber} i numerze referencyjnym sesji {referenceNumber} nie zostało znalezione.  |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceWrite"
+        ]
+      }
+    },
+
+
+
+request:  /api/v2/sessions/{referenceNumber}/invoices/ksef/{ksefNumber}/upo: get: text/plain
+//{
+//}
+
+
+
+response: application/xml
+//{
+//}

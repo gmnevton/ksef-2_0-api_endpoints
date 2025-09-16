@@ -1,0 +1,413 @@
+    "/api/v2/tokens": {
+      "post": {
+        "tags": [
+          "Tokeny KSeF"
+        ],
+        "summary": "Wygenerowanie nowego tokena",
+        "description": "Zwraca token, który może być użyty do uwierzytelniania się w KSeF.\n\nToken jest zwracany tylko raz. Zaczyna być aktywny w momencie gdy jego status zmieni się na `Active`.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/GenerateTokenRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                       | Details |\n|---------------------|------------------------------------------------------------|---------|\n| 26001               | Nie można nadać tokenowi uprawnień których nie posiadasz.  | Informacja o brakujących uprawnieniach. |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Tokeny KSeF"
+        ],
+        "summary": "Pobranie listy wygenerowanych tokenów",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Status tokenów do zwrócenia. W przypadku braku parametru zwracane są wszystkie tokeny. Parametr można przekazać wielokrotnie.\n| Wartość | Opis |\n| --- | --- |\n| Pending | Token został utworzony ale jest jeszcze w trakcie aktywacji i nadawania uprawnień. Nie może być jeszcze wykorzystywany do uwierzytelniania. |\n| Active | Token jest aktywny i może być wykorzystywany do uwierzytelniania. |\n| Revoking | Token jest w trakcie unieważniania. Nie może już być wykorzystywany do uwierzytelniania. |\n| Revoked | Token został unieważniony i nie może być wykorzystywany do uwierzytelniania. |\n| Failed | Nie udało się aktywować tokena. Należy wygenerować nowy token, obecny nie może być wykorzystywany do uwierzytelniania. |\n",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/AuthenticationTokenStatus"
+              },
+              "description": "| Wartość | Opis |\n| --- | --- |\n| Pending | Token został utworzony ale jest jeszcze w trakcie aktywacji i nadawania uprawnień. Nie może być jeszcze wykorzystywany do uwierzytelniania. |\n| Active | Token jest aktywny i może być wykorzystywany do uwierzytelniania. |\n| Revoking | Token jest w trakcie unieważniania. Nie może już być wykorzystywany do uwierzytelniania. |\n| Revoked | Token został unieważniony i nie może być wykorzystywany do uwierzytelniania. |\n| Failed | Nie udało się aktywować tokena. Należy wygenerować nowy token, obecny nie może być wykorzystywany do uwierzytelniania. |\n"
+            }
+          },
+          {
+            "name": "x-continuation-token",
+            "in": "header",
+            "description": "Token służący do pobrania kolejnej strony wyników.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Rozmiar strony wyników.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryTokensResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                     | \n|---------------------|-----------------------------------------------------|-------------------------------------------------------------|\n| 21418               | Przekazany token kontynuacji ma nieprawidłowy format. |   |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+
+
+      "GenerateTokenRequest": {
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TokenPermissionType"
+            },
+            "description": "Uprawnienia przypisane tokenowi.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Opis tokena.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "TokenPermissionType": {
+        "enum": [
+          "InvoiceRead",
+          "InvoiceWrite",
+          "CredentialsRead",
+          "CredentialsManage"
+        ],
+        "type": "string"
+      },
+
+
+      "GenerateTokenResponse": {
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "description": "Numer referencyjny tokena KSeF. Za jego pomocą można sprawdzić jego status lub go unieważnić.",
+            "nullable": true
+          },
+          "token": {
+            "type": "string",
+            "description": "Token KSeF.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "AuthenticationTokenStatus": {
+        "enum": [
+          "Pending",
+          "Active",
+          "Revoking",
+          "Revoked",
+          "Failed"
+        ],
+        "type": "string",
+        "description": "| Wartość | Opis |\n| --- | --- |\n| Pending | Token został utworzony ale jest jeszcze w trakcie aktywacji i nadawania uprawnień. Nie może być jeszcze wykorzystywany do uwierzytelniania. |\n| Active | Token jest aktywny i może być wykorzystywany do uwierzytelniania. |\n| Revoking | Token jest w trakcie unieważniania. Nie może już być wykorzystywany do uwierzytelniania. |\n| Revoked | Token został unieważniony i nie może być wykorzystywany do uwierzytelniania. |\n| Failed | Nie udało się aktywować tokena. Należy wygenerować nowy token, obecny nie może być wykorzystywany do uwierzytelniania. |\n"
+      },
+
+
+      "QueryTokensResponse": {
+        "required": [
+          "tokens"
+        ],
+        "type": "object",
+        "properties": {
+          "continuationToken": {
+            "type": "string",
+            "description": "Token służący do pobrania kolejnej strony wyników. Jeśli jest pusty, to nie ma kolejnych stron.",
+            "nullable": true
+          },
+          "tokens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuthenticationToken"
+            },
+            "description": "Lista tokenów uwierzytelniających."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "AuthenticationToken": {
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "description": "Numer referencyjny tokena.",
+            "nullable": true
+          },
+          "authorIdentifier": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SubjectIdentifier"
+              }
+            ],
+            "description": "Identyfikator osoby która wygenerowała token.",
+            "nullable": true
+          },
+          "contextIdentifier": {
+            "required": [
+              "type",
+              "value"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextIdentifier"
+              }
+            ],
+            "description": "Identyfikator kontekstu, w którym został wygenerowany token i do którego daje dostęp.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Opis tokena.",
+            "nullable": true
+          },
+          "requestedPermissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TokenPermissionType"
+            },
+            "description": "Uprawnienia przypisane tokenowi.",
+            "nullable": true
+          },
+          "dateCreated": {
+            "type": "string",
+            "description": "Data i czas utworzenia tokena.",
+            "format": "date-time"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthenticationTokenStatus"
+              }
+            ],
+            "description": "Status tokena.\n| Wartość | Opis |\n| --- | --- |\n| Pending | Token został utworzony ale jest jeszcze w trakcie aktywacji i nadawania uprawnień. Nie może być jeszcze wykorzystywany do uwierzytelniania. |\n| Active | Token jest aktywny i może być wykorzystywany do uwierzytelniania. |\n| Revoking | Token jest w trakcie unieważniania. Nie może już być wykorzystywany do uwierzytelniania. |\n| Revoked | Token został unieważniony i nie może być wykorzystywany do uwierzytelniania. |\n| Failed | Nie udało się aktywować tokena. Należy wygenerować nowy token, obecny nie może być wykorzystywany do uwierzytelniania. |\n"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "SubjectIdentifier": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SubjectIdentifierType"
+              }
+            ]
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "SubjectIdentifierType": {
+        "enum": [
+          "None",
+          "Nip",
+          "Pesel",
+          "Fingerprint",
+          "Token"
+        ],
+        "type": "string"
+      },
+
+
+      "ContextIdentifier": {
+        "required": [
+          "type",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextIdentifierType"
+              }
+            ],
+            "description": "Typ identyfikatora"
+          },
+          "value": {
+            "type": "string",
+            "description": "Wartość identyfikatora"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Identyfikator kontekstu działania.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |\n| NipVatUe | Dwuczłonowy identyfikator składający się z numeru NIP i numeru VAT-UE: `{nip}-{vat_ue}` |"
+      },
+
+
+      "ContextIdentifierType": {
+        "enum": [
+          "None",
+          "AllPartners",
+          "Nip",
+          "InternalId",
+          "NipVatUe"
+        ],
+        "type": "string"
+      },
+
+
+      "TokenPermissionType": {
+        "enum": [
+          "InvoiceRead",
+          "InvoiceWrite",
+          "CredentialsRead",
+          "CredentialsManage"
+        ],
+        "type": "string"
+      },
+
+
+      "AuthenticationTokenStatus": {
+        "enum": [
+          "Pending",
+          "Active",
+          "Revoking",
+          "Revoked",
+          "Failed"
+        ],
+        "type": "string",
+        "description": "| Wartość | Opis |\n| --- | --- |\n| Pending | Token został utworzony ale jest jeszcze w trakcie aktywacji i nadawania uprawnień. Nie może być jeszcze wykorzystywany do uwierzytelniania. |\n| Active | Token jest aktywny i może być wykorzystywany do uwierzytelniania. |\n| Revoking | Token jest w trakcie unieważniania. Nie może już być wykorzystywany do uwierzytelniania. |\n| Revoked | Token został unieważniony i nie może być wykorzystywany do uwierzytelniania. |\n| Failed | Nie udało się aktywować tokena. Należy wygenerować nowy token, obecny nie może być wykorzystywany do uwierzytelniania. |\n"
+      },
+
+
+
+request:  api/v2/tokens: post: application/json
+{
+  "permissions": [ // type: array; items: #/components/schemas/TokenPermissionType; enum: InvoiceRead, InvoiceWrite, CredentialsRead, CredentialsManage; description: Uprawnienia przypisane tokenowi.; nullable: true
+  ],
+  "description": "" // type: string; description: Opis tokena.; nullable: true
+}
+
+
+
+response: application/json
+{
+  "referenceNumber": "", // type: string; description: Numer referencyjny tokena KSeF. Za jego pomocą można sprawdzić jego status lub go unieważnić.; nullable: true
+  "token": "" // type: string; description: Token KSeF.; nullable: true
+}
+
+
+
+request:  api/v2/tokens: get: text/plain
+??x-continuation-token: continuationToken;
+{
+  "status": [ // type: array; items: #/components/schemas/AuthenticationTokenStatus; enum: Pending, Active, Revoking, Revoked, Failed; description: Status tokenów do zwrócenia. W przypadku braku parametru zwracane są wszystkie tokeny.;
+  ],
+  "pageSize": 0 // type: integer; format: int32; default: 10; description: Rozmiar strony wyników.;
+}
+
+
+
+response: application/json
+{
+  "continuationToken": "", // type: string; description: Token służący do pobrania kolejnej strony wyników. Jeśli jest pusty, to nie ma kolejnych stron.; nullable: true
+  "tokens": [ // type: array; items: #/components/schemas/AuthenticationToken; description: Lista tokenów uwierzytelniających.; nullable: true
+    {
+      "referenceNumber": "", // type: string; description: Numer referencyjny tokena.; nullable: true
+      "authorIdentifier": { // #/components/schemas/SubjectIdentifier; description: Identyfikator osoby która wygenerowała token.; nullable: true
+        "type": "", // enum: None, Nip, Pesel, Fingerprint, Token
+        "value": "" // type: string; nullable: true
+      },
+      "contextIdentifier": { // #/components/schemas/ContextIdentifier; description: Identyfikator kontekstu, w którym został wygenerowany token i do którego daje dostęp.; nullable: true
+        "type": "", // enum: None, AllPartners, Nip, InternalId, NipVatUe; description: Typ identyfikatora
+        "value": "" // type: string; description: Wartość identyfikatora
+      },
+      "description": "", // type: string; description: Opis tokena.; nullable: true
+      "requestedPermissions": [ // type: array; #/components/schemas/TokenPermissionType; enum: InvoiceRead, InvoiceWrite, CredentialsRead, CredentialsManage; description: Uprawnienia przypisane tokenowi.; nullable: true
+      ],
+      "dateCreated": "", // type: string; description: Data i czas utworzenia tokena.; format: date-time
+      "status": "" // #/components/schemas/AuthenticationTokenStatus; enum: Pending, Active, Revoking, Revoked, Failed
+    },
+  ]
+}

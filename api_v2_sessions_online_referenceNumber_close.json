@@ -1,0 +1,62 @@
+    "/api/v2/sessions/online/{referenceNumber}/close": {
+      "post": {
+        "tags": [
+          "Wysyłka interaktywna"
+        ],
+        "summary": "Zamknięcie sesji interaktywnej",
+        "description": "Zamyka sesję interaktywną i rozpoczyna generowanie zbiorczego UPO dla sesji.\n\nWymagane uprawnienia: `InvoiceWrite`.",
+        "parameters": [
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny sesji",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                                    | \n|---------------------|-----------------------------------------------------|----------------------------------------------------------------------------|\n| 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została odnaleziona.   |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceWrite"
+        ]
+      }
+    },
+
+
+
+request:  /api/v2/sessions/online/{referenceNumber}/close: post: text/plain
+//{
+//}
+
+
+
+response: text/plain
+//{
+//}

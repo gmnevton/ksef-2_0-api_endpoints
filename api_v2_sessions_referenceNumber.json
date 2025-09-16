@@ -1,0 +1,214 @@
+    "/api/v2/sessions/{referenceNumber}": {
+      "get": {
+        "tags": [
+          "Status wysyłki i UPO"
+        ],
+        "summary": "Pobranie statusu sesji",
+        "description": "Sprawdza bieżący status sesji o podanym numerze referencyjnym.\n\nWymagane uprawnienia: `InvoiceWrite`.",
+        "parameters": [
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny sesji.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionStatusResponse"
+                },
+                "example": {"status":{"code":200,"description":"Sesja interaktywna przetworzona pomyślnie"},"upo":{"pages":[{"referenceNumber":"20250626-EU-2EBD6FA000-242EB9B66D-43","downloadUrl":"https://ksef-api/api/v2/sessions/20250626-SO-2EBAD16000-2429DECA8E-E2/upo/20250626-EU-2EBD6FA000-242EB9B66D-43"}]},"invoiceCount":10,"successfulInvoiceCount":8,"failedInvoiceCount":2}
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                     | \n|---------------------|-----------------------------------------------------|-------------------------------------------------------------|\n| 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została znaleziona.   |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceWrite"
+        ]
+      }
+    },
+
+
+      "SessionStatusResponse": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatusInfo"
+              }
+            ],
+            "description": "Informacje o aktualnym statusie.\n            \nSesja wsadowa:\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Sesja wsadowa rozpoczęta | - |\n| 150 | Trwa przetwarzanie | - |\n| 200 | Sesja wsadowa przetworzona pomyślnie | - |\n| 405 | Błąd weryfikacji poprawności dostarczonych elementów paczki | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza | - |\n| 430 | Błąd dekompresji pierwotnego archiwum | - |\n| 435 | Błąd odszyfrowania zaszyfrowanych części archiwum | - |\n| 440 | Sesja anulowana, przekroczono czas wysyłki | - |\n| 445 | Błąd weryfikacji, brak poprawnych faktur | - |\n| 500 | Nieznany błąd ({statusCode}) | - |\n\nSesja interaktywna:\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Sesja interaktywna otwarta | - |\n| 170 | Sesja interaktywna zamknięta | - |\n| 200 | Sesja interaktywna przetworzona pomyślnie | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza | - |\n| 440 | Sesja anulowana, nie przesłano faktur | - |\n| 445 | Błąd weryfikacji, brak poprawnych faktur | - |\n| * | description missing | - |"
+          },
+          "validUntil": {
+            "type": "string",
+            "description": "Termin ważności sesji. Po jego upływie sesja zostanie automatycznie zamknięta.",
+            "format": "date-time",
+            "nullable": true,
+            "readOnly": true
+          },
+          "upo": {
+            "required": [
+              "pages"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpoResponse"
+              }
+            ],
+            "description": "Informacja o UPO sesyjnym, zwracana gdy sesja została zamknięta i UPO zostało wygenerowane.",
+            "nullable": true
+          },
+          "invoiceCount": {
+            "type": "integer",
+            "description": "Ilość przyjętych faktur w ramach sesji.",
+            "format": "int32",
+            "nullable": true
+          },
+          "successfulInvoiceCount": {
+            "type": "integer",
+            "description": "Ilość faktur przeprocesowanych w ramach sesji z sukcesem .",
+            "format": "int32",
+            "nullable": true
+          },
+          "failedInvoiceCount": {
+            "type": "integer",
+            "description": "Ilość faktur przeprocesowanych w ramach sesji z błędem.",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "StatusInfo": {
+        "required": [
+          "code",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Kod statusu",
+            "format": "int32"
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Opis statusu"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Dodatkowe szczegóły statusu",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "UpoResponse": {
+        "required": [
+          "pages"
+        ],
+        "type": "object",
+        "properties": {
+          "pages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpoPageResponse"
+            },
+            "description": "Lista stron UPO."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+
+      "UpoPageResponse": {
+        "required": [
+          "downloadUrl",
+          "referenceNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "description": "Numer referencyjny strony UPO."
+          },
+          "downloadUrl": {
+            "type": "string",
+            "description": "Adres do pobrania strony UPO.",
+            "format": "uri"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/sessions/{referenceNumber}: get: text/plain
+//{
+//}
+
+
+
+response: application/json
+{
+  "status": { // #/components/schemas/StatusInfo
+    "code": 0, // type: integer; format: int32; description: Kod statusu;
+    "description": "", // minLength: 1; type: string; description: Opis statusu
+    "details": [ // type: array; items: type: string; description: Dodatkowe szczegóły statusu; nullable: true
+    ]
+  },
+  "validUntil": "", // type: string; format: date-time; description: Termin ważności sesji. Po jego upływie sesja zostanie automatycznie zamknięta.; nullable: true
+  "upo": { // #/components/schemas/UpoResponse; description: Informacja o UPO sesyjnym, zwracana gdy sesja została zamknięta i UPO zostało wygenerowane.; nullable: true
+    "pages": [ // type: array; items: #/components/schemas/UpoPageResponse; description: Lista stron UPO.
+      {
+        "referenceNumber": "", // type: string; description: Numer referencyjny strony UPO.
+        "downloadUrl": "" // type: string; format: uri; description: Adres do pobrania strony UPO.;
+      },
+    ]
+  },
+  "invoiceCount": 0, // type: integer; format: int32; description: Ilość przyjętych faktur w ramach sesji.; nullable: true
+  "successfulInvoiceCount": 0, // type: integer; format: int32; description: Ilość faktur przeprocesowanych w ramach sesji z sukcesem .; nullable: true
+  "failedInvoiceCount": 0 // type: integer; format: int32; description: Ilość faktur przeprocesowanych w ramach sesji z błędem.; nullable: true
+}

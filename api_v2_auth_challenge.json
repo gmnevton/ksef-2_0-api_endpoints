@@ -1,0 +1,67 @@
+    "/api/v2/auth/challenge": {
+      "post": {
+        "tags": [
+          "Uzyskiwanie dostępu"
+        ],
+        "summary": "Inicjalizacja uwierzytelnienia",
+        "description": "Generuje unikalny challenge wymagany w kolejnym kroku operacji uwierzytelnienia.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationChallengeResponse"
+                },
+                "example": {"challenge":"20250514-CR-226FB7B000-3ACF9BE4C0-10","timestamp":"2025-07-11T12:23:56.0154302+00:00"}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+
+      "AuthenticationChallengeResponse": {
+        "required": [
+          "challenge",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "challenge": {
+            "type": "string",
+            "description": "Unikalny challenge."
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Czas wygenerowania challenge-a.",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/auth/challenge: post: text/plain
+//{
+//}
+
+
+
+response: application/json
+{
+  "challenge": "", // type: string,
+  "timestamp": "" // type: string; format: date-time
+}

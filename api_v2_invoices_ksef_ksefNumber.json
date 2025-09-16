@@ -1,0 +1,69 @@
+    "/api/v2/invoices/ksef/{ksefNumber}": {
+      "get": {
+        "tags": [
+          "Pobieranie faktur"
+        ],
+        "summary": "Pobranie faktury po numerze KSeF",
+        "description": "Zwraca fakturę o podanym numerze KSeF.\n\nWymagane uprawnienia: `InvoiceRead`.",
+        "parameters": [
+          {
+            "name": "ksefNumber",
+            "in": "path",
+            "description": "Numer KSeF faktury.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                       | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------|\n| 21164               | Faktura o podanym identyfikatorze nie istnieje.     | Faktura o numerze KSeF {ksefNumber} nie została znaleziona.   |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceRead"
+        ]
+      }
+    },
+
+
+
+request:  /api/v2/invoices/ksef/{ksefNumber}: get: text/plain
+//{
+//}
+
+
+
+response: application/xml
+//{
+//}

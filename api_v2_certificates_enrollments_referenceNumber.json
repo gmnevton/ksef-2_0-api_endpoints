@@ -1,0 +1,131 @@
+    "/api/v2/certificates/enrollments/{referenceNumber}": {
+      "get": {
+        "tags": [
+          "Certyfikaty"
+        ],
+        "summary": "Pobranie statusu przetwarzania wniosku certyfikacyjnego",
+        "description": "Zwraca informacje o statusie wniosku certyfikacyjnego.",
+        "parameters": [
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny wniosku certyfikacyjnego",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateEnrollmentStatusResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                                                           | Details |\n|---------------------|------------------------------------------------------------------------------------------------|---------|\n| 25005               | Wniosek certyfikacyjny o podanym numerze referencyjnym nie istnieje.                           |         |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+
+
+      "CertificateEnrollmentStatusResponse": {
+        "required": [
+          "requestDate",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "requestDate": {
+            "type": "string",
+            "description": "Data złożenia wniosku certyfikacyjnego.",
+            "format": "date-time"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatusInfo"
+              }
+            ],
+            "description": "Informacje o aktualnym statusie.\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Wniosek przyjęty do realizacji | - |\n| 200 | Wniosek obsłużony (certyfikat wygenerowany) | - |\n| 400 | Wniosek odrzucony | Klucz publiczny został już certyfikowany przez inny podmiot. |\n| 400 | Wniosek odrzucony | Osiągnięto dopuszczalny limit posiadanych certyfikatów. |\n| 500 | Nieznany błąd | - |"
+          },
+          "certificateSerialNumber": {
+            "type": "string",
+            "description": "Numer seryjny wygenerowanego certyfikatu (w formacie szesnastkowym). \nZwracany w przypadku prawidłowego przeprocesowania wniosku certyfikacyjnego.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "StatusInfo": {
+        "required": [
+          "code",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Kod statusu",
+            "format": "int32"
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Opis statusu"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Dodatkowe szczegóły statusu",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/certificates/enrollments/{referenceNumber}: get: text/plain
+{
+}
+
+
+
+response: application/json
+{
+  "requestDate": "", // type: string; format: date-time; description: Data złożenia wniosku certyfikacyjnego.
+  "status": {
+    "code": 0, // type: integer; format: int32; description: Kod statusu;
+    "description": "", // minLength: 1; type: string; description: Opis statusu;
+    "details": [ // type: array; items: type: string; description: Dodatkowe szczegóły statusu;
+    ]
+  },
+  "certificateSerialNumber": "" // type: string; description: Numer seryjny wygenerowanego certyfikatu (w formacie szesnastkowym). \nZwracany w przypadku prawidłowego przeprocesowania wniosku certyfikacyjnego.
+}

@@ -1,0 +1,280 @@
+    "/api/v2/auth/ksef-token": {
+      "post": {
+        "tags": [
+          "Uzyskiwanie dostępu"
+        ],
+        "summary": "Uwierzytelnienie z wykorzystaniem tokena KSeF",
+        "description": "Rozpoczyna operację uwierzytelniania z wykorzystaniem wcześniej wygenerowanego tokena KSeF.\n\nToken KSeF wraz z timestampem ze wcześniej wygenerowanego challenge'a (w formacie ```token|timestamp```) powinien zostać zaszyfrowany dedykowanym do tego celu kluczem publicznym.\n- Timestamp powinien zostać przekazany jako **liczba milisekund od 1 stycznia 1970 roku (Unix timestamp)**.\n- Algorytm szyfrowania: **RSA-OAEP (z użyciem SHA-256 jako funkcji skrótu)**.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "challenge",
+                  "contextIdentifier",
+                  "encryptedToken"
+                ],
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/InitTokenAuthenticationRequest"
+                  }
+                ]
+              },
+              "example": {"challenge":"20250625-CR-2FDC223000-C2BFC98A9C-4E","contextIdentifier":{"type":"Nip","value":"5265877635"},"encryptedToken":"..."}
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationInitResponse"
+                },
+                "example": {"referenceNumber":"20250514-AU-2DFC46C000-3AC6D5877F-D4","authenticationToken":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbi10eXBlIjoiT3BlcmF0aW9uVG9rZW4iLCJvcGVyYXRpb24tcmVmZXJlbmNlLW51bWJlciI6IjIwMjUwNTE0LUFVLTJERkM0NkMwMDAtM0FDNkQ1ODc3Ri1ENCIsImV4cCI6MTc0NzIzMTcxOSwiaWF0IjoxNzQ3MjI5MDE5LCJpc3MiOiJrc2VmLWFwaS10aSIsImF1ZCI6ImtzZWYtYXBpLXRpIn0.rtRcV2mR9SiuJwpQaQHsbAXvvVsdNKG4DJsdiJctIeU","validUntil":"2025-07-11T12:23:56.0154302+00:00"}}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+
+      "InitTokenAuthenticationRequest": {
+        "required": [
+          "challenge",
+          "contextIdentifier",
+          "encryptedToken"
+        ],
+        "type": "object",
+        "properties": {
+          "challenge": {
+            "type": "string",
+            "description": "Wygenerowany wcześniej challenge."
+          },
+          "contextIdentifier": {
+            "required": [
+              "type",
+              "value"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextIdentifier"
+              }
+            ],
+            "description": "Indentyfikator kontekstu do którego następuje uwierzytelnienie."
+          },
+          "encryptedToken": {
+            "type": "string",
+            "description": "Zaszyfrowany token wraz z timestampem z challenge'a, w formacie `token|timestamp`."
+          },
+          "ipAddressPolicy": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IpAddressPolicy"
+              }
+            ],
+            "description": "Reguła walidacji adresu IP klienta przy każdym użyciu tokena dostępu.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "ContextIdentifier": {
+        "required": [
+          "type",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ContextIdentifierType"
+              }
+            ],
+            "description": "Typ identyfikatora"
+          },
+          "value": {
+            "type": "string",
+            "description": "Wartość identyfikatora"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Identyfikator kontekstu działania.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |\n| NipVatUe | Dwuczłonowy identyfikator składający się z numeru NIP i numeru VAT-UE: `{nip}-{vat_ue}` |"
+      },
+
+
+      "ContextIdentifierType": {
+        "enum": [
+          "None",
+          "AllPartners",
+          "Nip",
+          "InternalId",
+          "NipVatUe"
+        ],
+        "type": "string"
+      },
+
+
+      "IpAddressPolicy": {
+        "type": "object",
+        "properties": {
+          "onClientIpChange": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IpChangePolicy"
+              }
+            ],
+            "description": "Określa reakcję systemu, gdy token dostępu zostanie użyty z adresu IP spoza zadeklarowanej listy dozwolonych adresów IP (allowedIps).",
+            "nullable": true
+          },
+          "allowedIps": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AllowedIps"
+              }
+            ],
+            "description": "Lista dozwolonych adresów IP.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "IpChangePolicy": {
+        "enum": [
+          "Reject",
+          "Ignore"
+        ],
+        "type": "string"
+      },
+
+
+      "AllowedIps": {
+        "type": "object",
+        "properties": {
+          "ipAddress": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Lista adresów IPv4 w notacji dziesiętnej kropkowanej, np. `192.168.0.10`.",
+            "nullable": true
+          },
+          "ipRange": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Lista adresów IPv4 podana w formie zakresu początek–koniec, oddzielonego pojedynczym myślnikiem, np. `10.0.0.1–10.0.0.254`.",
+            "nullable": true
+          },
+          "ipMask": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Lista adresów IPv4 w notacji CIDR z maską 8 / 16 / 24 / 32, np. `172.16.0.0/16`.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "AuthenticationInitResponse": {
+        "required": [
+          "authenticationToken",
+          "referenceNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "description": "Numer referencyjny operacji uwierzytelnienia."
+          },
+          "authenticationToken": {
+            "required": [
+              "token",
+              "validUntil"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TokenInfo"
+              }
+            ],
+            "description": "Token operacji uwierzytelnienia."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "TokenInfo": {
+        "required": [
+          "token",
+          "validUntil"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Token w formacie JWT."
+          },
+          "validUntil": {
+            "type": "string",
+            "description": "Data ważności tokena.",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/auth/ksef-token: post: application/json
+{
+  "challenge": "", // required; type: string
+  "contextIdentifier": { // required;
+    "type": "", // type: string; enum: None, AllPartners, Nip, InternalId, NipVatUe
+    "value": "" // type: string; 
+  },
+  "encryptedToken": "", // required; type: string
+  "ipAddressPolicy": {
+    "onClientIpChange": "", // type: string;enum: Reject, Ignore
+    "allowedIps": {
+      "ipAddress": [ // type: array; items: type: string; description: Lista adresów IPv4 w notacji dziesiętnej kropkowanej, np. `192.168.0.10`.
+      ],
+      "ipRange": [ // type: array; items: type: string; description: Lista adresów IPv4 podana w formie zakresu początek–koniec, oddzielonego pojedynczym myślnikiem, np. `10.0.0.1–10.0.0.254`.
+      ],
+      "ipMask": [ // type: array; items: type: string; description: Lista adresów IPv4 w notacji CIDR z maską 8 / 16 / 24 / 32, np. `172.16.0.0/16`.
+      ]
+    }
+  }
+}
+
+
+
+response: application/json
+{
+  "referenceNumber": "", // type: string
+  "authenticationToken": {
+    "token": "", // type: string
+    "validUntil": "" // type: string; format: date-time
+  }
+}

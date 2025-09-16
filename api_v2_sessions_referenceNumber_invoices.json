@@ -1,0 +1,222 @@
+    "/api/v2/sessions/{referenceNumber}/invoices": {
+      "get": {
+        "tags": [
+          "Status wysyłki i UPO"
+        ],
+        "summary": "Pobranie faktur sesji",
+        "description": "Zwraca listę faktur przesłanych w sesji wraz z ich statusami, oraz informacje na temat ilości poprawnie i niepoprawnie przetworzonych faktur.\n\nWymagane uprawnienia: `InvoiceWrite`.",
+        "parameters": [
+          {
+            "name": "x-continuation-token",
+            "in": "header",
+            "description": "Token służący do pobrania kolejnej strony wyników.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny sesji.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Rozmiar strony wyników.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionInvoicesResponse"
+                },
+                "example": {"continuationToken":"W34idG9rZW4iOiIrUklEOn4xUE5BQU5hcXJVOUFBQUFBQUFBQUFBPT0jUlQ6MSNUUkM6MTAjSVNWOjIjSUVPOjY1NTY3I1FDRjo4I0ZQQzpBVUFBQUFBQUFBQUFRZ0FBQUFBQUFBQT0iLCJyYW5nZSI6eyJtaW4iOiIiLCJtYXgiOiJGRiJ9fV0=","invoices":[{"ordinalNumber":1,"invoiceNumber":"FA/XPWIC-7900685789/06/2025","ksefNumber":"5265877635-20250626-010080DD2B5E-26","referenceNumber":"20250626-EE-2F15D39000-242207E5C4-1B","invoiceHash":"mkht+3m5trnfxlTYhq3QFn74LkEO69MFNlsMAkCDSPA=","acquisitionDate":"2025-07-11T12:24:16.0154302+00:00","invoicingDate":"2025-07-11T12:23:56.0154302+00:00","status":{"code":200,"description":"Sukces"}},{"ordinalNumber":2,"referenceNumber":"20250626-EE-2F20AD2000-242386DF86-52","invoiceHash":"mkht+3m5trnfxlTYhq3QFn74LkEO69MFNlsMAkCDSPA=","invoicingDate":"2025-07-11T12:23:56.0154302+00:00","status":{"code":404,"description":"Duplikat faktury","details":["Duplikat faktury. Faktura o numerze KSeF: 5265877635-20250626-010080DD2B5E-26 została już prawidłowo przesłana do systemu w sesji: 20250626-SO-2F14610000-242991F8C9-B4"]}}]}
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                     | \n|---------------------|-----------------------------------------------------|-------------------------------------------------------------|\n| 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została znaleziona.   |\n| 21418               | Przekazany token kontynuacji ma nieprawidłowy format. |   |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceWrite"
+        ]
+      }
+    },
+
+
+      "SessionInvoicesResponse": {
+        "required": [
+          "invoices"
+        ],
+        "type": "object",
+        "properties": {
+          "continuationToken": {
+            "type": "string",
+            "description": "Token służący do pobrania kolejnej strony wyników. Jeśli jest pusty, to nie ma kolejnych stron.",
+            "nullable": true
+          },
+          "invoices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SessionInvoiceStatusResponse"
+            },
+            "description": "Lista pobranych faktur."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "SessionInvoiceStatusResponse": {
+        "required": [
+          "invoicingDate",
+          "ordinalNumber",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "ordinalNumber": {
+            "type": "integer",
+            "description": "Numer sekwencyjny faktury w ramach sesji.",
+            "format": "int32"
+          },
+          "invoiceNumber": {
+            "type": "string",
+            "description": "Numer faktury.",
+            "nullable": true
+          },
+          "ksefNumber": {
+            "type": "string",
+            "description": "Numer KSeF.",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "description": "Numer referencyjny faktury.",
+            "nullable": true
+          },
+          "invoiceHash": {
+            "type": "string",
+            "description": "Skrót SHA256 faktury, zakodowany w formacie Base64.",
+            "nullable": true
+          },
+          "invoiceFileName": {
+            "type": "string",
+            "description": "Nazwa pliku faktury (zwracana dla faktur wysyłanych wsadowo).",
+            "nullable": true
+          },
+          "acquisitionDate": {
+            "type": "string",
+            "description": "Data nadania numeru KSeF.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "invoicingDate": {
+            "type": "string",
+            "description": "Data przyjęcia faktury w systemie KSeF (do dalszego przetwarzania).",
+            "format": "date-time"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatusInfo"
+              }
+            ],
+            "description": "Status faktury.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Faktura przyjęta do dalszego przetwarzania | - |\n| 150 | Trwa przetwarzanie | - |\n| 200 | Sukces | - |\n| 410 | Nieprawidłowy zakres uprawnień | - |\n| 415 | Brak możliwości wysyłania faktury z załącznikiem | - |\n| 430 | Błąd weryfikacji pliku faktury | - |\n| 435 | Błąd odszyfrowania pliku | - |\n| 440 | Duplikat faktury | - |\n| 450 | Błąd weryfikacji semantyki dokumentu faktury | - |\n| 500 | Nieznany błąd ({statusCode}) | - |"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "StatusInfo": {
+        "required": [
+          "code",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Kod statusu",
+            "format": "int32"
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Opis statusu"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Dodatkowe szczegóły statusu",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/sessions/{referenceNumber}/invoices?pageOffset=xxx&pageSize=yyy: get: text/plain
+//{
+//}
+
+
+
+response: application/json
+{
+  "continuationToken": "", // type: string; nullable: true
+  "invoices": [ // required; type: array; items: #/components/schemas/SessionInvoice; description: Lista pobranych faktur.
+    {
+      "ordinalNumber": 0, // required; type: integer; format: int32; description: Numer sekwencyjny faktury w ramach sesji.
+      "invoiceNumber": "", // type: string; description: Numer faktury.; nullable: true
+      "ksefNumber": "", // type: string; description: Numer KSeF.; nullable: true
+      "referenceNumber": "", // type: string; description: Numer referencyjny faktury.; nullable: true
+      "invoiceHash": "", // type: string; description: Skrót SHA256 faktury, zakodowany w formacie Base64.; nullable: true
+      "invoiceFileName": "", // type: string; description: Nazwa pliku faktury (zwracana dla faktur wysyłanych wsadowo).; nullable: true
+      "acquisitionDate": "", // type: string; format: date-time; description: Data nadania numeru KSeF.; nullable: true
+      "invoicingDate": "", // type: string; format: date-time; description: Data przyjęcia faktury w systemie KSeF (do dalszego przetwarzania).
+      "status": { // required; #/components/schemas/StatusInfo; description: "Status faktury
+        "code": 0, // required; type: integer; description: Kod statusu; format: int32
+        "description": "", // required; minLength: 1; type: string; description: Opis statusu
+        "details": [ // type: array; items: type: string; description: Dodatkowe szczegóły statusu; nullable: true
+        ],
+      }
+    },
+  ]
+}

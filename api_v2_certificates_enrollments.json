@@ -1,0 +1,144 @@
+    "/api/v2/certificates/enrollments": {
+      "post": {
+        "tags": [
+          "Certyfikaty"
+        ],
+        "summary": "Wysyłka wniosku certyfikacyjnego",
+        "description": "Przyjmuje wniosek certyfikacyjny i rozpoczyna jego przetwarzanie.\n\nDozwolone typy kluczy prywatnych używanych do podpisu wniosku (CSR):\n- RSA (OID: 1.2.840.113549.1.1.1), długość klucza co najmniej 2048 bitów,\n- EC (klucze oparte na krzywych eliptycznych, OID: 1.2.840.10045.2.1), długość klucza co najmniej 256 bitów.\n\nRekomendowane jest wykorzystywanie kluczy EC.\n\n> Więcej informacji:\n> - [Wysłanie wniosku certyfikacyjnego](https://github.com/CIRFMF/ksef-client-docs/blob/main/certyfikaty-wewn%C4%99trzne-KSeF.md#4-wys%C5%82anie-wniosku-certyfikacyjnego)",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "certificateName",
+                  "certificateType",
+                  "csr"
+                ],
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/EnrollCertificateRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnrollCertificateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                                                           | Details |\n|---------------------|------------------------------------------------------------------------------------------------|---------|\n| 25002               | Brak możliwości złożenia wniosku certyfikacyjnego dla wykorzystanego sposobu uwierzytelnienia. |         |\n| 25003               | Dane w CSR nie zgadzają się z danymi w użytym wektorze uwierzytelniającym.                     |         |\n| 25004               | Niepoprawny format CSR lub niepoprawny podpis CSR.                                             |         |\n| 25006               | Osiągnięto limit możliwych do złożenia wniosków certyfikacyjnych.                              |         |\n| 25007               | Osiągnięto limit dopuszczalnej liczby posiadanych certyfikatów.                                |         |\n| 25010               | Nieprawidłowy typ lub długość klucza.                                                          |         |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+
+
+      "EnrollCertificateRequest": {
+        "required": [
+          "certificateName",
+          "certificateType",
+          "csr"
+        ],
+        "type": "object",
+        "properties": {
+          "certificateName": {
+            "type": "string",
+            "description": "Nazwa własna certyfikatu."
+          },
+          "certificateType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/KsefCertificateType"
+              }
+            ],
+            "description": "Typ certyfikatu.\n| Wartość | Opis |\n| --- | --- |\n| Authentication | Certyfikat używany do uwierzytelnienia w systemie. |\n| Offline | Certyfikat używany wyłącznie do potwierdzania autentyczności wystawcy i integralności faktury w trybie offline |\n"
+          },
+          "csr": {
+            "type": "string",
+            "description": "Wniosek certyfikacyjny PKCS#10 (CSR) w formacie DER zakodowany w Base64.",
+            "format": "byte"
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "Data rozpoczęcia ważności certyfikatu.\nJeśli nie zostanie podana, certyfikat będzie ważny od momentu jego wystawienia.",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "KsefCertificateType": {
+        "enum": [
+          "Authentication",
+          "Offline"
+        ],
+        "type": "string",
+        "description": "| Wartość | Opis |\n| --- | --- |\n| Authentication | Certyfikat używany do uwierzytelnienia w systemie. |\n| Offline | Certyfikat używany wyłącznie do potwierdzania autentyczności wystawcy i integralności faktury w trybie offline |\n"
+      },
+
+
+      "EnrollCertificateResponse": {
+        "required": [
+          "referenceNumber",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "description": "Numer referencyjny operacji przetwarzania wniosku certyfikacyjnego."
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Data złożenia wniosku certyfikacyjnego.",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/certificates/enrollments: post: application/json
+{
+  "certificateName": "", // required; type: string; description: Nazwa własna certyfikatu.
+  "certificateType": "", // enum: Authentication, Offline; #/components/schemas/KsefCertificateType; description: Typ certyfikatu.\n| Wartość | Opis |\n| --- | --- |\n| Authentication | Certyfikat używany do uwierzytelnienia w systemie. |\n| Offline | Certyfikat używany wyłącznie do potwierdzania autentyczności wystawcy i integralności faktury w trybie offline |
+  "csr": "", // required; type: string; description: Wniosek certyfikacyjny PKCS#10 (CSR) w formacie DER zakodowany w Base64.
+  "validFrom": "" // type: string; format: date-time; description: Data rozpoczęcia ważności certyfikatu.\nJeśli nie zostanie podana, certyfikat będzie ważny od momentu jego wystawienia.
+}
+
+
+
+response: application/json
+{
+  "referenceNumber": "", // required; type: string; description: Numer referencyjny operacji przetwarzania wniosku certyfikacyjnego.
+  "timestamp": "" // required; type: string; format: date-time; description: Data złożenia wniosku certyfikacyjnego.
+}

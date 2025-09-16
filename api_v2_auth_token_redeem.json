@@ -1,0 +1,118 @@
+    "/api/v2/auth/token/redeem": {
+      "post": {
+        "tags": [
+          "Uzyskiwanie dostępu"
+        ],
+        "summary": "Pobranie tokenów dostępowych",
+        "description": "Pobiera parę tokenów (access token i refresh token) wygenerowanych w ramach pozytywnie zakończonego procesu uwierzytelniania.\n**Tokeny można pobrać tylko raz.**\n\nSposób uwierzytelnienia: `AuthenticationToken` otrzymany przy rozpoczęciu operacji uwierzytelniania.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationTokensResponse"
+                },
+                "example": {"accessToken":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbi10eXBlIjoiQ29udGV4dFRva2VuIiwiY29udGV4dC1pZGVudGlmaWVyLXR5cGUiOiJOaXAiLCJjb250ZXh0LWlkZW50aWZpZXItdmFsdWUiOiIzNzU2OTc3MDQ5IiwiYXV0aGVudGljYXRpb24tbWV0aG9kIjoiUXVhbGlmaWVkU2VhbCIsInN1YmplY3QtZGV0YWlscyI6IntcIlN1YmplY3RJZGVudGlmaWVyXCI6e1wiVHlwZVwiOlwiTmlwXCIsXCJWYWx1ZVwiOlwiMzc1Njk3NzA0OVwifX0iLCJleHAiOjE3NDcyMjAxNDksImlhdCI6MTc0NzIxOTI0OSwiaXNzIjoia3NlZi1hcGktdGkiLCJhdWQiOiJrc2VmLWFwaS10aSJ9.R_3_R2PbdCk8T4WP_0XGOO1iVNu2ugNxmkDvsD0soIE","validUntil":"2025-07-11T12:23:56.0154302+00:00"},"refreshToken":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbi10eXBlIjoiQ29udGV4dFRva2VuIiwiY29udGV4dC1pZGVudGlmaWVyLXR5cGUiOiJOaXAiLCJjb250ZXh0LWlkZW50aWZpZXItdmFsdWUiOiIzNzU2OTc3MDQ5IiwiYXV0aGVudGljYXRpb24tbWV0aG9kIjoiUXVhbGlmaWVkU2VhbCIsInN1YmplY3QtZGV0YWlscyI6IntcIlN1YmplY3RJZGVudGlmaWVyXCI6e1wiVHlwZVwiOlwiTmlwXCIsXCJWYWx1ZVwiOlwiMzc1Njk3NzA0OVwifX0iLCJleHAiOjE3NDcyMjAxNDksImlhdCI6MTc0NzIxOTI0OSwiaXNzIjoia3NlZi1hcGktdGkiLCJhdWQiOiJrc2VmLWFwaS10aSJ9.R_3_R2PbdCk8T4WP_0XGOO1iVNu2ugNxmkDvsD0soIE","validUntil":"2025-07-11T12:23:56.0154302+00:00"}}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+
+
+      "AuthenticationTokensResponse": {
+        "required": [
+          "accessToken",
+          "refreshToken"
+        ],
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "required": [
+              "token",
+              "validUntil"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TokenInfo"
+              }
+            ],
+            "description": "Token dostępu."
+          },
+          "refreshToken": {
+            "required": [
+              "token",
+              "validUntil"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TokenInfo"
+              }
+            ],
+            "description": "Token umożliwiający odświeżenie tokenu dostępu.\n> Więcej informacji:\n> - [Odświeżanie tokena](https://github.com/CIRFMF/ksef-docs/blob/main/uwierzytelnianie.md#od%C5%9Bwie%C5%BCenie-tokena-accesstoken)"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "TokenInfo": {
+        "required": [
+          "token",
+          "validUntil"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Token w formacie JWT."
+          },
+          "validUntil": {
+            "type": "string",
+            "description": "Data ważności tokena.",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+
+request:  /api/v2/auth/token/redeem: post: text/plain
+//{
+//}
+
+
+
+response: application/json
+{
+  "accessToken": {
+    "token": "", // type: string
+    "validUntil": "" // type: string; format: date-time
+  },
+  "refreshToken": {
+    "token": "", // type: string
+    "validUntil": "" // type: string; format: date-time
+  }
+}

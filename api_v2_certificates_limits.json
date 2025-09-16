@@ -1,0 +1,125 @@
+    "/api/v2/certificates/limits": {
+      "get": {
+        "tags": [
+          "Certyfikaty"
+        ],
+        "summary": "Pobranie danych o limitach certyfikatów",
+        "description": "Zwraca informacje o limitach certyfikatów oraz informacje czy użytkownik może zawnioskować o certyfikat KSeF.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateLimitsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+
+
+      "CertificateLimitsResponse": {
+        "required": [
+          "canRequest",
+          "certificate",
+          "enrollment"
+        ],
+        "type": "object",
+        "properties": {
+          "canRequest": {
+            "type": "boolean",
+            "description": "Flaga informująca czy uwierzytelniony podmiot może złożyć nowy wniosek o certyfikat.",
+            "readOnly": true
+          },
+          "enrollment": {
+            "required": [
+              "remaining",
+              "limit"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CertificateLimit"
+              }
+            ],
+            "description": "Informacje o limitach związanych z liczbą możliwych do złożenia wniosków certyfikacyjnych."
+          },
+          "certificate": {
+            "required": [
+              "remaining",
+              "limit"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CertificateLimit"
+              }
+            ],
+            "description": "Informacje o limitach dotyczących liczby aktywnych certyfikatów wydanych dla danego podmiotu."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Informacje o limitach wniosków oraz certyfikatów dla uwierzytelnionego podmiotu."
+      },
+
+
+      "CertificateLimit": {
+        "required": [
+          "limit",
+          "remaining"
+        ],
+        "type": "object",
+        "properties": {
+          "remaining": {
+            "type": "integer",
+            "description": "Pozostała wartość limitu.",
+            "format": "int32"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maksymalna liczba zasobów dozwolona w ramach limitu.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/certificates/limits: get: text/plain
+{
+}
+
+
+
+response: application/json
+{
+  "canRequest": true/false, // type: boolean; description: Flaga informująca czy uwierzytelniony podmiot może złożyć nowy wniosek o certyfikat.
+  "enrollment": {
+    "remaining": 0, // type: integer; format: int32; description: Pozostała wartość limitu.
+    "limit": 0 // type: integer; format: int32; description: Maksymalna liczba zasobów dozwolona w ramach limitu.
+  },
+  "certificate": {
+    "remaining": 0, // type: integer; format: int32; description: Pozostała wartość limitu.
+    "limit": 0 // type: integer; format: int32; description: Maksymalna liczba zasobów dozwolona w ramach limitu.
+  }
+}

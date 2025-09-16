@@ -1,0 +1,99 @@
+    "/api/v2/certificates/{certificateSerialNumber}/revoke": {
+      "post": {
+        "tags": [
+          "Certyfikaty"
+        ],
+        "summary": "Unieważnienie certyfikatu",
+        "description": "Unieważnia certyfikat o podanym numerze seryjnym.",
+        "parameters": [
+          {
+            "name": "certificateSerialNumber",
+            "in": "path",
+            "description": "Numer seryjny certyfikatu (w formacie szesnastkowym).",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RevokeCertificateRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                                                           | Details |\n|---------------------|------------------------------------------------------------------------------------------------|---------|\n| 25008               | Certyfikat o podanym numerze seryjnym nie istnieje.                                            |         |\n| 25009               | Nie można odwołać wskazanego certyfikatu, ponieważ jest już odwołany, zablokowany lub nieważny.|         |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+
+
+      "RevokeCertificateRequest": {
+        "type": "object",
+        "properties": {
+          "revocationReason": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CertificateRevocationReason"
+              }
+            ],
+            "description": "Powód unieważnienia certyfikatu.\n| Wartość | Opis |\n| --- | --- |\n| Unspecified | Nieokreślony. |\n| Superseded | Certyfikat został zastąpiony przez inny. |\n| KeyCompromise | Klucz prywatny powiązany z certyfikatem został skompromitowany. |\n",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "CertificateRevocationReason": {
+        "enum": [
+          "Unspecified",
+          "Superseded",
+          "KeyCompromise"
+        ],
+        "type": "string",
+        "description": "| Wartość | Opis |\n| --- | --- |\n| Unspecified | Nieokreślony. |\n| Superseded | Certyfikat został zastąpiony przez inny. |\n| KeyCompromise | Klucz prywatny powiązany z certyfikatem został skompromitowany. |\n"
+      },
+
+
+
+request:  /api/v2/certificates/{certificateSerialNumber}/revoke: post: application/json
+{
+  "revocationReason": "" // enum: Unspecified, Superseded, KeyCompromise; #/components/schemas/CertificateRevocationReason
+}
+
+
+
+response: text/plain
+//{
+//}

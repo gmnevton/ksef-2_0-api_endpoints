@@ -1,0 +1,114 @@
+    "/api/v2/certificates/enrollments/data": {
+      "get": {
+        "tags": [
+          "Certyfikaty"
+        ],
+        "summary": "Pobranie danych do wniosku certyfikacyjnego",
+        "description": "Zwraca dane wymagane do przygotowania wniosku certyfikacyjnego PKCS#10.\n\nDane te są zwracane na podstawie certyfikatu użytego w procesie uwierzytelnienia i identyfikują podmiot, który składa wniosek o certyfikat.\n\n\n> Więcej informacji:\n> - [Pobranie danych do wniosku certyfikacyjnego](https://github.com/CIRFMF/ksef-client-docs/blob/main/certyfikaty-wewn%C4%99trzne-KSeF.md#2-pobranie-danych-do-wniosku-certyfikacyjnego)\n> - [Przygotowanie wniosku](https://github.com/CIRFMF/ksef-client-docs/blob/main/certyfikaty-wewn%C4%99trzne-KSeF.md#3-przygotowanie-csr-certificate-signing-request)",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateEnrollmentDataResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                                                      | Details |\n|---------------------|-------------------------------------------------------------------------------------------|---------|\n| 25001               | Brak możliwości pobrania danych do CSR dla wykorzystanego sposobu uwierzytelnienia.       |         |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+
+
+      "CertificateEnrollmentDataResponse": {
+        "required": [
+          "commonName",
+          "countryName"
+        ],
+        "type": "object",
+        "properties": {
+          "commonName": {
+            "type": "string",
+            "description": "Nazwa powszechna."
+          },
+          "countryName": {
+            "type": "string",
+            "description": "Kraj, kod ISO 3166."
+          },
+          "givenNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Imiona.",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "description": "Nazwisko.",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "description": "Numer seryjny podmiotu.",
+            "nullable": true
+          },
+          "uniqueIdentifier": {
+            "type": "string",
+            "description": "Unikalny identyfikator.",
+            "nullable": true
+          },
+          "organizationName": {
+            "type": "string",
+            "description": "Nazwa organizacji.",
+            "nullable": true
+          },
+          "organizationIdentifier": {
+            "type": "string",
+            "description": "Identyfikator organizacji.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/certificates/enrollments/data: get: text/plain
+// {
+// }
+
+
+
+response: application/json
+{
+  "commonName": "", // type: string; description: Nazwa powszechna.
+  "countryName": "", // type: string; description: Kraj, kod ISO 3166.
+  "givenNames": [ // type: array; items: type: string; description: Imiona.; nullable: true
+  ],
+  "surname": "", // type: string; description: Nazwisko.; nullable: true
+  "serialNumber": "", // type: string; description: Numer seryjny podmiotu.; nullable: true
+  "uniqueIdentifier": "", // type: string; description: Unikalny identyfikator.; nullable: true
+  "organizationName": "", // type: string; description: Nazwa organizacji.; nullable: true
+  "organizationIdentifier": "" // type: string; description: Identyfikator organizacji.; nullable: true
+}

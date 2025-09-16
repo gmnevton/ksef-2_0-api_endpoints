@@ -1,0 +1,78 @@
+    "/api/v2/sessions/{referenceNumber}/upo/{upoReferenceNumber}": {
+      "get": {
+        "tags": [
+          "Status wysyłki i UPO"
+        ],
+        "summary": "Pobranie UPO dla sesji",
+        "description": "Zwraca XML zawierający zbiorcze UPO dla sesji.\n\nWymagane uprawnienia: `InvoiceWrite`.",
+        "parameters": [
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny sesji.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "upoReferenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny UPO.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                                                                        | \n|---------------------|-----------------------------------------------------|----------------------------------------------------------------------------------------------------------------|\n| 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została znaleziona.                                        |\n| 21178               | Nie znaleziono UPO dla podanych kryteriów.          | UPO o numerze referencyjnym {referenceNumber} dla sesji {referenceNumber} nie zostało znalezione.        |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceWrite"
+        ]
+      }
+    },
+
+
+
+request:  /api/v2/sessions/{referenceNumber}/upo/{upoReferenceNumber}: get: text/plain
+//{
+//}
+
+
+
+response: application/xml
+//{
+//}
