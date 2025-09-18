@@ -52,6 +52,9 @@
 
 
 request:  /api/v2/sessions/online/{referenceNumber}/close: post: text/plain
+header:
+Authentication: Bearer accessToken
+body:
 //{
 //}
 

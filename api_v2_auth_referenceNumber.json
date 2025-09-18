@@ -173,6 +173,9 @@
 
 
 request:  /api/v2/auth/{referenceNumber}: get: text/plain
+header:
+Authentication: Bearer authenticationToken
+body:
 //{
 //}
 

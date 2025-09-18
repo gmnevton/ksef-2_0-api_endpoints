@@ -171,6 +171,9 @@
 
 
 request:  /api/v2/sessions/online: post: application/json
+header:
+Authentication: Bearer accessToken
+body:
 {
   "formCode": {
     "systemCode": "", // type: string; description: Kod systemowy

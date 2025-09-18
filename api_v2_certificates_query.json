@@ -235,6 +235,9 @@
 
 
 request:  /api/v2/certificates/query?pageSize=xxx&pageOffset=yyy: post: application/json
+header:
+Authentication: Bearer accessToken
+body:
 {
   "certificateSerialNumber": "", // type: string; description: Numer seryjny certyfikatu. Wyszukiwanie odbywa się na zasadzie dokładnego dopasowania (exact match).; nullable: true
   "name": "", // type: string; description: Nazwa własna certyfikatu. Wyszukiwanie jest częściowe, czyli zwracane są certyfikaty, których nazwa zawiera podany ciąg znaków (contains).; nullable: true

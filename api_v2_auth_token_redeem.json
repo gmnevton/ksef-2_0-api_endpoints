@@ -100,6 +100,9 @@
 
 
 request:  /api/v2/auth/token/redeem: post: text/plain
+header:
+Authentication: Bearer authenticationToken
+body:
 //{
 //}
 

@@ -87,6 +87,9 @@
 
 
 request:  /api/v2/auth/token/refresh: post: text/plain
+header:
+Authentication: Bearer refreshToken
+body:
 //{
 //}
 

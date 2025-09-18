@@ -59,6 +59,9 @@
 
 
 request:  /api/v2/invoices/ksef/{ksefNumber}: get: text/plain
+header:
+Authentication: Bearer accessToken
+body:
 //{
 //}
 

@@ -95,6 +95,9 @@
 
 
 request:  /api/v2/certificates/enrollments/data: get: text/plain
+header:
+Authentication: Bearer accessToken
+body:
 // {
 // }
 
@@ -105,6 +108,8 @@ response: application/json
   "commonName": "", // type: string; description: Nazwa powszechna.
   "countryName": "", // type: string; description: Kraj, kod ISO 3166.
   "givenNames": [ // type: array; items: type: string; description: Imiona.; nullable: true
+    "",
+    ...
   ],
   "surname": "", // type: string; description: Nazwisko.; nullable: true
   "serialNumber": "", // type: string; description: Numer seryjny podmiotu.; nullable: true

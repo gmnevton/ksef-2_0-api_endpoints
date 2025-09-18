@@ -193,7 +193,10 @@
 
 
 request:  /api/v2/sessions/{referenceNumber}/invoices/failed?pageSize=xxx: get: text/plain
+header:
+Authentication: Bearer accessToken
 ??x-continuation-token: continuationToken
+body:
 //{
 //}
 
@@ -216,8 +219,11 @@ response: application/json
         "code": 0, // required; type: integer; description: Kod statusu; format: int32
         "description": "", // required; minLength: 1; type: string; description: Opis statusu
         "details": [ // type: array; items: type: string; description: Dodatkowe szczegóły statusu; nullable: true
+          "",
+          ...
         ],
       }
     },
+    ...
   ]
 }

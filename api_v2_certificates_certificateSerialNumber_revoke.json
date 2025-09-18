@@ -88,6 +88,9 @@
 
 
 request:  /api/v2/certificates/{certificateSerialNumber}/revoke: post: application/json
+header:
+Authentication: Bearer accessToken
+body:
 {
   "revocationReason": "" // enum: Unspecified, Superseded, KeyCompromise; #/components/schemas/CertificateRevocationReason
 }

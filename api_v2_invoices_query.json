@@ -959,6 +959,9 @@
 
 
 request:  /api/v2/invoices/query/metadata?pageOffset=xxx&pageSize=yyy: post: application/json
+header:
+Authentication: Bearer accessToken
+body:
 {
   "subjectType": "", // required; enum: Subject1, Subject2, Subject3, SubjectAuthorized
   "dateRange": { // required; description: Typ i zakres dat, według którego mają być filtrowane faktury.
@@ -984,6 +987,7 @@ request:  /api/v2/invoices/query/metadata?pageOffset=xxx&pageSize=yyy: post: app
   },
   "currencyCodes": [ // type: array; items: #/components/schemas/CurrencyCode; description: Kody walut.; nullable: true
     "", // enum: "AED".."ZWL"
+    ...
   ],
   "invoicingMode": "", // enum: Online, Offline; description: Tryb wystawienia faktury: online lub offline.; nullable: true
   "isSelfInvoicing": true/false, // type: boolean; description: Czy faktura została wystawiona w trybie samofakturowania.; nullable: true
@@ -991,6 +995,8 @@ request:  /api/v2/invoices/query/metadata?pageOffset=xxx&pageSize=yyy: post: app
   "formType": "", // type: string; #/components/schemas/InvoiceQueryFormType; description: Typ dokumentu.\n| Wartość | Opis |\n| --- | --- |\n| FA | Faktura VAT |\n| PEF | Faktura PEF |\n| RR | Faktura RR |; nullable: true
   "invoiceTypes": [ // type: array; description: Rodzaje faktur.; nullable: true
     // enum: Vat, Kor, Zal, Roz, Upr, Kor_Zal, Kor_Roz
+    "",
+    ...
   ]
   "hasAttachment": true/false // type: boolean; description: Czy faktura ma załącznik.; nullable: true
 }
@@ -1039,13 +1045,15 @@ response: application/json
           "identifier": "", // type: string; description: Wartość identyfikatora podmiotu trzeciego.; nullable: true
           "name": "", // type: string; description: Nazwa podmiotu trzeciego.; nullable: true
           "role": 0 // type: integer; format: int32; description: Rola podmiotu trzeciego
-        },...
+        },
+        ...
       ],
       "authorizedSubject": { // #/components/schemas/InvoiceMetadataAuthorizedSubject; description: Podmiot upoważniony.; nullable: true
         "identifier": "", // type: string; description: Identyfikator podmiotu upoważnionego; nullable: true
         "name": "", // type: string; description: Nazwa podmiotu upoważnionego; nullable: true
         "role": 0 // type: integer; format: int32; description: Rola podmiotu upoważnionego
       }
-    },...
+    },
+    ...
   ]
 }

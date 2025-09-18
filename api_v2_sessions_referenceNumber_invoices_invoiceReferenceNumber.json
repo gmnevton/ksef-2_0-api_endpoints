@@ -160,6 +160,9 @@
 
 
 request:  /api/v2/sessions/{referenceNumber}/invoices/{invoiceReferenceNumber}: get: text/plain
+header:
+Authentication: Bearer accessToken
+body:
 //{
 //}
 
@@ -179,6 +182,8 @@ response: application/json
     "code": 0, // required; type: integer; description: Kod statusu; format: int32
     "description": "", // required; minLength: 1; type: string; description: Opis statusu
     "details": [ // type: array; items: type: string; description: Dodatkowe szczegóły statusu; nullable: true
-    ],
+      "",
+      ...
+    ]
   }
 }

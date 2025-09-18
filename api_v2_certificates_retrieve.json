@@ -141,9 +141,13 @@
 
 
 request:  /api/v2/certificates/retrieve: post: application/json
+header:
+Authentication: Bearer accessToken
+body:
 {
   "certificateSerialNumbers": [ // type: array; items: type: string; description: Numery seryjne certyfikatów do pobrania.
-    "",...
+    "",
+    ...
   ]
 }
 
@@ -156,5 +160,6 @@ response: application/json
       "certificateSerialNumber": "" // required; type: string; description: Numer seryjny certyfikatu.
       "certificateType": "" // required; #/components/schemas/KsefCertificateType; description: Typ certyfikatu.\n| Wartość | Opis |\n| --- | --- |\n| Authentication | Certyfikat używany do uwierzytelnienia w systemie. |\n| Offline | Certyfikat używany wyłącznie do potwierdzania autentyczności wystawcy i integralności faktury w trybie offline |;
     },
+    ...
   ]
 }

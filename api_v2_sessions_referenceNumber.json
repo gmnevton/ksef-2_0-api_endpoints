@@ -186,6 +186,9 @@
 
 
 request:  /api/v2/sessions/{referenceNumber}: get: text/plain
+header:
+Authentication: Bearer accessToken
+body:
 //{
 //}
 
@@ -197,6 +200,8 @@ response: application/json
     "code": 0, // type: integer; format: int32; description: Kod statusu;
     "description": "", // minLength: 1; type: string; description: Opis statusu
     "details": [ // type: array; items: type: string; description: Dodatkowe szczegóły statusu; nullable: true
+      "",
+      ...
     ]
   },
   "validUntil": "", // type: string; format: date-time; description: Termin ważności sesji. Po jego upływie sesja zostanie automatycznie zamknięta.; nullable: true
@@ -206,6 +211,7 @@ response: application/json
         "referenceNumber": "", // type: string; description: Numer referencyjny strony UPO.
         "downloadUrl": "" // type: string; format: uri; description: Adres do pobrania strony UPO.;
       },
+      ...
     ]
   },
   "invoiceCount": 0, // type: integer; format: int32; description: Ilość przyjętych faktur w ramach sesji.; nullable: true

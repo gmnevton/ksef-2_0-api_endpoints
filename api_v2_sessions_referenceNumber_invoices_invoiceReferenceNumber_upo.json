@@ -67,6 +67,9 @@
 
 
 request:  /api/v2/sessions/{referenceNumber}/invoices/{invoiceReferenceNumber}/upo: get: text/plain
+header:
+Authentication: Bearer accessToken
+body:
 //{
 //}
 

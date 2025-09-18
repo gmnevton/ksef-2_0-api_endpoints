@@ -68,6 +68,9 @@
 
 
 request:  /api/v2/sessions/{referenceNumber}/invoices/ksef/{ksefNumber}/upo: get: text/plain
+header:
+Authentication: Bearer accessToken
+body:
 //{
 //}
 

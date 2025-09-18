@@ -144,6 +144,9 @@
 
 
 request:  /api/v2/sessions/online/{referenceNumber}/invoices: post: application/json
+header:
+Authentication: Bearer accessToken
+body:
 {
   "invoiceHash": "", // type: string; description: Skrót SHA256 oryginalnej faktury, zakodowany w formacie Base64.
   "invoiceSize": 0, // type: integer; format: int64; description": "Rozmiar oryginalnej faktury w bajtach.

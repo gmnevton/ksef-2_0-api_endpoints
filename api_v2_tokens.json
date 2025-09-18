@@ -363,8 +363,13 @@
 
 
 request:  api/v2/tokens: post: application/json
+header:
+Authentication: Bearer accessToken
+body:
 {
   "permissions": [ // type: array; items: #/components/schemas/TokenPermissionType; enum: InvoiceRead, InvoiceWrite, CredentialsRead, CredentialsManage; description: Uprawnienia przypisane tokenowi.; nullable: true
+    "",
+    ...
   ],
   "description": "" // type: string; description: Opis tokena.; nullable: true
 }
@@ -380,9 +385,14 @@ response: application/json
 
 
 request:  api/v2/tokens: get: text/plain
+header:
+Authentication: Bearer accessToken
 ??x-continuation-token: continuationToken;
+body:
 {
   "status": [ // type: array; items: #/components/schemas/AuthenticationTokenStatus; enum: Pending, Active, Revoking, Revoked, Failed; description: Status tokenów do zwrócenia. W przypadku braku parametru zwracane są wszystkie tokeny.;
+    "",
+    ...
   ],
   "pageSize": 0 // type: integer; format: int32; default: 10; description: Rozmiar strony wyników.;
 }
@@ -405,9 +415,12 @@ response: application/json
       },
       "description": "", // type: string; description: Opis tokena.; nullable: true
       "requestedPermissions": [ // type: array; #/components/schemas/TokenPermissionType; enum: InvoiceRead, InvoiceWrite, CredentialsRead, CredentialsManage; description: Uprawnienia przypisane tokenowi.; nullable: true
+        "",
+        ...
       ],
       "dateCreated": "", // type: string; description: Data i czas utworzenia tokena.; format: date-time
       "status": "" // #/components/schemas/AuthenticationTokenStatus; enum: Pending, Active, Revoking, Revoked, Failed
     },
+    ...
   ]
 }
