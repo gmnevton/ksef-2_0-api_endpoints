@@ -1,0 +1,226 @@
+    "/api/v2/auth/sessions": {
+      "get": {
+        "tags": [
+          "Aktywne sesje"
+        ],
+        "summary": "Pobranie listy aktywnych sesji",
+        "description": "Zwraca liste aktywnych sesji uwierzytelnienia.",
+        "parameters": [
+          {
+            "name": "x-continuation-token",
+            "in": "header",
+            "description": "Token sluzacy do pobrania kolejnej strony wyników.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Rozmiar strony wyników.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                     | \n|---------------------|-----------------------------------------------------|-------------------------------------------------------------|\n| 21418               | Przekazany token kontynuacji ma nieprawidlowy format. |   |\n| 21405 | Blad walidacji danych wejsciowych. | {tresc bledu z walidatora} |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+
+
+      "AuthenticationListResponse": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "continuationToken": {
+            "type": "string",
+            "description": "Token sluzacy do pobrania kolejnej strony wyników. Jesli jest pusty, to nie ma kolejnych stron.",
+            "nullable": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuthenticationListItem"
+            },
+            "description": "Lista sesji uwierzytelniania."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "AuthenticationListItem": {
+        "required": [
+          "authenticationMethod",
+          "referenceNumber",
+          "startDate",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "description": "Data rozpoczecia operacji uwierzytelnienia.",
+            "format": "date-time"
+          },
+          "authenticationMethod": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthenticationMethod"
+              }
+            ],
+            "description": "Uzyta metoda uwierzytelnienia.\n| Wartosc | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczec kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy uslug Peppol. |\n"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatusInfo"
+              }
+            ],
+            "description": "Informacje o aktualnym statusie.\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Uwierzytelnianie w toku | - |\n| 200 | Uwierzytelnianie zakonczone sukcesem | - |\n| 415 | Uwierzytelnianie zakonczone niepowodzeniem | Brak przypisanych uprawnien |\n| 425 | Uwierzytelnienie uniewaznione  | Uwierzytelnienie i powiazane refresh tokeny zostaly uniewaznione przez uzytkownika |\n| 450 | Uwierzytelnianie zakonczone niepowodzeniem z powodu blednego tokenu | Nieprawidlowy token |\n| 450 | Uwierzytelnianie zakonczone niepowodzeniem z powodu blednego tokenu | Nieprawidlowy czas tokena |\n| 450 | Uwierzytelnianie zakonczone niepowodzeniem z powodu blednego tokenu | Token uniewazniony |\n| 450 | Uwierzytelnianie zakonczone niepowodzeniem z powodu blednego tokenu | Token nieaktywny |\n| 460 | Uwierzytelnianie zakonczone niepowodzeniem z powodu bledu certyfikatu | Niewazny certyfikat |\n| 460 | Uwierzytelnianie zakonczone niepowodzeniem z powodu bledu certyfikatu | Blad weryfikacji lancucha certyfikatów |\n| 460 | Uwierzytelnianie zakonczone niepowodzeniem z powodu bledu certyfikatu | Niezaufany lancuch certyfikatów |\n| 460 | Uwierzytelnianie zakonczone niepowodzeniem z powodu bledu certyfikatu | Certyfikat odwolany |\n| 460 | Uwierzytelnianie zakonczone niepowodzeniem z powodu bledu certyfikatu | Niepoprawny certyfikat |\n| 500 | Nieznany blad | - |"
+          },
+          "isTokenRedeemed": {
+            "type": "boolean",
+            "description": "Czy zostal juz wydany refresh token powiazany z danym uwierzytelnieniem.",
+            "nullable": true
+          },
+          "lastTokenRefreshDate": {
+            "type": "string",
+            "description": "Data ostatniego odswiezenia tokena.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "refreshTokenValidUntil": {
+            "type": "string",
+            "description": "Termin waznosci refresh tokena (o ile nie zostanie wczesniej uniewazniony).",
+            "format": "date-time",
+            "nullable": true
+          },
+          "referenceNumber": {
+            "type": "string",
+            "description": "Numer referencyjny operacji uwierzytelnienia."
+          },
+          "isCurrent": {
+            "type": "boolean",
+            "description": "Czy sesja jest powiazana z aktualnie uzywanym tokenem.",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "AuthenticationMethod": {
+        "enum": [
+          "Token",
+          "TrustedProfile",
+          "InternalCertificate",
+          "QualifiedSignature",
+          "QualifiedSeal",
+          "PersonalSignature",
+          "PeppolSignature"
+        ],
+        "type": "string",
+        "description": "Metoda uwierzytelnienia.\n| Wartosc | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczec kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy uslug Peppol. |\n"
+      },
+
+
+      "StatusInfo": {
+        "required": [
+          "code",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Kod statusu",
+            "format": "int32"
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Opis statusu"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Dodatkowe szczególy statusu",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/auth/sessions?pageSize=xxx: get: text/plain
+header:
+??x-continuation-token: continuationToken
+Authentication: Bearer accessToken
+body:
+//{
+//}
+
+
+
+response: application/json
+{
+  "continuationToken": "", // type: string; description: Token sluzacy do pobrania kolejnej strony wyników. Jesli jest pusty, to nie ma kolejnych stron.; nullable: true
+  "items": [ // required; type: array; items: #/components/schemas/AuthenticationListItem; description: Lista sesji uwierzytelniania.
+    {
+      "startDate": "", // required; type: string; format: date-time; description: Data rozpoczecia operacji uwierzytelnienia.
+      "authenticationMethod": "", // required; type: string; items: #/components/schemas/AuthenticationMethod; enum: Token, TrustedProfile, InternalCertificate, QualifiedSignature, QualifiedSeal, PersonalSignature, PeppolSignature; description: Metoda uwierzytelnienia.\n| Wartosc | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczec kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy uslug Peppol. |
+      "status": { // required; items: #/components/schemas/StatusInfo; description: Informacje o aktualnym statusie.\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Uwierzytelnianie w toku | - |\n| 200 | Uwierzytelnianie zakonczone sukcesem | - |\n| 415 | Uwierzytelnianie zakonczone niepowodzeniem | Brak przypisanych uprawnien |\n| 425 | Uwierzytelnienie uniewaznione  | Uwierzytelnienie i powiazane refresh tokeny zostaly uniewaznione przez uzytkownika |\n| 450 | Uwierzytelnianie zakonczone niepowodzeniem z powodu blednego tokenu | Nieprawidlowy token |\n| 450 | Uwierzytelnianie zakonczone niepowodzeniem z powodu blednego tokenu | Nieprawidlowy czas tokena |\n| 450 | Uwierzytelnianie zakonczone niepowodzeniem z powodu blednego tokenu | Token uniewazniony |\n| 450 | Uwierzytelnianie zakonczone niepowodzeniem z powodu blednego tokenu | Token nieaktywny |\n| 460 | Uwierzytelnianie zakonczone niepowodzeniem z powodu bledu certyfikatu | Niewazny certyfikat |\n| 460 | Uwierzytelnianie zakonczone niepowodzeniem z powodu bledu certyfikatu | Blad weryfikacji lancucha certyfikatów |\n| 460 | Uwierzytelnianie zakonczone niepowodzeniem z powodu bledu certyfikatu | Niezaufany lancuch certyfikatów |\n| 460 | Uwierzytelnianie zakonczone niepowodzeniem z powodu bledu certyfikatu | Certyfikat odwolany |\n| 460 | Uwierzytelnianie zakonczone niepowodzeniem z powodu bledu certyfikatu | Niepoprawny certyfikat |\n| 500 | Nieznany blad | - |
+        "code": 0, // required; type: integer; format: int32; description: Kod statusu;
+        "description": "", // required; minLength: 1; type: string; description: Opis statusu
+        "details": [ // type: array; items: type: string; description: "Dodatkowe szczególy statusu; nullable: true
+          "",
+          ...
+        ]
+      },
+      "isTokenRedeemed": true/false, // type: boolean; description: Czy zostal juz wydany refresh token powiazany z danym uwierzytelnieniem.; nullable: true
+      "lastTokenRefreshDate": "", // type: string; format: date-time; description: Data ostatniego odswiezenia tokena.; nullable: true
+      "refreshTokenValidUntil": "", // type: string; format: date-time; description: Termin waznosci refresh tokena (o ile nie zostanie wczesniej uniewazniony).; nullable: true
+      "referenceNumber":  // required; type: string; description: Numer referencyjny operacji uwierzytelnienia.
+      "isCurrent": true/false // type: boolean; description: Czy sesja jest powiazana z aktualnie uzywanym tokenem.; readOnly: true
+    },
+    ...
+  ]
+}

@@ -97,8 +97,8 @@ body:
 
 response: application/json
 {
-  "accessToken": {
-    "token": "", // type: string
-    "validUntil": "" // type: string; format: date-time
+  "accessToken": { // required
+    "token": "", // required; type: string
+    "validUntil": "" // required; type: string; format: date-time
   }
 }

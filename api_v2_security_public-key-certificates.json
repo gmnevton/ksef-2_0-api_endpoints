@@ -1,0 +1,102 @@
+    "/api/v2/security/public-key-certificates": {
+      "get": {
+        "tags": [
+          "Certyfikaty klucza publicznego"
+        ],
+        "summary": "Pobranie certyfikatów",
+        "description": "Zwraca informacje o kluczach publicznych uzywanych do szyfrowania danych przesylanych do systemu KSeF.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicKeyCertificate"
+                  }
+                },
+                "example": [{"certificate":"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwocTwdNgt2+PXJ2fcB7k1kn5eFUTXBeep9pH...","validFrom":"2024-07-11T12:23:56.0154302+00:00","validTo":"2028-07-11T12:23:56.0154302+00:00","usage":["KsefTokenEncryption","SymmetricKeyEncryption"]}]
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          }
+        }
+      }
+    },
+
+
+      "PublicKeyCertificate": {
+        "required": [
+          "certificate",
+          "usage",
+          "validFrom",
+          "validTo"
+        ],
+        "type": "object",
+        "properties": {
+          "certificate": {
+            "type": "string",
+            "description": "Certyfikat klucza publicznego w formacie DER zakodowany w Base64."
+          },
+          "validFrom": {
+            "type": "string",
+            "description": "Data poczatku obowiazywania certyfikatu.",
+            "format": "date-time"
+          },
+          "validTo": {
+            "type": "string",
+            "description": "Data konca obowiazywania certyfikatu.",
+            "format": "date-time"
+          },
+          "usage": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicKeyCertificateUsage"
+            },
+            "description": "Operacje do których moze byc uzywany certyfikat.\n| Wartosc | Opis |\n| --- | --- |\n| KsefTokenEncryption | Szyfrowanie tokenów KSeF przesylanych w trakcie procesu uwierzytelniania. |\n| SymmetricKeyEncryption | Szyfrowanie klucza symetrycznego wykorzystywanego do szyfrowania przesylanych faktur. |\n"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "PublicKeyCertificateUsage": {
+        "enum": [
+          "KsefTokenEncryption",
+          "SymmetricKeyEncryption"
+        ],
+        "type": "string",
+        "description": "| Wartosc | Opis |\n| --- | --- |\n| KsefTokenEncryption | Szyfrowanie tokenów KSeF przesylanych w trakcie procesu uwierzytelniania. |\n| SymmetricKeyEncryption | Szyfrowanie klucza symetrycznego wykorzystywanego do szyfrowania przesylanych faktur. |\n"
+      },
+
+
+
+request:  /api/v2/security/public-key-certificates: get: text/plain
+header:
+body:
+//{
+//}
+
+
+
+response: application/json
+{
+  "certificate": "", // type: string; description: Certyfikat klucza publicznego w formacie DER zakodowany w Base64.
+  "validFrom": "", // type: string; format: date-time; description: Data poczatku obowiazywania certyfikatu.
+  "validTo": "", // type: string; format: date-time; description: Data konca obowiazywania certyfikatu.
+  "usage": [ // type: array; items: #/components/schemas/PublicKeyCertificateUsage; enum: KsefTokenEncryption, SymmetricKeyEncryption; description: Operacje do których moze byc uzywany certyfikat.\n| Wartosc | Opis |\n| --- | --- |\n| KsefTokenEncryption | Szyfrowanie tokenów KSeF przesylanych w trakcie procesu uwierzytelniania. |\n| SymmetricKeyEncryption | Szyfrowanie klucza symetrycznego wykorzystywanego do szyfrowania przesylanych faktur. |\n
+    "",
+    ...
+  ]
+}

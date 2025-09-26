@@ -1,0 +1,664 @@
+    "/api/v2/invoices/exports": {
+      "post": {
+        "tags": [
+          "Pobieranie faktur"
+        ],
+        "summary": "Eksport paczki faktur",
+        "description": "Rozpoczyna asynchroniczny proces wyszukiwania faktur w systemie KSeF na podstawie przekazanych filtrów oraz przygotowania ich w formie zaszyfrowanej paczki.\nWymagane jest przekazanie informacji o szyfrowaniu w polu `Encryption`, które sluza do zabezpieczenia przygotowanej paczki z fakturami.\n\nWymagane uprawnienia: `InvoiceRead`.",
+        "requestBody": {
+          "description": "Dane wejsciowe okreslajace kryteria i format eksportu paczki faktur.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "encryption",
+                  "filters"
+                ],
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/InvoiceExportRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportInvoicesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                       | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------|\n| 21181               | Nieprawidlowe zadanie eksportu faktur.              | Nie mozna wyeksportowac paczki faktur dla wybranego podmiotu ({subjecttype}) i zalogowanego identyfikatoru kontekstu ({type}). |\n| 21405 | Blad walidacji danych wejsciowych. | {tresc bledu z walidatora} |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceRead"
+        ]
+      }
+    },
+
+
+      "InvoiceExportRequest": {
+        "required": [
+          "encryption",
+          "filters"
+        ],
+        "type": "object",
+        "properties": {
+          "encryption": {
+            "required": [
+              "encryptedSymmetricKey",
+              "initializationVector"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EncryptionInfo"
+              }
+            ],
+            "description": "Informacje wymagane do zaszyfrowania wyniku zapytania."
+          },
+          "filters": {
+            "required": [
+              "subjectType",
+              "dateRange"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceQueryFilters"
+              }
+            ],
+            "description": "Zestaw filtrów do wyszukiwania faktur."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "EncryptionInfo": {
+        "required": [
+          "encryptedSymmetricKey",
+          "initializationVector"
+        ],
+        "type": "object",
+        "properties": {
+          "encryptedSymmetricKey": {
+            "type": "string",
+            "description": "Klucz symetryczny zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.\n\n[Klucz publiczny RSA](/public-keys/publicKey.pem)"
+          },
+          "initializationVector": {
+            "type": "string",
+            "description": "Wektor inicjalizujacy (IV) uzywany do szyfrowania symetrycznego, zakodowany w formacie Base64."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "InvoiceQueryFilters": {
+        "required": [
+          "dateRange",
+          "subjectType"
+        ],
+        "type": "object",
+        "properties": {
+          "subjectType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceQuerySubjectType"
+              }
+            ],
+            "description": "Typ podmiotu, którego dotycza kryteria filtrowania metadanych faktur.\nOkresla kontekst, w jakim przeszukiwane sa dane.\n| Wartosc | Opis |\n| --- | --- |\n| Subject1 | Podmiot 1 |\n| Subject2 | Podmiot 2 |\n| Subject3 | Podmiot 3 |\n| SubjectAuthorized | Podmiot upowazniony |\n"
+          },
+          "dateRange": {
+            "required": [
+              "dateType",
+              "from"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceQueryDateRange"
+              }
+            ],
+            "description": "Typ i zakres dat, wedlug którego maja byc filtrowane faktury. Dozwolony maksymalny okres wynosi 2 lata."
+          },
+          "ksefNumber": {
+            "type": "string",
+            "description": "Numer KSeF faktury.",
+            "nullable": true
+          },
+          "invoiceNumber": {
+            "type": "string",
+            "description": "Numer faktury nadany przez wystawce.",
+            "nullable": true
+          },
+          "amount": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceQueryAmount"
+              }
+            ],
+            "description": "Filtr kwotowy – brutto, netto lub VAT (z wartoscia).",
+            "nullable": true
+          },
+          "seller": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceQuerySeller"
+              }
+            ],
+            "description": "Dane sprzedawcy.",
+            "nullable": true
+          },
+          "buyer": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceQueryBuyer"
+              }
+            ],
+            "description": "Dane nabywcy.",
+            "nullable": true
+          },
+          "currencyCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CurrencyCode"
+            },
+            "description": "Kody walut.",
+            "nullable": true
+          },
+          "invoicingMode": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoicingMode"
+              }
+            ],
+            "description": "Tryb wystawienia faktury: online lub offline.",
+            "nullable": true
+          },
+          "isSelfInvoicing": {
+            "type": "boolean",
+            "description": "Czy faktura zostala wystawiona w trybie samofakturowania.",
+            "nullable": true
+          },
+          "formType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceQueryFormType"
+              }
+            ],
+            "description": "Typ dokumentu.\n| Wartosc | Opis |\n| --- | --- |\n| FA | Faktura VAT |\n| PEF | Faktura PEF |\n| RR | Faktura RR |\n",
+            "nullable": true
+          },
+          "invoiceTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceType"
+            },
+            "description": "Rodzaje faktur.\n| Wartosc | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygujaca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygujaca fakture zaliczkowa |\n| KorRoz | (FA) Korygujaca fakture rozliczeniowa |\n| VatPef | (PEF) Podstawowowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygujaca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygujaca |\n",
+            "nullable": true
+          },
+          "hasAttachment": {
+            "type": "boolean",
+            "description": "Czy faktura ma zalacznik.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "InvoiceQuerySubjectType": {
+        "enum": [
+          "Subject1",
+          "Subject2",
+          "Subject3",
+          "SubjectAuthorized"
+        ],
+        "type": "string",
+        "description": "| Wartosc | Opis |\n| --- | --- |\n| Subject1 | Podmiot 1 |\n| Subject2 | Podmiot 2 |\n| Subject3 | Podmiot 3 |\n| SubjectAuthorized | Podmiot upowazniony |\n"
+      },
+
+
+      "InvoiceQueryDateRange": {
+        "required": [
+          "dateType",
+          "from"
+        ],
+        "type": "object",
+        "properties": {
+          "dateType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoiceQueryDateType"
+              }
+            ],
+            "description": "Typ daty, wedlug której ma byc zastosowany zakres.\n| Wartosc | Opis |\n| --- | --- |\n| Issue | Data wystawienia faktury. |\n| Invoicing | Data przyjecia faktury w systemie KSeF (do dalszego przetwarzania). |\n| PermanentStorage | Data trwalego zapisu faktury w repozytorium systemu KSeF. |\n"
+          },
+          "from": {
+            "type": "string",
+            "description": "Data poczatkowa zakresu.",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "description": "Data koncowa zakresu. Jesli nie zostanie podana, przyjmowana jest biezaca data i czas w UTC.",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "InvoiceQueryAmount": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AmountType"
+              }
+            ],
+            "nullable": true
+          },
+          "from": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "to": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "AmountType": {
+        "enum": [
+          "Brutto",
+          "Netto",
+          "Vat"
+        ],
+        "type": "string"
+      },
+
+
+      "InvoiceQuerySeller": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "Identyfikator sprzedawcy.",
+            "nullable": true,
+            "deprecated": true
+          },
+          "nip": {
+            "type": "string",
+            "description": "Nip sprzedawcy.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "InvoiceQueryBuyer": {
+        "type": "object",
+        "properties": {
+          "identifierType": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuyerIdentifierType"
+              }
+            ],
+            "description": "Typ identyfikatora nabywcy.\n| Wartosc | Opis |\n| --- | --- |\n| None | Brak identyfikatora nabywcy |\n| Other | Inny |\n| Nip | NIP |\n| VatUe | VAT UE |\n",
+            "nullable": true
+          },
+          "identifier": {
+            "type": "string",
+            "description": "Wartosc identyfikatora nabywcy.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "BuyerIdentifierType": {
+        "enum": [
+          "None",
+          "Other",
+          "Nip",
+          "VatUe"
+        ],
+        "type": "string",
+        "description": "| Wartosc | Opis |\n| --- | --- |\n| None | Brak identyfikatora nabywcy |\n| Other | Inny |\n| Nip | NIP |\n| VatUe | VAT UE |\n"
+      },
+
+
+      "CurrencyCode": {
+        "enum": [
+          "AED",
+          "AFN",
+          "ALL",
+          "AMD",
+          "ANG",
+          "AOA",
+          "ARS",
+          "AUD",
+          "AWG",
+          "AZN",
+          "BAM",
+          "BBD",
+          "BDT",
+          "BGN",
+          "BHD",
+          "BIF",
+          "BMD",
+          "BND",
+          "BOB",
+          "BOV",
+          "BRL",
+          "BSD",
+          "BTN",
+          "BWP",
+          "BYN",
+          "BZD",
+          "CAD",
+          "CDF",
+          "CHE",
+          "CHF",
+          "CHW",
+          "CLF",
+          "CLP",
+          "CNY",
+          "COP",
+          "COU",
+          "CRC",
+          "CUC",
+          "CUP",
+          "CVE",
+          "CZK",
+          "DJF",
+          "DKK",
+          "DOP",
+          "DZD",
+          "EGP",
+          "ERN",
+          "ETB",
+          "EUR",
+          "FJD",
+          "FKP",
+          "GBP",
+          "GEL",
+          "GGP",
+          "GHS",
+          "GIP",
+          "GMD",
+          "GNF",
+          "GTQ",
+          "GYD",
+          "HKD",
+          "HNL",
+          "HRK",
+          "HTG",
+          "HUF",
+          "IDR",
+          "ILS",
+          "IMP",
+          "INR",
+          "IQD",
+          "IRR",
+          "ISK",
+          "JEP",
+          "JMD",
+          "JOD",
+          "JPY",
+          "KES",
+          "KGS",
+          "KHR",
+          "KMF",
+          "KPW",
+          "KRW",
+          "KWD",
+          "KYD",
+          "KZT",
+          "LAK",
+          "LBP",
+          "LKR",
+          "LRD",
+          "LSL",
+          "LYD",
+          "MAD",
+          "MDL",
+          "MGA",
+          "MKD",
+          "MMK",
+          "MNT",
+          "MOP",
+          "MRU",
+          "MUR",
+          "MVR",
+          "MWK",
+          "MXN",
+          "MXV",
+          "MYR",
+          "MZN",
+          "NAD",
+          "NGN",
+          "NIO",
+          "NOK",
+          "NPR",
+          "NZD",
+          "OMR",
+          "PAB",
+          "PEN",
+          "PGK",
+          "PHP",
+          "PKR",
+          "PLN",
+          "PYG",
+          "QAR",
+          "RON",
+          "RSD",
+          "RUB",
+          "RWF",
+          "SAR",
+          "SBD",
+          "SCR",
+          "SDG",
+          "SEK",
+          "SGD",
+          "SHP",
+          "SLL",
+          "SOS",
+          "SRD",
+          "SSP",
+          "STN",
+          "SVC",
+          "SYP",
+          "SZL",
+          "THB",
+          "TJS",
+          "TMT",
+          "TND",
+          "TOP",
+          "TRY",
+          "TTD",
+          "TWD",
+          "TZS",
+          "UAH",
+          "UGX",
+          "USD",
+          "USN",
+          "UYI",
+          "UYU",
+          "UYW",
+          "UZS",
+          "VES",
+          "VND",
+          "VUV",
+          "WST",
+          "XAF",
+          "XAG",
+          "XAU",
+          "XBA",
+          "XBB",
+          "XBC",
+          "XBD",
+          "XCD",
+          "XCG",
+          "XDR",
+          "XOF",
+          "XPD",
+          "XPF",
+          "XPT",
+          "XSU",
+          "XUA",
+          "XXX",
+          "YER",
+          "ZAR",
+          "ZMW",
+          "ZWL"
+        ],
+        "type": "string"
+      },
+
+
+      "InvoicingMode": {
+        "enum": [
+          "Online",
+          "Offline"
+        ],
+        "type": "string"
+      },
+
+
+      "InvoiceQueryFormType": {
+        "enum": [
+          "FA",
+          "PEF",
+          "RR"
+        ],
+        "type": "string",
+        "description": "| Wartosc | Opis |\n| --- | --- |\n| FA | Faktura VAT |\n| PEF | Faktura PEF |\n| RR | Faktura RR |\n"
+      },
+
+
+      "InvoiceType": {
+        "enum": [
+          "Vat",
+          "Zal",
+          "Kor",
+          "Roz",
+          "Upr",
+          "KorZal",
+          "KorRoz",
+          "VatPef",
+          "VatPefSp",
+          "KorPef",
+          "VatRr",
+          "KorVatRr"
+        ],
+        "type": "string",
+        "description": "| Wartosc | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygujaca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygujaca fakture zaliczkowa |\n| KorRoz | (FA) Korygujaca fakture rozliczeniowa |\n| VatPef | (PEF) Podstawowowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygujaca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygujaca |\n"
+      },
+
+
+      "ExportInvoicesResponse": {
+        "type": "object",
+        "properties": {
+          "operationReferenceNumber": {
+            "type": "string",
+            "description": "Numer referencyjny operacji.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/invoices/exports: post: application/json
+header:
+Authentication: Bearer accessToken
+body:
+{
+  "encryption": { // #/components/schemas/EncryptionInfo; description: Informacje wymagane do zaszyfrowania wyniku zapytania.
+    "encryptedSymmetricKey": "", // type: string; description: Klucz symetryczny zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.\n\n[Klucz publiczny RSA](/public-keys/publicKey.pem)
+    "initializationVector": "" // type: string; description: Wektor inicjalizujacy (IV) uzywany do szyfrowania symetrycznego, zakodowany w formacie Base64.
+  },
+  "filters": { // #/components/schemas/InvoiceQueryFilters; description: Zestaw filtrów do wyszukiwania faktur.
+    "subjectType": "", // required; enum: Subject1, Subject2, Subject3, SubjectAuthorized
+    "dateRange": { // required; description: Typ i zakres dat, wedlug którego maja byc filtrowane faktury. Dozwolony maksymalny okres wynosi 2 lata.
+      "dateType": "", // required; enum: Issue, Invoicing, Acquisition, Hidden; description: Typ daty, wedlug której ma byc zastosowany zakres.\n| Wartosc | Opis |\n| --- | --- |\n| Issue | Data wystawienia faktury. |\n| Invoicing | Data przyjecia faktury w systemie KSeF (do dalszego przetwarzania). |\n| PermanentStorage | Data trwalego zapisu faktury w repozytorium systemu KSeF. |
+      "from": "", // required; type: string; format: date-time; description: Data poczatkowa zakresu.
+      "to": "" // type: string; format: date-time; description: Data koncowa zakresu. Jesli nie zostanie podana, przyjmowana jest biezaca data i czas w UTC.
+    },
+    "ksefNumber": "", // type: string; description: Numer KSeF faktury.; nullable: true
+    "invoiceNumber": "", // type: string; description: Numer faktury nadany przez wystawce.; nullable: true
+    "amount": { // description: Filtr kwotowy – brutto, netto lub VAT (z wartoscia).; nullable: true
+      "type": "", // enum: Brutto, Netto, Vat; nullable: true
+      "from": 0, // type: number; format: double; nullable: true
+      "to": 0, // type: number; format: double; nullable: true
+    },
+    "seller": { // description: Dane sprzedawcy.; nullable: true
+      "identifier": "", // type: string; description: Identyfikator sprzedawcy.; nullable: true
+      "name": "" // type: string; description: Nazwa sprzedawcy.; nullable: true
+    },
+    "buyer": { // description: Dane nabywcy.; nullable: true
+      "identifierType": "", // enum: None, Other, Nip, VatUe; description: Typ identyfikatora nabywcy.; nullable: true
+      "identifier": "", // type: string; description: Wartosc identyfikatora nabywcy.; nullable: true
+      "name": "" // type: string; description: Nazwa nabywcy.; nullable: true
+    },
+    "currencyCodes": [ // type: array; items: #/components/schemas/CurrencyCode; description: Kody walut.; nullable: true
+      "", // enum: "AED".."ZWL"
+      ...
+    ],
+    "invoicingMode": "", // enum: Online, Offline; description: Tryb wystawienia faktury: online lub offline.; nullable: true
+    "isSelfInvoicing": true/false, // type: boolean; description: Czy faktura zostala wystawiona w trybie samofakturowania.; nullable: true
+    "formType": "", // type: string; #/components/schemas/InvoiceQueryFormType; description: Typ dokumentu.\n| Wartosc | Opis |\n| --- | --- |\n| FA | Faktura VAT |\n| PEF | Faktura PEF |\n| RR | Faktura RR |; nullable: true
+    "invoiceTypes": [ // type: array; items: #/components/schemas/InvoiceType; description: Rodzaje faktur.\n| Wartosc | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygujaca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygujaca fakture zaliczkowa |\n| KorRoz | (FA) Korygujaca fakture rozliczeniowa |\n| VatPef | (PEF) Podstawowowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygujaca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygujaca |; nullable: true
+    // enum: Vat, Zal, Kor, Roz, Upr, KorZal, KorRoz, VatPef, VatPefSp, KorPef, VatRr, KorVatRr
+      "",
+      ...
+    ]
+    "hasAttachment": true/false // type: boolean; description: Czy faktura ma zalacznik.; nullable: true
+  }
+}
+
+
+
+response: application/json
+{
+  "operationReferenceNumber": "" // type: string; description: Numer referencyjny operacji.; nullable: true
+}

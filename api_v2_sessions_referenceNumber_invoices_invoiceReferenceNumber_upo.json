@@ -4,7 +4,7 @@
           "Status wysyłki i UPO"
         ],
         "summary": "Pobranie UPO faktury z sesji na podstawie numeru referencyjnego faktury",
-        "description": "Zwraca UPO faktury przesłanego w sesji na podstawie jego numeru KSeF.\n\nWymagane uprawnienia: `InvoiceWrite`.",
+        "description": "Zwraca UPO faktury przesłanego w sesji na podstawie jego numeru KSeF.\n\nWymagane uprawnienia: `InvoiceWrite`, `Introspection`, `PefInvoiceWrite`.",
         "parameters": [
           {
             "name": "referenceNumber",
@@ -37,14 +37,15 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
-            }
+            },
+            "x-summary": "Bad Request"
           },
           "403": {
             "description": "Forbidden"
@@ -59,7 +60,9 @@
           }
         ],
         "x-required-permissions": [
-          "InvoiceWrite"
+          "InvoiceWrite",
+          "Introspection",
+          "PefInvoiceWrite"
         ]
       }
     },

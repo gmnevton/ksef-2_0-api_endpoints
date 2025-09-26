@@ -1,0 +1,215 @@
+    "/api/v2/invoices/exports/{operationReferenceNumber}": {
+      "get": {
+        "tags": [
+          "Pobieranie faktur"
+        ],
+        "summary": "Pobranie statusu eksportu paczki faktur",
+        "description": "\n\nWymagane uprawnienia: `InvoiceRead`.",
+        "parameters": [
+          {
+            "name": "operationReferenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny operacji.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceExportStatusResponse"
+                },
+                "example": {"status":{"code":200,"description":"Eksport faktur zakonczony sukcesem"},"completedDate":"2025-09-16T16:09:40.901091+00:00","package":{"invoiceCount":10000,"size":22425060,"parts":[{"ordinalNumber":1,"partName":"20250925-EH-2D2C11B000-E9C9ED8340-EE-001.zip.aes","method":"GET","url":"https://ksef-api-storage/storage/00/20250626-eh-2d2c11b000-e9c9ed8340-ee/invoice-part/20250925-EH-2D2C11B000-E9C9ED8340-EE-001.zip.aes?skoid=1ad7cfe8-2cb2-406b-b96c-6eefb55794db&sktid=647754c7-3974-4442-a425-c61341b61c69&skt=2025-06-26T09%3A40%3A54Z&ske=2025-06-26T10%3A10%3A54Z&sks=b&skv=2025-01-05&sv=2025-01-05&se=2025-06-26T10%3A10%3A54Z&sr=b&sp=w&sig=8mKZEU8Reuz%2Fn7wHi4T%2FY8BzLeD5l8bR2xJsBxIgDEY%3D","partSize":22425060,"partHash":"BKH9Uy1CjBFXiQdDUM2CJYk5LxWTm4fE1lljnl83Ajw=","encryptedPartSize":22425072,"encryptedPartHash":"HlvwRLc59EJH7O5GoeHEZxTQO5TJ/WP1QH0aFi4x2Ss=","expirationDate":"2025-09-16T17:09:40.901091+00:00"}],"isTruncated":true,"lastPermanentStorageDate":"2025-09-11T11:40:40.266578+00:00"}}
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                       | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------|\n| 21175               | Wynik zapytania o podanym identyfikatorze nie istnieje.     |                                  |\n| 21405 | Blad walidacji danych wejsciowych. | {tresc bledu z walidatora} |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceRead"
+        ]
+      }
+    },
+
+
+      "InvoiceExportStatusResponse": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatusInfo"
+              }
+            ],
+            "description": "Status eksportu.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Eksport faktur w toku | - |\n| 200 | Eksport faktur zakonczony sukcesem | - |\n| 415 | Blad odszyfrowania dostarczonego klucza  | - |\n| 500 | Nieznany blad ({statusCode}) | - |"
+          },
+          "completedDate": {
+            "type": "string",
+            "description": "Data zakonczenia przetwarzania zadania.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "package": {
+            "required": [
+              "invoiceCount",
+              "size",
+              "parts",
+              "isTruncated"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/InvoicePackage"
+              }
+            ],
+            "description": "Dane paczki faktur przygotowanej do pobrania.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "StatusInfo": {
+        "required": [
+          "code",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Kod statusu",
+            "format": "int32"
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Opis statusu"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Dodatkowe szczególy statusu",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "InvoicePackage": {
+        "required": [
+          "invoiceCount",
+          "isTruncated",
+          "parts",
+          "size"
+        ],
+        "type": "object",
+        "properties": {
+          "invoiceCount": {
+            "type": "integer",
+            "description": "Laczna liczba faktur w paczce. Maksymalna liczba faktur w paczce to 10 000.",
+            "format": "int64"
+          },
+          "size": {
+            "type": "integer",
+            "description": "Rozmiar paczki w bajtach. Maksymalny rozmiar paczki to 1 GiB (1 073 741 824 bajtów).",
+            "format": "int64"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoicePackagePart"
+            },
+            "description": "Lista dostepnych czesci paczki do pobrania. Kazda czesc jest zaszyfrowana algorytmem AES-256-CBC z dopelnieniem PKCS#7, przy uzyciu klucza symetrycznego przekazanego podczas inicjowania eksportu. Wyniki sortowane sa rosnaco wedlug typu daty przekazanej w `DateRange` przy inicjalizacji."
+          },
+          "isTruncated": {
+            "type": "boolean",
+            "description": "Okresla, czy wynik eksportu zostal uciety z powodu przekroczenia limitu liczby faktur lub wielkosci paczki."
+          },
+          "lastIssueDate": {
+            "type": "string",
+            "description": "Data wystawienia ostatniej faktury ujetej w paczce.\nPole wystepuje wylacznie wtedy, gdy paczka zostala ucieta i eksport byl filtrowany po typie daty `Issue`.",
+            "format": "date",
+            "nullable": true
+          },
+          "lastInvoicingDate": {
+            "type": "string",
+            "description": "Data przyjecia ostatniej faktury ujetej w paczce.\nPole wystepuje wylacznie wtedy, gdy paczka zostala ucieta i eksport byl filtrowany po typie daty `Invoicing`.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastPermanentStorageDate": {
+            "type": "string",
+            "description": "Data trwalego zapisu ostatniej faktury ujetej w paczce.\nPole wystepuje wylacznie wtedy, gdy paczka zostala ucieta i eksport byl filtrowany po typie daty `PermanentStorage`.",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/invoices/exports/{operationReferenceNumber}: get: text/plain
+header:
+Authentication: Bearer accessToken
+body:
+//{
+//}
+
+
+
+response: application/json
+{
+  "status": { // required; #/components/schemas/StatusInfo; description: Status eksportu.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Eksport faktur w toku | - |\n| 200 | Eksport faktur zakonczony sukcesem | - |\n| 415 | Blad odszyfrowania dostarczonego klucza  | - |\n| 500 | Nieznany blad ({statusCode}) | - |
+    "code": 0, // required; type: integer; format: int32; description: Kod statusu
+    "description": "", // required; minLength: 1; type: string; description: Opis statusu
+    "details": [ // type: array; items: type: string; description: Dodatkowe szczególy statusu; nullable: true
+      "",
+      ...
+    ]
+  },
+  "completedDate": "", // type: string; format: date-time; description: Data zakonczenia przetwarzania zadania.; nullable: true
+  "package": { // #/components/schemas/InvoicePackage; description: Dane paczki faktur przygotowanej do pobrania.; nullable: true
+    "invoiceCount": 0, // required; type: integer; format: int64; description: Laczna liczba faktur w paczce. Maksymalna liczba faktur w paczce to 10 000.
+    "size": 0, // required; type: integer; format: int64; description: Rozmiar paczki w bajtach. Maksymalny rozmiar paczki to 1 GiB (1 073 741 824 bajtów).
+    "parts": [ // required; type: array; items: #/components/schemas/InvoicePackagePart; description: Lista dostepnych czesci paczki do pobrania. Kazda czesc jest zaszyfrowana algorytmem AES-256-CBC z dopelnieniem PKCS#7, przy uzyciu klucza symetrycznego przekazanego podczas inicjowania eksportu. Wyniki sortowane sa rosnaco wedlug typu daty przekazanej w `DateRange` przy inicjalizacji.
+    ],
+    "isTruncated": true/false, // required; type: boolean; description: Okresla, czy wynik eksportu zostal uciety z powodu przekroczenia limitu liczby faktur lub wielkosci paczki.
+    "lastIssueDate": "", // type: string; format: date; description: Data wystawienia ostatniej faktury ujetej w paczce.\nPole wystepuje wylacznie wtedy, gdy paczka zostala ucieta i eksport byl filtrowany po typie daty `Issue`.; nullable: true
+    "lastInvoicingDate": "", //type: string; format: date-time; description: Data przyjecia ostatniej faktury ujetej w paczce.\nPole wystepuje wylacznie wtedy, gdy paczka zostala ucieta i eksport byl filtrowany po typie daty `Invoicing`.; nullable: true
+    "lastPermanentStorageDate": "" // type: string; format: date-time; description: Data trwalego zapisu ostatniej faktury ujetej w paczce.\nPole wystepuje wylacznie wtedy, gdy paczka zostala ucieta i eksport byl filtrowany po typie daty `PermanentStorage`.; nullable: true
+  }
+}

@@ -4,7 +4,7 @@
           "Status wysyłki i UPO"
         ],
         "summary": "Pobranie statusu faktury z sesji",
-        "description": "Zwraca fakturę przesłaną w sesji wraz ze statusem.\n\nWymagane uprawnienia: `InvoiceWrite`.",
+        "description": "Zwraca fakturę przesłaną w sesji wraz ze statusem.\n\nWymagane uprawnienia: `InvoiceWrite`, `Introspection`, `PefInvoiceWrite`.",
         "parameters": [
           {
             "name": "referenceNumber",
@@ -38,14 +38,15 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
-            }
+            },
+            "x-summary": "Bad Request"
           },
           "403": {
             "description": "Forbidden"
@@ -60,7 +61,9 @@
           }
         ],
         "x-required-permissions": [
-          "InvoiceWrite"
+          "InvoiceWrite",
+          "Introspection",
+          "PefInvoiceWrite"
         ]
       }
     },
@@ -115,13 +118,25 @@
             "description": "Data przyjęcia faktury w systemie KSeF (do dalszego przetwarzania).",
             "format": "date-time"
           },
+          "permanentStorageDate": {
+            "type": "string",
+            "description": "Data trwałego zapisu faktury w repozytorium systemu KSeF. Od tego momentu faktura jest dostępna do pobrania.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "upoDownloadUrl": {
+            "type": "string",
+            "description": "Adres do pobrania UPO.",
+            "format": "uri",
+            "nullable": true
+          },
           "status": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/StatusInfo"
               }
             ],
-            "description": "Status faktury.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Faktura przyjęta do dalszego przetwarzania | - |\n| 150 | Trwa przetwarzanie | - |\n| 200 | Sukces | - |\n| 410 | Nieprawidłowy zakres uprawnień | - |\n| 415 | Brak możliwości wysyłania faktury z załącznikiem | - |\n| 430 | Błąd weryfikacji pliku faktury | - |\n| 435 | Błąd odszyfrowania pliku | - |\n| 440 | Duplikat faktury | - |\n| 450 | Błąd weryfikacji semantyki dokumentu faktury | - |\n| 500 | Nieznany błąd ({statusCode}) | - |"
+            "description": "Status faktury.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Faktura przyjęta do dalszego przetwarzania | - |\n| 150 | Trwa przetwarzanie | - |\n| 200 | Sukces | - |\n| 405 | Przetwarzanie anulowane | - |\n| 410 | Nieprawidłowy zakres uprawnień | - |\n| 415 | Brak możliwości wysyłania faktury z załącznikiem | - |\n| 430 | Błąd weryfikacji pliku faktury | - |\n| 435 | Błąd odszyfrowania pliku | - |\n| 440 | Duplikat faktury | - |\n| 450 | Błąd weryfikacji semantyki dokumentu faktury | - |\n| 500 | Nieznany błąd ({statusCode}) | - |"
           }
         },
         "additionalProperties": false
@@ -170,15 +185,17 @@ body:
 
 response: application/json
 {
-  "ordinalNumber": 0, // type: integer; format: int32
+  "ordinalNumber": 0, // required; type: integer; format: int32
   "invoiceNumber": "", // type: string; nullable: true
   "ksefNumber": "", // type: string; nullable: true
   "referenceNumber": "", // type: string; nullable: true
   "invoiceHash": "", // type: string; description: Skrót SHA256 faktury, zakodowany w formacie Base64.; nullable: true
   "invoiceFileName": "", // type: string; description: Nazwa pliku faktury (zwracana dla faktur wysyłanych wsadowo).; nullable: true
   "acquisitionDate": "", // type: string; format: date-time; description: Data nadania numeru KSeF.; nullable: true
-  "invoicingDate": "", // type: string; format: date-time; description: Data przyjęcia faktury w systemie KSeF (do dalszego przetwarzania).
-  "status": { // #/components/schemas/StatusInfo; nullable: true
+  "invoicingDate": "", // required; type: string; format: date-time; description: Data przyjęcia faktury w systemie KSeF (do dalszego przetwarzania).
+  "permanentStorageDate": "", // type: string; format: date-time; description: Data trwałego zapisu faktury w repozytorium systemu KSeF. Od tego momentu faktura jest dostępna do pobrania.; nullable: true
+  "upoDownloadUrl": "", // type: string; format: uri; description: Adres do pobrania UPO.; nullable: true
+  "status": { // required; #/components/schemas/StatusInfo; nullable: true
     "code": 0, // required; type: integer; description: Kod statusu; format: int32
     "description": "", // required; minLength: 1; type: string; description: Opis statusu
     "details": [ // type: array; items: type: string; description: Dodatkowe szczegóły statusu; nullable: true

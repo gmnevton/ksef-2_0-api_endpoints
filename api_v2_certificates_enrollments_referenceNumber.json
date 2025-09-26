@@ -28,7 +28,7 @@
             }
           },
           "400": {
-            "description": "| ExceptionCode       | ExceptionDescription                                                                           | Details |\n|---------------------|------------------------------------------------------------------------------------------------|---------|\n| 25005               | Wniosek certyfikacyjny o podanym numerze referencyjnym nie istnieje.                           |         |",
+            "description": "| ExceptionCode       | ExceptionDescription                                                                           | Details |\n|---------------------|------------------------------------------------------------------------------------------------|---------|\n| 25005               | Wniosek certyfikacyjny o podanym numerze referencyjnym nie istnieje.                           |         |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
             "content": {
               "application/json": {
                 "schema": {
@@ -125,9 +125,9 @@ response: application/json
 {
   "requestDate": "", // type: string; format: date-time; description: Data złożenia wniosku certyfikacyjnego.
   "status": {
-    "code": 0, // type: integer; format: int32; description: Kod statusu;
-    "description": "", // minLength: 1; type: string; description: Opis statusu;
-    "details": [ // type: array; items: type: string; description: Dodatkowe szczegóły statusu;
+    "code": 0, // required; type: integer; format: int32; description: Kod statusu
+    "description": "", // required; minLength: 1; type: string; description: Opis statusu
+    "details": [ // type: array; items: type: string; description: Dodatkowe szczególy statusu; nullable: true
       "",
       ...
     ]

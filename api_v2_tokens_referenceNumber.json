@@ -27,14 +27,15 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
-            }
+            },
+            "x-summary": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -51,7 +52,7 @@
           "Tokeny KSeF"
         ],
         "summary": "Unieważnienie tokena",
-        "description": "Unieważniony token nie pozwoli już na uwierzytelnienie się za jego pomocą. Unieważnienie nie może zostać cofnięte.\n\nWymagane uprawnienia: `CredentialsManage`.",
+        "description": "Unieważniony token nie pozwoli już na uwierzytelnienie się za jego pomocą. Unieważnienie nie może zostać cofnięte.",
         "parameters": [
           {
             "name": "referenceNumber",
@@ -68,17 +69,15 @@
             "description": "No Content"
           },
           "400": {
-            "description": "Bad Request",
+            "description": "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
-            }
-          },
-          "403": {
-            "description": "Forbidden"
+            },
+            "x-summary": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -88,9 +87,6 @@
           {
             "Bearer": [ ]
           }
-        ],
-        "x-required-permissions": [
-          "CredentialsManage"
         ]
       }
     },
@@ -144,6 +140,12 @@
             "description": "Data i czas utworzenia tokena.",
             "format": "date-time"
           },
+          "lastUseDate": {
+            "type": "string",
+            "description": "Data ostatniego użycia tokena.",
+            "format": "date-time",
+            "nullable": true
+          },
           "status": {
             "allOf": [
               {
@@ -151,6 +153,14 @@
               }
             ],
             "description": "Status tokena.\n| Wartość | Opis |\n| --- | --- |\n| Pending | Token został utworzony ale jest jeszcze w trakcie aktywacji i nadawania uprawnień. Nie może być jeszcze wykorzystywany do uwierzytelniania. |\n| Active | Token jest aktywny i może być wykorzystywany do uwierzytelniania. |\n| Revoking | Token jest w trakcie unieważniania. Nie może już być wykorzystywany do uwierzytelniania. |\n| Revoked | Token został unieważniony i nie może być wykorzystywany do uwierzytelniania. |\n| Failed | Nie udało się aktywować tokena. Należy wygenerować nowy token, obecny nie może być wykorzystywany do uwierzytelniania. |\n"
+          },
+          "statusDetails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Dodatkowe informacje na temat statusu, zwracane w przypadku błędów.",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -219,7 +229,8 @@
           "AllPartners",
           "Nip",
           "InternalId",
-          "NipVatUe"
+          "NipVatUe",
+          "PeppolId"
         ],
         "type": "string"
       },
@@ -230,7 +241,9 @@
           "InvoiceRead",
           "InvoiceWrite",
           "CredentialsRead",
-          "CredentialsManage"
+          "CredentialsManage",
+          "SubunitManage",
+          "EnforcementOperations"
         ],
         "type": "string"
       },
@@ -267,18 +280,25 @@ response: application/json
     "value": "" // type: string; nullable: true
   },
   "contextIdentifier": { // #/components/schemas/ContextIdentifier; description: Identyfikator kontekstu, w którym został wygenerowany token i do którego daje dostęp.; nullable: true
-    "type": "", // enum: None, AllPartners, Nip, InternalId, NipVatUe; description: Typ identyfikatora
-    "value": "" // type: string; description: Wartość identyfikatora
+    "type": "", // required; enum: None, AllPartners, Nip, InternalId, NipVatUe, PeppolId; description: Typ identyfikatora
+    "value": "" // required; type: string; description: Wartość identyfikatora
   },
   "description": "", // type: string; description: Opis tokena.; nullable: true
-  "requestedPermissions": [ // type: array; #/components/schemas/TokenPermissionType; enum: InvoiceRead, InvoiceWrite, CredentialsRead, CredentialsManage; description: Uprawnienia przypisane tokenowi.; nullable: true
+  "requestedPermissions": [ // type: array; #/components/schemas/TokenPermissionType; enum: InvoiceRead, InvoiceWrite, CredentialsRead, CredentialsManage, SubunitManage, EnforcementOperations; description: Uprawnienia przypisane tokenowi.; nullable: true
     "",
     ...
   ],
   "dateCreated": "", // type: string; description: Data i czas utworzenia tokena.; format: date-time
-  "status": "" // #/components/schemas/AuthenticationTokenStatus; enum: Pending, Active, Revoking, Revoked, Failed
+  "lastUseDate": "", // type: string; format: date-time; description: Data ostatniego użycia tokena.; nullable: true
+  "status": "", // #/components/schemas/AuthenticationTokenStatus; enum: Pending, Active, Revoking, Revoked, Failed
+  "statusDetails": [ // type: array; items: type: string; description: Dodatkowe informacje na temat statusu, zwracane w przypadku błędów.; nullable: true
+    "",
+    ...
+  ]
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 request:  /api/v2/tokens/{referenceNumber}: delete: text/plain

@@ -48,19 +48,21 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/QueryCertificatesResponse"
-                }
+                },
+                "example": {"certificates":[{"certificateSerialNumber":"018209160C631F1E","name":"Certyfikat 1","type":"Authentication","commonName":"Jan Kowalski","status":"Active","subjectIdentifier":"1234445678","subjectIdentifierType":"Nip","validFrom":"2025-08-24T14:15:22+00:00","validTo":"2027-08-24T14:15:22+00:00","lastUseDate":"2025-08-25T14:15:22+00:00"}],"hasMore":false}
               }
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
-            }
+            },
+            "x-summary": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"

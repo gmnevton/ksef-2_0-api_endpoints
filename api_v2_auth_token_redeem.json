@@ -18,14 +18,15 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
-            }
+            },
+            "x-summary": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -110,12 +111,12 @@ body:
 
 response: application/json
 {
-  "accessToken": {
-    "token": "", // type: string
-    "validUntil": "" // type: string; format: date-time
+  "accessToken": { // required
+    "token": "", // required; type: string
+    "validUntil": "" // required; type: string; format: date-time
   },
-  "refreshToken": {
-    "token": "", // type: string
-    "validUntil": "" // type: string; format: date-time
+  "refreshToken": { // required
+    "token": "", // required; type: string
+    "validUntil": "" // required; type: string; format: date-time
   }
 }

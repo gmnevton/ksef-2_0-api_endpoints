@@ -37,14 +37,15 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
-            }
+            },
+            "x-summary": "Bad Request"
           }
         }
       }
@@ -79,13 +80,13 @@
             "type": "string",
             "description": "Zaszyfrowany token wraz z timestampem z challenge'a, w formacie `token|timestamp`."
           },
-          "ipAddressPolicy": {
+          "authorizationPolicy": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/IpAddressPolicy"
+                "$ref": "#/components/schemas/AuthorizationPolicy"
               }
             ],
-            "description": "Reguła walidacji adresu IP klienta przy każdym użyciu tokena dostępu.",
+            "description": "Polityka autoryzacji żądań przy każdym użyciu tokena dostępu.",
             "nullable": true
           }
         },
@@ -124,24 +125,16 @@
           "AllPartners",
           "Nip",
           "InternalId",
-          "NipVatUe"
+          "NipVatUe",
+          "PeppolId"
         ],
         "type": "string"
       },
 
 
-      "IpAddressPolicy": {
+      "AuthorizationPolicy": {
         "type": "object",
         "properties": {
-          "onClientIpChange": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IpChangePolicy"
-              }
-            ],
-            "description": "Określa reakcję systemu, gdy token dostępu zostanie użyty z adresu IP spoza zadeklarowanej listy dozwolonych adresów IP (allowedIps).",
-            "nullable": true
-          },
           "allowedIps": {
             "allOf": [
               {
@@ -156,19 +149,10 @@
       },
 
 
-      "IpChangePolicy": {
-        "enum": [
-          "Reject",
-          "Ignore"
-        ],
-        "type": "string"
-      },
-
-
       "AllowedIps": {
         "type": "object",
         "properties": {
-          "ipAddress": {
+          "ip4Addresses": {
             "type": "array",
             "items": {
               "type": "string"
@@ -176,7 +160,7 @@
             "description": "Lista adresów IPv4 w notacji dziesiętnej kropkowanej, np. `192.168.0.10`.",
             "nullable": true
           },
-          "ipRange": {
+          "ip4Ranges": {
             "type": "array",
             "items": {
               "type": "string"
@@ -184,12 +168,12 @@
             "description": "Lista adresów IPv4 podana w formie zakresu początek–koniec, oddzielonego pojedynczym myślnikiem, np. `10.0.0.1–10.0.0.254`.",
             "nullable": true
           },
-          "ipMask": {
+          "ip4Masks": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Lista adresów IPv4 w notacji CIDR z maską 8 / 16 / 24 / 32, np. `172.16.0.0/16`.",
+            "description": "Lista adresów IPv4 w notacji CIDR, np. `172.16.0.0/16`.",
             "nullable": true
           }
         },
@@ -251,18 +235,23 @@ request:  /api/v2/auth/ksef-token: post: application/json
 {
   "challenge": "", // required; type: string
   "contextIdentifier": { // required;
-    "type": "", // type: string; enum: None, AllPartners, Nip, InternalId, NipVatUe
+    "type": "", // type: string; enum: None, AllPartners, Nip, InternalId, NipVatUe, PeppolId
     "value": "" // type: string; 
   },
   "encryptedToken": "", // required; type: string
-  "ipAddressPolicy": {
-    "onClientIpChange": "", // type: string;enum: Reject, Ignore
+  "authorizationPolicy": {
     "allowedIps": {
-      "ipAddress": [ // type: array; items: type: string; description: Lista adresów IPv4 w notacji dziesiętnej kropkowanej, np. `192.168.0.10`.
+      "ip4Addresses": [ // type: array; items: type: string; description: Lista adresów IPv4 w notacji dziesiętnej kropkowanej, np. `192.168.0.10`.
+        "",
+        ...
       ],
-      "ipRange": [ // type: array; items: type: string; description: Lista adresów IPv4 podana w formie zakresu początek–koniec, oddzielonego pojedynczym myślnikiem, np. `10.0.0.1–10.0.0.254`.
+      "ip4Ranges": [ // type: array; items: type: string; description: Lista adresów IPv4 podana w formie zakresu początek–koniec, oddzielonego pojedynczym myślnikiem, np. `10.0.0.1–10.0.0.254`.
+        "",
+        ...
       ],
-      "ipMask": [ // type: array; items: type: string; description: Lista adresów IPv4 w notacji CIDR z maską 8 / 16 / 24 / 32, np. `172.16.0.0/16`.
+      "ip4Masks": [ // type: array; items: type: string; description: Lista adresów IPv4 w notacji CIDR z maską 8 / 16 / 24 / 32, np. `172.16.0.0/16`.
+        "",
+        ...
       ]
     }
   }
@@ -272,9 +261,9 @@ request:  /api/v2/auth/ksef-token: post: application/json
 
 response: application/json
 {
-  "referenceNumber": "", // type: string
-  "authenticationToken": {
-    "token": "", // type: string
-    "validUntil": "" // type: string; format: date-time
+  "referenceNumber": "", // required; type: string
+  "authenticationToken": { // required; #/components/schemas/TokenInfo
+    "token": "", // required; type: string
+    "validUntil": "" // required; type: string; format: date-time
   }
 }

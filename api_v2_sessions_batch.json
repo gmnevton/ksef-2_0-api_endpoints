@@ -1,0 +1,335 @@
+    "/api/v2/sessions/batch": {
+      "post": {
+        "tags": [
+          "Wysylka wsadowa"
+        ],
+        "summary": "Otwarcie sesji wsadowej",
+        "description": "Otwiera sesje do wysylki wsadowej faktur. Nalezy przekazac schemat wysylanych faktur, informacje o paczce faktur oraz informacje o kluczu uzywanym do szyfrowania.\n\n> Wiecej informacji:\n> - [Przygotwanie paczki faktur](https://github.com/CIRFMF/ksef-docs/blob/main/sesja-wsadowa.md)\n> - [Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)\n\nWymagane uprawnienia: `InvoiceWrite`.",
+        "operationId": "batch.open",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "formCode",
+                  "batchFile",
+                  "encryption"
+                ],
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/OpenBatchSessionRequest"
+                  }
+                ]
+              },
+              "example": {"formCode":{"systemCode":"FA (2)","schemaVersion":"1-0E","value":"FA"},"batchFile":{"fileSize":16037,"fileHash":"WO86CC+1Lef11wEosItld/NPwxGN8tobOMLqk9PQjgs=","fileParts":[{"ordinalNumber":1,"fileName":"92cca5be-7f37-4d36-98bb-1f5369841038.zip.aes","fileSize":16048,"fileHash":"23ZyDAN0H/+yhC/En2xbNfF0tajAWSfejDaXD7fc2AE="}]},"encryption":{"encryptedSymmetricKey":"bYqmPAglF01AxZim4oNa+1NerhZYfFgLMnvksBprUur1aesQ0Y5jsmOIfCrozfMkF2tjdO+uOsBg4FPlDgjChwN2/tz2Hqwtxq3RkTr1SjY4x8jxJFpPedcS7EI+XO8C+i9mLj7TFx9p/bg07yM9vHtMAk5b88Ay9Qc3+T5Ch1DM2ClR3sVu2DqdlKzmbINY+rhfGtXn58Qo0XRyESGgc6M0iTZVBRPuPXLnD8a1KpOneCpNzLwxgT6Ei3ivLOpPWT53PxkRTaQ8puj6CIiCKo4FHQzHuI/NmrAhYU7TkNm2kymP/OxBgWdg3XB74tqNFfT8RZN1bZXuPhBidDOqa+xsqY3E871FSDmQwZf58HmoNl31XNvpnryiRGfnAISt+m+ELqgksAresVu6E9poUL1yiff+IOHSZABoYpNiqwnbT8qyW1uk8lKLyFVFu+kOsbzBk1OWWHqSkNFDaznDa2MKjHonOXI0uyKaKWvoBFC4dWN1PVumfpSSFAeYgNpAyVrZdcVOuiliEWepTDjGzJoOafTvwr5za2S6B5bPECDpX7JXazV7Olkq7ezG0w8y3olx+0C+NHoCk8B5/cm4gtVHTgKjiLSGpKJVOJABLXFkOyIOjbQsVe4ryX0Qy+SfL7JIQvTWvM5xkCoOMbzLdMo9tNo5qE34sguFI+lIevY=","initializationVector":"jWpJLNBHJ5pQEGCBglmIAw=="},"offlineMode":false}
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenBatchSessionResponse"
+                },
+                "example": {"referenceNumber":"20250626-SB-213D593000-4DE10D80A5-E9","partUploadRequests":[{"ordinalNumber":1,"method":"PUT","url":"https://ksef-api-storage/storage/00/20250626-sb-213d593000-4de10d80a5-e9/batch-parts/92cca5be-7f37-4d36-98bb-1f5369841038.zip.aes?skoid=1ad7cfe8-2cb2-406b-b96c-6eefb55794db&sktid=647754c7-3974-4442-a425-c61341b61c69&skt=2025-06-26T09%3A40%3A54Z&ske=2025-06-26T10%3A10%3A54Z&sks=b&skv=2025-01-05&sv=2025-01-05&se=2025-06-26T10%3A10%3A54Z&sr=b&sp=w&sig=8mKZEU8Reuz%2Fn7wHi4T%2FY8BzLeD5l8bR2xJsBxIgDEY%3D","headers":{"x-ms-blob-type":"BlockBlob"}}]}
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                                   | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------------------|\n| 21157               | Nieprawidlowy rozmiar czesci pakietu.               | {tresc bledu walidacji}                                                   | \n| 21161               | Przekroczono dozwolona liczbe czesci pakietu.       | {tresc bledu walidacji}                                                   | \n| 21401               | Dokument nie jest zgodny ze schema (json).          | {tresc bledu walidacji}                                                   |\n| 21405 | Blad walidacji danych wejsciowych. | {tresc bledu z walidatora} |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceWrite"
+        ]
+      }
+    },
+
+
+      "OpenBatchSessionRequest": {
+        "required": [
+          "batchFile",
+          "encryption",
+          "formCode"
+        ],
+        "type": "object",
+        "properties": {
+          "formCode": {
+            "required": [
+              "systemCode",
+              "schemaVersion",
+              "value"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FormCode"
+              }
+            ],
+            "description": "Schemat faktur wysylanych w ramach sesji.\n\nObslugiwane schematy:\n| SystemCode | SchemaVersion | Value |\n| --- | --- | --- |\n| FA (2) | 1-0E | FA |\n| FA (3) | 1-0E | FA |\n"
+          },
+          "batchFile": {
+            "required": [
+              "fileSize",
+              "fileHash",
+              "fileParts"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BatchFileInfo"
+              }
+            ],
+            "description": "Informacje o przesylanej paczce faktur."
+          },
+          "encryption": {
+            "required": [
+              "encryptedSymmetricKey",
+              "initializationVector"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EncryptionInfo"
+              }
+            ],
+            "description": "Symetryczny klucz szyfrujacy plik paczki, zaszyfrowany kluczem publicznym Ministerstwa Finansów."
+          },
+          "offlineMode": {
+            "type": "boolean",
+            "description": "Okresla, czy podatnik deklaruje tryb fakurowania \"offline\" dla dokumentów przesylanych w sesji wsadowej.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "FormCode": {
+        "required": [
+          "schemaVersion",
+          "systemCode",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "systemCode": {
+            "type": "string",
+            "description": "Kod systemowy"
+          },
+          "schemaVersion": {
+            "type": "string",
+            "description": "Wersja schematu"
+          },
+          "value": {
+            "type": "string",
+            "description": "Wartosc"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "BatchFileInfo": {
+        "required": [
+          "fileHash",
+          "fileParts",
+          "fileSize"
+        ],
+        "type": "object",
+        "properties": {
+          "fileSize": {
+            "type": "integer",
+            "description": "Rozmiar pliku paczki w bajtach. Maksymalny rozmiar paczki to 5GiB (5 368 709 120 bajtów).",
+            "format": "int64"
+          },
+          "fileHash": {
+            "type": "string",
+            "description": "Skrót SHA256 pliku paczki, zakodowany w formacie Base64."
+          },
+          "fileParts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BatchFilePartInfo"
+            },
+            "description": "Informacje o czesciach pliku paczki. Maksymalna liczba czesci to 50."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "BatchFilePartInfo": {
+        "required": [
+          "fileHash",
+          "fileName",
+          "fileSize",
+          "ordinalNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "ordinalNumber": {
+            "type": "integer",
+            "description": "Numer sekwencyjny czesci pliku paczki.",
+            "format": "int32"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "Nazwa czesci pliku paczki."
+          },
+          "fileSize": {
+            "type": "integer",
+            "description": "Rozmiar czesci pliku paczki w bajtach. Maksymalna dozwolona wartosc to 100MiB (104 857 600 bajtów).",
+            "format": "int64"
+          },
+          "fileHash": {
+            "type": "string",
+            "description": "Skrót SHA256 czesci pliku paczki, zakodowany w formacie Base64."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "EncryptionInfo": {
+        "required": [
+          "encryptedSymmetricKey",
+          "initializationVector"
+        ],
+        "type": "object",
+        "properties": {
+          "encryptedSymmetricKey": {
+            "type": "string",
+            "description": "Klucz symetryczny zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.\n\n[Klucz publiczny RSA](/public-keys/publicKey.pem)"
+          },
+          "initializationVector": {
+            "type": "string",
+            "description": "Wektor inicjalizujacy (IV) uzywany do szyfrowania symetrycznego, zakodowany w formacie Base64."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "OpenBatchSessionResponse": {
+        "required": [
+          "partUploadRequests",
+          "referenceNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "description": "Numer referencyjny sesji."
+          },
+          "partUploadRequests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PartUploadRequest"
+            },
+            "description": "Dane wymagane do poprawnego przeslania poszczególnych czesci pliku paczki faktur."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "PartUploadRequest": {
+        "type": "object",
+        "properties": {
+          "ordinalNumber": {
+            "type": "integer",
+            "description": "Numer sekwencyjny czesci pliku paczki.",
+            "format": "int32"
+          },
+          "method": {
+            "type": "string",
+            "description": "Metoda HTTP, której nalezy uzyc przy wysylce czesci pliku paczki.",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "description": "Adres pod który nalezy wyslac czesc pliku paczki.",
+            "format": "uri",
+            "nullable": true
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "nullable": true
+            },
+            "description": "Naglówki, których nalezy uzyc przy wysylce czesci pliku paczki.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/sessions/batch: post: application/json
+header:
+Authentication: Bearer accessToken
+body:
+{
+  "formCode": { // required; items: #/components/schemas/FormCode; description: Schemat faktur wysylanych w ramach sesji.\n\nObslugiwane schematy:\n| SystemCode | SchemaVersion | Value |\n| --- | --- | --- |\n| FA (2) | 1-0E | FA |\n| FA (3) | 1-0E | FA |
+    "systemCode": "", // required; type: string; description: Kod systemowy
+    "schemaVersion": "", // required; type: string; description: Wersja schematu
+    "value": "" // required; type: string; description: Wartosc
+  },
+  "batchFile": { // required; items: #/components/schemas/BatchFileInfo; description: Informacje o przesylanej paczce faktur.
+    "fileSize": 0, // required; type: integer; format: int64; description: Rozmiar pliku paczki w bajtach. Maksymalny rozmiar paczki to 5GiB (5 368 709 120 bajtów).
+    "fileHash": "", // required; type: string; description: Skrót SHA256 pliku paczki, zakodowany w formacie Base64.
+    "fileParts": [ // required; type: array; items: #/components/schemas/BatchFilePartInfo; description: Informacje o czesciach pliku paczki. Maksymalna liczba czesci to 50.
+      {
+        "ordinalNumber": 0, // required; type: integer; format: int32; description: Numer sekwencyjny czesci pliku paczki.
+        "fileName": "", // required; type: string; description: Nazwa czesci pliku paczki.
+        "fileSize": 0, // required; type: integer; format: int64; description: Rozmiar czesci pliku paczki w bajtach. Maksymalna dozwolona wartosc to 100MiB (104 857 600 bajtów).
+        "fileHash": "" // required; type: string; description: Skrót SHA256 czesci pliku paczki, zakodowany w formacie Base64.
+      },
+      ...
+    ]
+  },
+  "encryption": { // required; items: #/components/schemas/EncryptionInfo; description: "Symetryczny klucz szyfrujacy plik paczki, zaszyfrowany kluczem publicznym Ministerstwa Finansów.
+    "encryptedSymmetricKey": "", // type: string; description: Klucz symetryczny zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.\n\n[Klucz publiczny RSA](/public-keys/publicKey.pem)
+    "initializationVector": "" // type: string; description: Wektor inicjalizujacy (IV) uzywany do szyfrowania symetrycznego, zakodowany w formacie Base64.
+  },
+  "offlineMode": true/false // type: boolean; description: Okresla, czy podatnik deklaruje tryb fakurowania \"offline\" dla dokumentów przesylanych w sesji wsadowej.; default: false
+}
+
+
+
+response: application/json
+{
+  "referenceNumber": "", // required; type: string; description: Numer referencyjny sesji.
+  "partUploadRequests": [ // required; type: array; items: #/components/schemas/PartUploadRequest; description: Dane wymagane do poprawnego przeslania poszczególnych czesci pliku paczki faktur.
+    {
+      "ordinalNumber": 0, // type: integer; format: int32; description: Numer sekwencyjny czesci pliku paczki.
+      "method": "", // type: string; description: Metoda HTTP, której nalezy uzyc przy wysylce czesci pliku paczki.; nullable: true
+      "url": "", // type: string; format: uri; description: Adres pod który nalezy wyslac czesc pliku paczki.; nullable: true
+      "headers": { // description: Naglówki, których nalezy uzyc przy wysylce czesci pliku paczki.; nullable: true
+        "additionalProperties": "" // type: string; nullable: true
+      }
+    },
+    ...
+  ]
+}

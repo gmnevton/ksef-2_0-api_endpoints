@@ -55,12 +55,9 @@
             "type": "string",
             "description": "Kraj, kod ISO 3166."
           },
-          "givenNames": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Imiona.",
+          "givenName": {
+            "type": "string",
+            "description": "Imię.",
             "nullable": true
           },
           "surname": {
@@ -105,12 +102,9 @@ body:
 
 response: application/json
 {
-  "commonName": "", // type: string; description: Nazwa powszechna.
-  "countryName": "", // type: string; description: Kraj, kod ISO 3166.
-  "givenNames": [ // type: array; items: type: string; description: Imiona.; nullable: true
-    "",
-    ...
-  ],
+  "commonName": "", // required; type: string; description: Nazwa powszechna.
+  "countryName": "", // required; type: string; description: Kraj, kod ISO 3166.
+  "givenName": "", // type: string; description: Imię.; nullable: true
   "surname": "", // type: string; description: Nazwisko.; nullable: true
   "serialNumber": "", // type: string; description: Numer seryjny podmiotu.; nullable: true
   "uniqueIdentifier": "", // type: string; description: Unikalny identyfikator.; nullable: true

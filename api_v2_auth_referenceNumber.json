@@ -54,14 +54,15 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
-            }
+            },
+            "x-summary": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -95,7 +96,7 @@
                 "$ref": "#/components/schemas/AuthenticationMethod"
               }
             ],
-            "description": "Użyta metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n"
+            "description": "Użyta metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy uslug Peppol. |\n"
           },
           "status": {
             "allOf": [
@@ -103,7 +104,7 @@
                 "$ref": "#/components/schemas/StatusInfo"
               }
             ],
-            "description": "Informacje o aktualnym statusie.\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Uwierzytelnianie w toku | - |\n| 200 | Uwierzytelnianie zakończone sukcesem | - |\n| 400 | Uwierzytelnianie zakończone niepowodzeniem | Nieważny certyfikat |\n| 400 | Uwierzytelnianie zakończone niepowodzeniem | Błąd weryfikacji łańcucha certyfikatów |\n| 400 | Uwierzytelnianie zakończone niepowodzeniem | Niezaufany łańcuch certyfikatów |\n| 400 | Uwierzytelnianie zakończone niepowodzeniem | Certyfikat odwołany |\n| 400 | Uwierzytelnianie zakończone niepowodzeniem | Niepoprawny certyfikat |\n| 400 | Uwierzytelnianie zakończone niepowodzeniem | Brak przypisanych uprawnień |\n| 401 | Uwierzytelnienie unieważnione | Uwierzytelnienie i powiązane refresh tokeny zostały unieważnione przez użytkownika |\n| 500 | Nieznany błąd | - |"
+            "description": "Informacje o aktualnym statusie.\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Uwierzytelnianie w toku | - |\n| 200 | Uwierzytelnianie zakończone sukcesem | - |\n| 415 | Uwierzytelnianie zakończone niepowodzeniem | Brak przypisanych uprawnień |\n| 425 | Uwierzytelnienie unieważnione  | Uwierzytelnienie i powiązane refresh tokeny zostały unieważnione przez użytkownika |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowy token |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowy czas tokena |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Token unieważniony |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Token nieaktywny |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Nieważny certyfikat |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Błąd weryfikacji łańcucha certyfikatów |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Niezaufany łańcuch certyfikatów |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Certyfikat odwołany |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Niepoprawny certyfikat |\n| 500 | Nieznany błąd | - |"
           },
           "isTokenRedeemed": {
             "type": "boolean",
@@ -134,10 +135,11 @@
           "InternalCertificate",
           "QualifiedSignature",
           "QualifiedSeal",
-          "PersonalSignature"
+          "PersonalSignature",
+          "PeppolSignature"
         ],
         "type": "string",
-        "description": "Metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n"
+        "description": "Metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy uslug Peppol. |\n"
       },
 
 
@@ -183,12 +185,14 @@ body:
 
 response: application/json
 {
-  "startDate": "", // type: string; format: date-time; description: Data rozpoczęcia operacji uwierzytelnienia.
-  "authenticationMethod": "", // enum: Token, TrustedProfile, InternalCertificate, QualifiedSignature, QualifiedSeal, PersonalSignature; #/components/schemas/AuthenticationMethod; description: Użyta metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |
-  "status": {
-    "code": 0, // type: integer; format: int32
-    "description": "", // minLength: 1; type: string;
-    "details": [ // type: array; items: type: string
+  "startDate": "", // required; type: string; format: date-time; description: Data rozpoczęcia operacji uwierzytelnienia.
+  "authenticationMethod": "", // required; enum: Token, TrustedProfile, InternalCertificate, QualifiedSignature, QualifiedSeal, PersonalSignature, PeppolSignature; #/components/schemas/AuthenticationMethod; description: "Metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy uslug Peppol. |
+  "status": { // required
+    "code": 0, // required; type: integer; format: int32; description: Kod statusu
+    "description": "", // required; minLength: 1; type: string; description: Opis statusu
+    "details": [ // type: array; items: type: string; description: Dodatkowe szczególy statusu; nullable: true
+      "",
+      ...
     ]
   },
   "isTokenRedeemed": true/false, // type: boolean; description: Czy został już wydany refresh token powiązany z danym uwierzytelnieniem.; nullable: true

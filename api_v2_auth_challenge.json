@@ -18,14 +18,15 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExceptionResponse"
                 }
               }
-            }
+            },
+            "x-summary": "Bad Request"
           }
         }
       }
@@ -62,6 +63,6 @@ request:  /api/v2/auth/challenge: post: text/plain
 
 response: application/json
 {
-  "challenge": "", // type: string,
-  "timestamp": "" // type: string; format: date-time
+  "challenge": "", // required; type: string,
+  "timestamp": "" // required; type: string; format: date-time
 }

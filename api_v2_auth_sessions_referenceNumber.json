@@ -1,0 +1,59 @@
+    "/api/v2/auth/sessions/{referenceNumber}": {
+      "delete": {
+        "tags": [
+          "Aktywne sesje"
+        ],
+        "summary": "Uniewaznienie sesji uwierzytelnienia",
+        "description": "Uniewaznia sesje o podanym numerze referencyjnym.\n\nUniewaznienie sesji sprawia, ze powiazany z nia refresh token przestaje dzialac i nie mozna juz za jego pomoca uzyskac kolejnych access tokenów.\n**Aktywne access tokeny dzialaja do czasu miniecia ich termin waznosci.**",
+        "parameters": [
+          {
+            "name": "referenceNumber",
+            "in": "path",
+            "description": "Numer referencyjny sesji uwierzytelnienia.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Blad walidacji danych wejsciowych. | {tresc bledu z walidatora} |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+
+
+
+request:  /api/v2/auth/sessions/{referenceNumber}: delete: text/plain
+header:
+Authentication: Bearer accessToken
+body:
+//{
+//}
+
+
+
+response: text/plain
+//{
+//}

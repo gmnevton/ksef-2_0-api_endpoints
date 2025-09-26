@@ -1,0 +1,324 @@
+    "/api/v2/sessions": {
+      "get": {
+        "tags": [
+          "Status wysylki i UPO"
+        ],
+        "summary": "Pobranie listy sesji",
+        "description": "Zwraca liste sesji spelniajacych podane kryteria wyszukiwania.\n\nWymagane uprawnienia:\n- `Introspection` – pozwala pobrac wszystkie sesje w biezacym kontekscie uwierzytelnienia `(ContextIdentifier)`.\n- `InvoiceWrite` – pozwala pobrac wylacznie sesje utworzone przez podmiot uwierzytelniajacy, czyli podmiot inicjujacy uwierzytelnienie.",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Rozmiar strony.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "sessionType",
+            "in": "query",
+            "description": "Typ sesji.\n| Wartosc | Opis |\n| --- | --- |\n| Online | Wysylka interaktywna (pojedyncze faktury). |\n| Batch | Wysylka wsadowa (paczka faktur). |\n",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SessionType"
+                }
+              ]
+            }
+          },
+          {
+            "name": "referenceNumber",
+            "in": "query",
+            "description": "Numer referencyjny sesji.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateCreatedFrom",
+            "in": "query",
+            "description": "Data utworzenia sesji (od).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "dateCreatedTo",
+            "in": "query",
+            "description": "Data utworzenia sesji (do).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "dateClosedFrom",
+            "in": "query",
+            "description": "Data zamkniecia sesji (od).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "dateClosedTo",
+            "in": "query",
+            "description": "Data zamkniecia sesji (do).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "dateModifiedFrom",
+            "in": "query",
+            "description": "Data ostatniej aktywnosci (wysylka faktury lub zmiana statusu) w ramach sesji (od).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "dateModifiedTo",
+            "in": "query",
+            "description": "Data ostatniej aktywnosci (wysylka faktury lub zmiana statusu) w ramach sesji (do).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "statuses",
+            "in": "query",
+            "description": "Statusy sesji.\n| Wartosc | Opis |\n| --- | --- |\n| InProgress | Sesja aktywna. |\n| Succeeded | Sesja przetworzona poprawnie.            W trakcie przetwarzania sesji nie wystapily zadne bledy, ale czesc faktur nadal mogla zostac odrzucona. |\n| Failed | Sesja nie przetworzona z powodu bledów.            Na etapie rozpoczynania lub konczenia sesji wystapily bledy, które nie pozwolily na jej poprawne przetworzenie. |\n| Cancelled | Sesja anulowania.            Zostal przekroczony czas na wysylke w sesji wsadowej, lub nie przeslano zadnych faktur w sesji interaktywnej. |\n",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CommonSessionStatus"
+              }
+            }
+          },
+          {
+            "name": "x-continuation-token",
+            "in": "header",
+            "description": "Token sluzacy do pobrania kolejnej strony wyników.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionsQueryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                     | \n|---------------------|-----------------------------------------------------|-------------------------------------------------------------|\n| 21418               | Przekazany token kontynuacji ma nieprawidlowy format. |   |\n| 21405 | Blad walidacji danych wejsciowych. | {tresc bledu z walidatora} |",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExceptionResponse"
+                }
+              }
+            },
+            "x-summary": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ],
+        "x-required-permissions": [
+          "InvoiceWrite",
+          "Introspection"
+        ]
+      }
+    },
+
+
+      "SessionType": {
+        "enum": [
+          "Online",
+          "Batch"
+        ],
+        "type": "string",
+        "description": "| Wartosc | Opis |\n| --- | --- |\n| Online | Wysylka interaktywna (pojedyncze faktury). |\n| Batch | Wysylka wsadowa (paczka faktur). |\n"
+      },
+
+
+      "CommonSessionStatus": {
+        "enum": [
+          "InProgress",
+          "Succeeded",
+          "Failed",
+          "Cancelled"
+        ],
+        "type": "string",
+        "description": "| Wartosc | Opis |\n| --- | --- |\n| InProgress | Sesja aktywna. |\n| Succeeded | Sesja przetworzona poprawnie.            W trakcie przetwarzania sesji nie wystapily zadne bledy, ale czesc faktur nadal mogla zostac odrzucona. |\n| Failed | Sesja nie przetworzona z powodu bledów.            Na etapie rozpoczynania lub konczenia sesji wystapily bledy, które nie pozwolily na jej poprawne przetworzenie. |\n| Cancelled | Sesja anulowania.            Zostal przekroczony czas na wysylke w sesji wsadowej, lub nie przeslano zadnych faktur w sesji interaktywnej. |\n"
+      },
+
+
+      "SessionsQueryResponse": {
+        "required": [
+          "sessions"
+        ],
+        "type": "object",
+        "properties": {
+          "continuationToken": {
+            "type": "string",
+            "description": "Token sluzacy do pobrania kolejnej strony wyników. Jesli jest pusty, to nie ma kolejnych stron.",
+            "nullable": true
+          },
+          "sessions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SessionsQueryResponseItem"
+            },
+            "description": "Lista sesji."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "SessionsQueryResponseItem": {
+        "required": [
+          "dateCreated",
+          "dateUpdated",
+          "failedInvoiceCount",
+          "referenceNumber",
+          "status",
+          "successfulInvoiceCount",
+          "totalInvoiceCount"
+        ],
+        "type": "object",
+        "properties": {
+          "referenceNumber": {
+            "type": "string",
+            "description": "Numer referencyjny sesji."
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatusInfo"
+              }
+            ],
+            "description": "Status sesji."
+          },
+          "dateCreated": {
+            "type": "string",
+            "description": "Data utowrzenia sesji.",
+            "format": "date-time"
+          },
+          "dateUpdated": {
+            "type": "string",
+            "description": "Data ostatniej aktywnosci w ramach sesji.",
+            "format": "date-time"
+          },
+          "validUntil": {
+            "type": "string",
+            "description": "Termin waznosci sesji. Po jego uplywie sesja interaktywna zostanie automatycznie zamknieta.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "totalInvoiceCount": {
+            "type": "integer",
+            "description": "Laczna liczba faktur (uwzglednia równiez te w trakcie przetwarzania).",
+            "format": "int32"
+          },
+          "successfulInvoiceCount": {
+            "type": "integer",
+            "description": "Liczba poprawnie przetworzonych faktur.",
+            "format": "int32"
+          },
+          "failedInvoiceCount": {
+            "type": "integer",
+            "description": "Liczba blednie przetworzonych faktur.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "StatusInfo": {
+        "required": [
+          "code",
+          "description"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Kod statusu",
+            "format": "int32"
+          },
+          "description": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Opis statusu"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Dodatkowe szczególy statusu",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+
+request:  /api/v2/sessions?pageSize={pageSize}&sessionType={sessionType}&referenceNumber={referenceNumber}&dateCreatedFrom={dateCreatedFrom}&dateCreatedTo={dateCreatedTo}&dateClosedFrom={dateClosedFrom}&dateClosedTo={dateClosedTo}&dateModifiedFrom={dateModifiedFrom}&dateModifiedTo={dateModifiedTo}&statuses={statuses}: get: text/plain
+header:
+??x-continuation-token: continuationToken
+Authentication: Bearer accessToken
+body:
+//{
+//}
+
+
+
+response: application/json
+{
+  "continuationToken": "", // type: string", description: Token sluzacy do pobrania kolejnej strony wyników. Jesli jest pusty, to nie ma kolejnych stron.; nullable: true
+  "sessions": [ // required; type: array; items: #/components/schemas/SessionsQueryResponseItem; description: Lista sesji.
+    {
+      "referenceNumber": "", // required; type: string; description: Numer referencyjny sesji.
+      "status": { // required; items: #/components/schemas/StatusInfo; description: Status sesji.
+        "code": 0, // required; type: integer; format: int32; description: Kod statusu
+        "description": "", // required; minLength: 1; type: string; description: Opis statusu
+        "details": [ // type: array; items: type: string; description: Dodatkowe szczególy statusu; nullable: true
+          "",
+          ...
+        ]
+      },
+      "dateCreated": "", // required; type: string; format: date-time; description: Data utowrzenia sesji. 
+      "dateUpdated": "", // required; type: string; format: date-time; description: Data ostatniej aktywnosci w ramach sesji.
+      "validUntil": "", // type: string; format: date-time; description: Termin waznosci sesji. Po jego uplywie sesja interaktywna zostanie automatycznie zamknieta.; nullable: true
+      "totalInvoiceCount": 0, // required; type: integer; format: int32; description: Laczna liczba faktur (uwzglednia równiez te w trakcie przetwarzania).
+      "successfulInvoiceCount": 0, // required; type: integer; format: int32; description": "Liczba poprawnie przetworzonych faktur.
+      "failedInvoiceCount": 0 // required; type: integer; format: int32; description: Liczba blednie przetworzonych faktur.
+    },
+    ...
+  ]
+}

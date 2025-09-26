@@ -4,7 +4,7 @@
           "Status wysyłki i UPO"
         ],
         "summary": "Pobranie UPO dla sesji",
-        "description": "Zwraca XML zawierający zbiorcze UPO dla sesji.\n\nWymagane uprawnienia: `InvoiceWrite`.",
+        "description": "Zwraca XML zawierający zbiorcze UPO dla sesji.\n\nWymagane uprawnienia: `InvoiceWrite`, `Introspection`, `PefInvoiceWrite`.",
         "parameters": [
           {
             "name": "referenceNumber",
@@ -37,7 +37,7 @@
             }
           },
           "400": {
-            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                                                                        | \n|---------------------|-----------------------------------------------------|----------------------------------------------------------------------------------------------------------------|\n| 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została znaleziona.                                        |\n| 21178               | Nie znaleziono UPO dla podanych kryteriów.          | UPO o numerze referencyjnym {referenceNumber} dla sesji {referenceNumber} nie zostało znalezione.        |",
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                                                                        | \n|---------------------|-----------------------------------------------------|----------------------------------------------------------------------------------------------------------------|\n| 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została znaleziona.                                        |\n| 21178               | Nie znaleziono UPO dla podanych kryteriów.          | UPO o numerze referencyjnym {referenceNumber} dla sesji {referenceNumber} nie zostało znalezione.        |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
             "content": {
               "application/json": {
                 "schema": {
@@ -60,7 +60,9 @@
           }
         ],
         "x-required-permissions": [
-          "InvoiceWrite"
+          "InvoiceWrite",
+          "Introspection",
+          "PefInvoiceWrite"
         ]
       }
     },
