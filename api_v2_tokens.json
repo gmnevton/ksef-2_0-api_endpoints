@@ -90,7 +90,7 @@
             "schema": {
               "allOf": [
                 {
-                  "$ref": "#/components/schemas/AuthorIdentifierType"
+                  "$ref": "#/components/schemas/TokenAuthorIdentifierType"
                 }
               ]
             }
@@ -213,7 +213,7 @@
       },
 
 
-      "AuthorIdentifierType": {
+      "TokenAuthorIdentifierType": {
         "enum": [
           "Nip",
           "Pesel",

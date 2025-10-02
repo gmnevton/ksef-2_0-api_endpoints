@@ -49,7 +49,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/QueryCertificatesResponse"
                 },
-                "example": {"certificates":[{"certificateSerialNumber":"018209160C631F1E","name":"Certyfikat 1","type":"Authentication","commonName":"Jan Kowalski","status":"Active","subjectIdentifier":"1234445678","subjectIdentifierType":"Nip","validFrom":"2025-08-24T14:15:22+00:00","validTo":"2027-08-24T14:15:22+00:00","lastUseDate":"2025-08-25T14:15:22+00:00"}],"hasMore":false}
+                "example": {"certificates":[{"certificateSerialNumber":"018209160C631F1E","name":"Certyfikat 1","type":"Authentication","commonName":"Jan Kowalski","status":"Active","subjectIdentifier":{"type":"Nip","value":"1234445678"},"validFrom":"2025-08-24T14:15:22+00:00","validTo":"2027-08-24T14:15:22+00:00","lastUseDate":"2025-08-25T14:15:22+00:00"}],"hasMore":false}
               }
             }
           },
@@ -171,7 +171,6 @@
           "name",
           "status",
           "subjectIdentifier",
-          "subjectIdentifierType",
           "type",
           "validFrom",
           "validTo"
@@ -207,12 +206,16 @@
             "description": "Status certyfikatu.\n| Wartość | Opis |\n| --- | --- |\n| Active | Certyfikat jest aktywny i może zostać użyty do uwierzytelnienia lub realizacji operacji w trybie offline (w zależności od typu certyfikatu). |\n| Blocked | Certyfikat został zablokowany i nie może zostać użyty do uwierzytelnienia i realizacji operacji w trybie offline.            Status przejściowy do czasu zakończenia procesu unieważniania. |\n| Revoked | Certyfikat został unieważniony i nie może zostać użyty do uwierzytelnienia i realizacji operacji w trybie offline. |\n| Expired | Certyfikat wygasł i nie może zostać użyty do uwierzytelnienia i realizacji operacji w trybie offline. |\n"
           },
           "subjectIdentifier": {
-            "type": "string",
+            "required": [
+              "type",
+              "value"
+            ],
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CertificateSubjectIdentifier"
+              }
+            ],
             "description": "Identyfikator podmiotu, dla którego wystawiono certyfikat."
-          },
-          "subjectIdentifierType": {
-            "type": "string",
-            "description": "Typ identyfikatora podmiotu, dla którego wystawiono certyfikat."
           },
           "validFrom": {
             "type": "string",
@@ -232,6 +235,41 @@
           }
         },
         "additionalProperties": false
+      },
+
+
+      "CertificateSubjectIdentifier": {
+        "required": [
+          "type",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CertificateSubjectIdentifierType"
+              }
+            ],
+            "description": "Typ identyfikatora."
+          },
+          "value": {
+            "type": "string",
+            "description": "Wartość identyfikatora."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Identyfikator podmiotu dla którego wystawiono certyfikat.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| Pesel | 11 cyfrowy numer PESEL |\n| Fingerprint | Odcisk palca certyfikatu |"
+      },
+
+
+      "CertificateSubjectIdentifierType": {
+        "enum": [
+          "Nip",
+          "Pesel",
+          "Fingerprint"
+        ],
+        "type": "string"
       },
 
 
@@ -259,8 +297,10 @@ response: application/json
       "type": "", // #/components/schemas/KsefCertificateType; enum: Authentication, Offline; nullable: true
       "commonName": "", // required; type: string; description: Nazwa powszechna (CN) podmiotu, dla którego wystawiono certyfikat.
       "status": "", // required; enum: Active, Blocked, Revoked, Expired
-      "subjectIdentifier": "", // required; type: string; description: Identyfikator podmiotu, dla którego wystawiono certyfikat.
-      "subjectIdentifierType": "", // required; type: string; description: Typ identyfikatora podmiotu, dla którego wystawiono certyfikat.
+      "subjectIdentifier": { // required; #/components/schemas/CertificateSubjectIdentifier; description: "Identyfikator podmiotu, dla którego wystawiono certyfikat.
+        "type": "", // required; #/components/schemas/CertificateSubjectIdentifierType; enum: Nip, Pesel, Fingerprint; description: Typ identyfikatora.
+        "value": "" // required; type: string; description: Wartość identyfikatora.
+      },
       "validFrom": "", // required; type: string; format: date-time; description: Data rozpoczęcia ważności certyfikatu.
       "validTo": "", // required; type: string; format: date-time; description: Data wygaśnięcia certyfikatu.
       "lastUseDate": "" // type: string; format: date-time; description: Data ostatniego użycia certyfikatu.; nullable: true

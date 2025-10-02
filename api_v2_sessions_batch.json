@@ -5,7 +5,6 @@
         ],
         "summary": "Otwarcie sesji wsadowej",
         "description": "Otwiera sesje do wysylki wsadowej faktur. Nalezy przekazac schemat wysylanych faktur, informacje o paczce faktur oraz informacje o kluczu uzywanym do szyfrowania.\n\n> Wiecej informacji:\n> - [Przygotwanie paczki faktur](https://github.com/CIRFMF/ksef-docs/blob/main/sesja-wsadowa.md)\n> - [Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)\n\nWymagane uprawnienia: `InvoiceWrite`.",
-        "operationId": "batch.open",
         "requestBody": {
           "content": {
             "application/json": {
@@ -38,7 +37,7 @@
             }
           },
           "400": {
-            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                                   | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------------------|\n| 21157               | Nieprawidlowy rozmiar czesci pakietu.               | {tresc bledu walidacji}                                                   | \n| 21161               | Przekroczono dozwolona liczbe czesci pakietu.       | {tresc bledu walidacji}                                                   | \n| 21401               | Dokument nie jest zgodny ze schema (json).          | {tresc bledu walidacji}                                                   |\n| 21405 | Blad walidacji danych wejsciowych. | {tresc bledu z walidatora} |",
+            "description": "| ExceptionCode       | ExceptionDescription                                | Details                                                                   | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------------------|\n| 21157               | Nieprawidlowy rozmiar czesci pakietu.               | {tresc bledu walidacji}                                                   | \n| 21161               | Przekroczono dozwolona liczbe czesci pakietu.       | {tresc bledu walidacji}                                                   |\n| 21405 | Blad walidacji danych wejsciowych. | {tresc bledu z walidatora} |",
             "content": {
               "application/json": {
                 "schema": {

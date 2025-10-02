@@ -21,7 +21,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuthenticationToken"
+                  "$ref": "#/components/schemas/TokenStatusResponse"
                 }
               }
             }
@@ -92,7 +92,7 @@
     },
 
 
-      "AuthenticationToken": {
+      "TokenStatusResponse": {
         "type": "object",
         "properties": {
           "referenceNumber": {
@@ -101,9 +101,13 @@
             "nullable": true
           },
           "authorIdentifier": {
+            "required": [
+              "type",
+              "value"
+            ],
             "allOf": [
               {
-                "$ref": "#/components/schemas/SubjectIdentifier"
+                "$ref": "#/components/schemas/TokenAuthorIdentifierTypeIdentifier"
               }
             ],
             "description": "Identyfikator osoby która wygenerowała token.",
@@ -116,7 +120,7 @@
             ],
             "allOf": [
               {
-                "$ref": "#/components/schemas/ContextIdentifier"
+                "$ref": "#/components/schemas/TokenContextIdentifierTypeIdentifier"
               }
             ],
             "description": "Identyfikator kontekstu, w którym został wygenerowany token i do którego daje dostęp.",
@@ -167,38 +171,7 @@
       },
 
 
-      "SubjectIdentifier": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SubjectIdentifierType"
-              }
-            ]
-          },
-          "value": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-
-
-      "SubjectIdentifierType": {
-        "enum": [
-          "None",
-          "Nip",
-          "Pesel",
-          "Fingerprint",
-          "Token"
-        ],
-        "type": "string"
-      },
-
-
-      "ContextIdentifier": {
+      "TokenAuthorIdentifierTypeIdentifier": {
         "required": [
           "type",
           "value"
@@ -208,31 +181,64 @@
           "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ContextIdentifierType"
+                "$ref": "#/components/schemas/TokenAuthorIdentifierType"
               }
             ],
-            "description": "Typ identyfikatora"
+            "description": "Typ identyfikatora.\n| Wartość | Opis |\n| --- | --- |\n| Nip | NIP. |\n| Pesel | PESEL. |\n| Fingerprint | Odcisk palca certyfikatu. |\n"
           },
           "value": {
             "type": "string",
-            "description": "Wartość identyfikatora"
+            "description": "Wartość identyfikatora."
           }
         },
-        "additionalProperties": false,
-        "description": "Identyfikator kontekstu działania.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |\n| NipVatUe | Dwuczłonowy identyfikator składający się z numeru NIP i numeru VAT-UE: `{nip}-{vat_ue}` |"
+        "additionalProperties": false
       },
 
 
-      "ContextIdentifierType": {
+      "TokenAuthorIdentifierType": {
         "enum": [
-          "None",
-          "AllPartners",
+          "Nip",
+          "Pesel",
+          "Fingerprint"
+        ],
+        "type": "string",
+        "description": "| Wartość | Opis |\n| --- | --- |\n| Nip | NIP. |\n| Pesel | PESEL. |\n| Fingerprint | Odcisk palca certyfikatu. |\n"
+      },
+
+
+      "TokenContextIdentifierTypeIdentifier": {
+        "required": [
+          "type",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TokenContextIdentifierType"
+              }
+            ],
+            "description": "Typ identyfikatora.\n| Wartość | Opis |\n| --- | --- |\n| Nip | NIP. |\n| InternalId | Identyfikator wewnętrzny. |\n| NipVatUe | Dwuczłonowy identyfikator składający się z numeru NIP i numeru VAT-UE: `{nip}-{vat_ue}`. |\n| PeppolId | Identyfikator dostawcy usług Peppol. |\n"
+          },
+          "value": {
+            "type": "string",
+            "description": "Wartość identyfikatora."
+          }
+        },
+        "additionalProperties": false
+      },
+
+
+      "TokenContextIdentifierType": {
+        "enum": [
           "Nip",
           "InternalId",
           "NipVatUe",
           "PeppolId"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "| Wartość | Opis |\n| --- | --- |\n| Nip | NIP. |\n| InternalId | Identyfikator wewnętrzny. |\n| NipVatUe | Dwuczłonowy identyfikator składający się z numeru NIP i numeru VAT-UE: `{nip}-{vat_ue}`. |\n| PeppolId | Identyfikator dostawcy usług Peppol. |\n"
       },
 
 
@@ -276,11 +282,11 @@ response: application/json
 {
   "referenceNumber": "", // type: string; description: Numer referencyjny tokena.; nullable: true
   "authorIdentifier": { // #/components/schemas/SubjectIdentifier; description: Identyfikator osoby która wygenerowała token.; nullable: true
-    "type": "", // enum: None, Nip, Pesel, Fingerprint, Token
-    "value": "" // type: string; nullable: true
+    "type": "", // required; enum: Nip, Pesel, Fingerprint
+    "value": "" // required; type: string; nullable: true
   },
   "contextIdentifier": { // #/components/schemas/ContextIdentifier; description: Identyfikator kontekstu, w którym został wygenerowany token i do którego daje dostęp.; nullable: true
-    "type": "", // required; enum: None, AllPartners, Nip, InternalId, NipVatUe, PeppolId; description: Typ identyfikatora
+    "type": "", // required; enum: Nip, InternalId, NipVatUe, PeppolId; description: Typ identyfikatora
     "value": "" // required; type: string; description: Wartość identyfikatora
   },
   "description": "", // type: string; description: Opis tokena.; nullable: true
