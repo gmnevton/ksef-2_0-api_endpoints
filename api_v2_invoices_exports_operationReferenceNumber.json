@@ -181,6 +181,66 @@
       },
 
 
+      "InvoicePackagePart": {
+        "required": [
+          "encryptedPartHash",
+          "encryptedPartSize",
+          "expirationDate",
+          "method",
+          "ordinalNumber",
+          "partHash",
+          "partName",
+          "partSize",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "ordinalNumber": {
+            "type": "integer",
+            "description": "Numer sekwencyjny pliku czesci paczki.",
+            "format": "int32"
+          },
+          "partName": {
+            "type": "string",
+            "description": "Nazwa pliku czesci paczki."
+          },
+          "method": {
+            "type": "string",
+            "description": "Metoda HTTP, której nalezy uzyc przy pobieraniu pliku."
+          },
+          "url": {
+            "type": "string",
+            "description": "Adres URL, pod który nalezy wyslac zadanie pobrania.",
+            "format": "uri"
+          },
+          "partSize": {
+            "type": "integer",
+            "description": "Rozmiar czesci paczki w bajtach. Maksymalny rozmiar czesci to 50MiB (52 428 800 bajtów).",
+            "format": "int64"
+          },
+          "partHash": {
+            "type": "string",
+            "description": "Skrót SHA256 pliku czesci paczki, zakodowany w formacie Base64."
+          },
+          "encryptedPartSize": {
+            "type": "integer",
+            "description": "Rozmiar zaszyfrowanej czesci paczki w bajtach.",
+            "format": "int64"
+          },
+          "encryptedPartHash": {
+            "type": "string",
+            "description": "Skrót SHA256 zaszyfrowanej czesci paczki, zakodowany w formacie Base64."
+          },
+          "expirationDate": {
+            "type": "string",
+            "description": "Moment wygasniecia linku do pobrania czesci.",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+
+
 
 request:  /api/v2/invoices/exports/{operationReferenceNumber}: get: text/plain
 header:
@@ -206,6 +266,18 @@ response: application/json
     "invoiceCount": 0, // required; type: integer; format: int64; description: Laczna liczba faktur w paczce. Maksymalna liczba faktur w paczce to 10 000.
     "size": 0, // required; type: integer; format: int64; description: Rozmiar paczki w bajtach. Maksymalny rozmiar paczki to 1 GiB (1 073 741 824 bajtów).
     "parts": [ // required; type: array; items: #/components/schemas/InvoicePackagePart; description: Lista dostepnych czesci paczki do pobrania. Kazda czesc jest zaszyfrowana algorytmem AES-256-CBC z dopelnieniem PKCS#7, przy uzyciu klucza symetrycznego przekazanego podczas inicjowania eksportu. Wyniki sortowane sa rosnaco wedlug typu daty przekazanej w `DateRange` przy inicjalizacji.
+      {
+        "ordinalNumber": 0, // type: integer; format: int32; description: Numer sekwencyjny pliku czesci paczki.;
+        "partName": "" , // type: string; description: Nazwa pliku czesci paczki.
+        "method": "", // type: string; description: Metoda HTTP, której nalezy uzyc przy pobieraniu pliku.
+        "url": "", // type: string; format: uri; description: Adres URL, pod który nalezy wyslac zadanie pobrania.
+        "partSize": 0, // type: integer; format: int64; description: Rozmiar czesci paczki w bajtach. Maksymalny rozmiar czesci to 50MiB (52 428 800 bajtów).
+        "partHash": "", // type: string; description: Skrót SHA256 pliku czesci paczki, zakodowany w formacie Base64.
+        "encryptedPartSize": 0 , // type: integer; format: int64; description: Rozmiar zaszyfrowanej czesci paczki w bajtach.
+        "encryptedPartHash": "", // type: string; description: Skrót SHA256 zaszyfrowanej czesci paczki, zakodowany w formacie Base64.
+        "expirationDate": "" // type: string; format: date-time; description: Moment wygasniecia linku do pobrania czesci.
+      },
+      ...
     ],
     "isTruncated": true/false, // required; type: boolean; description: Okresla, czy wynik eksportu zostal uciety z powodu przekroczenia limitu liczby faktur lub wielkosci paczki.
     "lastIssueDate": "", // type: string; format: date; description: Data wystawienia ostatniej faktury ujetej w paczce.\nPole wystepuje wylacznie wtedy, gdy paczka zostala ucieta i eksport byl filtrowany po typie daty `Issue`.; nullable: true

@@ -158,6 +158,9 @@
             "nullable": true
           },
           "amount": {
+            "required": [
+              "type"
+            ],
             "allOf": [
               {
                 "$ref": "#/components/schemas/InvoiceQueryAmount"
@@ -166,22 +169,21 @@
             "description": "Filtr kwotowy – brutto, netto lub VAT (z wartoscia).",
             "nullable": true
           },
-          "seller": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/InvoiceQuerySeller"
-              }
-            ],
-            "description": "Dane sprzedawcy.",
+          "sellerNip": {
+            "type": "string",
+            "description": "Nip sprzedawcy.",
             "nullable": true
           },
-          "buyer": {
+          "buyerIdentifier": {
+            "required": [
+              "type"
+            ],
             "allOf": [
               {
-                "$ref": "#/components/schemas/InvoiceQueryBuyer"
+                "$ref": "#/components/schemas/InvoiceQueryBuyerIdentifier"
               }
             ],
-            "description": "Dane nabywcy.",
+            "description": "Identyfikator nabywcy.",
             "nullable": true
           },
           "currencyCodes": {
@@ -276,7 +278,21 @@
       },
 
 
+      "InvoiceQueryDateType": {
+        "enum": [
+          "Issue",
+          "Invoicing",
+          "PermanentStorage"
+        ],
+        "type": "string",
+        "description": "| Wartosc | Opis |\n| --- | --- |\n| Issue | Data wystawienia faktury. |\n| Invoicing | Data przyjecia faktury w systemie KSeF (do dalszego przetwarzania). |\n| PermanentStorage | Data trwalego zapisu faktury w repozytorium systemu KSeF. |\n"
+      },
+
+
       "InvoiceQueryAmount": {
+        "required": [
+          "type"
+        ],
         "type": "object",
         "properties": {
           "type": {
@@ -284,8 +300,7 @@
               {
                 "$ref": "#/components/schemas/AmountType"
               }
-            ],
-            "nullable": true
+            ]
           },
           "from": {
             "type": "number",
@@ -312,22 +327,39 @@
       },
 
 
-      "InvoiceQuerySeller": {
+      "InvoiceQueryBuyerIdentifier": {
+        "required": [
+          "type"
+        ],
         "type": "object",
         "properties": {
-          "identifier": {
-            "type": "string",
-            "description": "Identyfikator sprzedawcy.",
-            "nullable": true,
-            "deprecated": true
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BuyerIdentifierType"
+              }
+            ],
+            "description": "Typ identyfikatora nabywcy.\n| Wartosc | Opis |\n| --- | --- |\n| None | Brak identyfikatora nabywcy |\n| Other | Inny |\n| Nip | NIP |\n| VatUe | VAT UE |\n"
           },
-          "nip": {
+          "value": {
             "type": "string",
-            "description": "Nip sprzedawcy.",
+            "description": "Wartosc identyfikatora nabywcy.",
             "nullable": true
           }
         },
         "additionalProperties": false
+      },
+
+
+      "BuyerIdentifierType": {
+        "enum": [
+          "None",
+          "Other",
+          "Nip",
+          "VatUe"
+        ],
+        "type": "string",
+        "description": "| Wartosc | Opis |\n| --- | --- |\n| None | Brak identyfikatora nabywcy |\n| Other | Inny |\n| Nip | NIP |\n| VatUe | VAT UE |\n"
       },
 
 
@@ -595,12 +627,14 @@
 
 
       "ExportInvoicesResponse": {
+        "required": [
+          "operationReferenceNumber"
+        ],
         "type": "object",
         "properties": {
           "operationReferenceNumber": {
             "type": "string",
-            "description": "Numer referencyjny operacji.",
-            "nullable": true
+            "description": "Numer referencyjny operacji."
           }
         },
         "additionalProperties": false
@@ -627,18 +661,14 @@ body:
     "ksefNumber": "", // type: string; description: Numer KSeF faktury.; nullable: true
     "invoiceNumber": "", // type: string; description: Numer faktury nadany przez wystawce.; nullable: true
     "amount": { // description: Filtr kwotowy – brutto, netto lub VAT (z wartoscia).; nullable: true
-      "type": "", // enum: Brutto, Netto, Vat; nullable: true
+      "type": "", // required; enum: Brutto, Netto, Vat; nullable: true
       "from": 0, // type: number; format: double; nullable: true
       "to": 0, // type: number; format: double; nullable: true
     },
-    "seller": { // description: Dane sprzedawcy.; nullable: true
-      "identifier": "", // type: string; description: Identyfikator sprzedawcy.; nullable: true
-      "name": "" // type: string; description: Nazwa sprzedawcy.; nullable: true
-    },
-    "buyer": { // description: Dane nabywcy.; nullable: true
-      "identifierType": "", // enum: None, Other, Nip, VatUe; description: Typ identyfikatora nabywcy.; nullable: true
-      "identifier": "", // type: string; description: Wartosc identyfikatora nabywcy.; nullable: true
-      "name": "" // type: string; description: Nazwa nabywcy.; nullable: true
+    "sellerNip": "", // type: string; description: Nip sprzedawcy.; nullable: true
+    "buyerIdentifier": { // description: Dane nabywcy.; nullable: true
+      "type": "", // required; #/components/schemas/BuyerIdentifierType; description: Typ identyfikatora nabywcy.\n| Wartosc | Opis |\n| --- | --- |\n| None | Brak identyfikatora nabywcy |\n| Other | Inny |\n| Nip | NIP |\n| VatUe | VAT UE |
+      "value": "" // type: string; description: Wartosc identyfikatora nabywcy.; nullable: true
     },
     "currencyCodes": [ // type: array; items: #/components/schemas/CurrencyCode; description: Kody walut.; nullable: true
       "", // enum: "AED".."ZWL"
@@ -660,5 +690,5 @@ body:
 
 response: application/json
 {
-  "operationReferenceNumber": "" // type: string; description: Numer referencyjny operacji.; nullable: true
+  "operationReferenceNumber": "" // required; type: string; description: Numer referencyjny operacji.
 }
