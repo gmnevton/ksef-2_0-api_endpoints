@@ -1,130 +1,133 @@
-    "/api/v2/auth/xades-signature": {
-      "post": {
-        "tags": [
-          "Uzyskiwanie dostępu"
-        ],
-        "summary": "Uwierzytelnienie z wykorzystaniem podpisu XAdES",
-        "description": "Rozpoczyna operację uwierzytelniania za pomocą dokumentu XML podpisanego podpisem elektronicznym XAdES.\n\n> Więcej informacji:\n> - [Przygotowanie dokumentu XML](https://github.com/CIRFMF/ksef-docs/blob/main/uwierzytelnianie.md#1-przygotowanie-dokumentu-xml-authtokenrequest)\n> - [Podpis dokumentu XML](https://github.com/CIRFMF/ksef-docs/blob/main/uwierzytelnianie.md#2-podpisanie-dokumentu-xades)\n> - [Schemat XSD](/docs/v2/schemas/authv2.xsd)",
-        "parameters": [
-          {
-            "name": "verifyCertificateChain",
-            "in": "query",
-            "description": "Wymuszenie weryfikacji zaufania łańcucha certyfikatu wraz ze sprawdzeniem statusu certyfikatu (OCSP/CRL) na środowiskach które umożliwiają wykorzystanie samodzielnie wygenerowanych certyfikatów.",
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/xml": {
-              "schema": {
-                "type": "string"
-              },
-              "example": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<AuthTokenRequest xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://ksef.mf.gov.pl/auth/token/2.0\">\n    <Challenge>20250625-CR-20F5EE4000-DA48AE4124-46</Challenge>\n    <ContextIdentifier>\n        <Nip>5265877635</Nip>\n    </ContextIdentifier>\n    <SubjectIdentifierType>certificateSubject</SubjectIdentifierType>\n    <ds:Signature xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\" Id=\"Signature-9707709\">\n        <!-- Tu powinien być podpis XAdES -->\n    </ds:Signature>\n</AuthTokenRequest>"
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "202": {
-            "description": "Accepted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthenticationInitResponse"
-                },
-                "example": {"referenceNumber":"20250514-AU-2DFC46C000-3AC6D5877F-D4","authenticationToken":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbi10eXBlIjoiT3BlcmF0aW9uVG9rZW4iLCJvcGVyYXRpb24tcmVmZXJlbmNlLW51bWJlciI6IjIwMjUwNTE0LUFVLTJERkM0NkMwMDAtM0FDNkQ1ODc3Ri1ENCIsImV4cCI6MTc0NzIzMTcxOSwiaWF0IjoxNzQ3MjI5MDE5LCJpc3MiOiJrc2VmLWFwaS10aSIsImF1ZCI6ImtzZWYtYXBpLXRpIn0.rtRcV2mR9SiuJwpQaQHsbAXvvVsdNKG4DJsdiJctIeU","validUntil":"2025-07-11T12:23:56.0154302+00:00"}}
-              }
-            }
-          },
-          "400": {
-            "description": " | ExceptionCode      | ExceptionDescription                                                | Details                                                     | \n|---------------------|---------------------------------------------------------------------|-------------------------------------------------------------|\n| 21001               | Nieczytelna treść.                                                  |                                                             |\n| 21111               | Nieprawidłowe wyzwanie autoryzacyjne.                               |                                                             |\n| 21115               | Nieprawidłowy certyfikat.                                           |                                                             |\n| 21117               | Nieprawidłowy identyfikator podmiotu dla wskazanego typu kontekstu. |                                                             |\n| 21217               | Nieprawidłowe kodowanie znaków.                                     |                                                             |\n| 21401               | Dokument nie jest zgodny ze schemą (xsd).                           | {treść błędu walidacji}                                     |\n| 21406               | Konflikt podpisu i typu uwierzytelnienia.                           |                                                             |\n| 9101                | Nieprawidłowy dokument.                                             |                                                             |\n| 9102                | Brak podpisu.                                                       |                                                             |\n| 9103                | Przekroczona liczba dozwolonych podpisów.                           |                                                             |\n| 9105                | Nieprawidłowa treść podpisu.                                        |                                                             |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExceptionResponse"
-                }
-              }
-            },
-            "x-summary": "Bad Request"
+//
+// Endpoint: /api/v2/auth/xades-signature
+//
+// Generated by OpenAPI_JSON_To_Single_Endpoint app.
+// Author: Grzegorz Molenda.
+// (C) 2025, All rights reserved.
+// Released under MIT License.
+//
+  "/api/v2/auth/xades-signature" : {
+    "post" : {
+      "tags" : [
+        "Uzyskiwanie dostępu"
+      ],
+      "summary" : "Uwierzytelnienie z wykorzystaniem podpisu XAdES",
+      "description" : "Rozpoczyna operację uwierzytelniania za pomocą dokumentu XML podpisanego podpisem elektronicznym XAdES.\n\n> Więcej informacji:\n> - [Przygotowanie dokumentu XML](https://github.com/CIRFMF/ksef-docs/blob/main/uwierzytelnianie.md#1-przygotowanie-dokumentu-xml-authtokenrequest)\n> - [Podpis dokumentu XML](https://github.com/CIRFMF/ksef-docs/blob/main/uwierzytelnianie.md#2-podpisanie-dokumentu-xades)\n> - [Schemat XSD](/docs/v2/schemas/authv2.xsd)",
+      "parameters" : [
+        {
+          "name" : "verifyCertificateChain",
+          "in" : "query",
+          "description" : "Wymuszenie weryfikacji zaufania łańcucha certyfikatu wraz ze sprawdzeniem statusu certyfikatu (OCSP/CRL) na środowiskach które umożliwiają wykorzystanie samodzielnie wygenerowanych certyfikatów.",
+          "schema" : {
+            "type" : "boolean"
           }
         }
-      }
-    },
-
-
-      "AuthenticationInitResponse": {
-        "required": [
-          "authenticationToken",
-          "referenceNumber"
-        ],
-        "type": "object",
-        "properties": {
-          "referenceNumber": {
-            "type": "string",
-            "description": "Numer referencyjny operacji uwierzytelnienia."
-          },
-          "authenticationToken": {
-            "required": [
-              "token",
-              "validUntil"
-            ],
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TokenInfo"
-              }
-            ],
-            "description": "Token operacji uwierzytelnienia."
+      ],
+      "requestBody" : {
+        "content" : {
+          "application/xml" : {
+            "schema" : {
+              "type" : "string"
+            },
+            "example" : "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<AuthTokenRequest xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://ksef.mf.gov.pl/auth/token/2.0\">\n    <Challenge>20250625-CR-20F5EE4000-DA48AE4124-46</Challenge>\n    <ContextIdentifier>\n        <Nip>5265877635</Nip>\n    </ContextIdentifier>\n    <SubjectIdentifierType>certificateSubject</SubjectIdentifierType>\n    <ds:Signature xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\" Id=\"Signature-9707709\">\n        <!-- Tu powinien być podpis XAdES -->\n    </ds:Signature>\n</AuthTokenRequest>"
           }
         },
-        "additionalProperties": false
+        "required" : true
       },
+      "responses" : {
+        "202" : {
+          "description" : "Accepted",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AuthenticationInitResponse"
+              },
+              "example" : {
+                "referenceNumber" : "20250514-AU-2DFC46C000-3AC6D5877F-D4",
+                "authenticationToken" : {
+                  "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbi10eXBlIjoiT3BlcmF0aW9uVG9rZW4iLCJvcGVyYXRpb24tcmVmZXJlbmNlLW51bWJlciI6IjIwMjUwNTE0LUFVLTJERkM0NkMwMDAtM0FDNkQ1ODc3Ri1ENCIsImV4cCI6MTc0NzIzMTcxOSwiaWF0IjoxNzQ3MjI5MDE5LCJpc3MiOiJrc2VmLWFwaS10aSIsImF1ZCI6ImtzZWYtYXBpLXRpIn0.rtRcV2mR9SiuJwpQaQHsbAXvvVsdNKG4DJsdiJctIeU",
+                  "validUntil" : "2025-07-11T12:23:56.0154302+00:00"
+                }
+              }
+            }
+          }
+        },
+        "400" : {
+          "description" : " | ExceptionCode      | ExceptionDescription                                                | Details                                                     | \n|---------------------|---------------------------------------------------------------------|-------------------------------------------------------------|\n| 21001               | Nieczytelna treść.                                                  |                                                             |\n| 21111               | Nieprawidłowe wyzwanie autoryzacyjne.                               |                                                             |\n| 21115               | Nieprawidłowy certyfikat.                                           |                                                             |\n| 21117               | Nieprawidłowy identyfikator podmiotu dla wskazanego typu kontekstu. |                                                             |\n| 21217               | Nieprawidłowe kodowanie znaków.                                     |                                                             |\n| 21401               | Dokument nie jest zgodny ze schemą (xsd).                           | {treść błędu walidacji}                                     |\n| 21406               | Konflikt podpisu i typu uwierzytelnienia.                           |                                                             |\n| 9101                | Nieprawidłowy dokument.                                             |                                                             |\n| 9102                | Brak podpisu.                                                       |                                                             |\n| 9103                | Przekroczona liczba dozwolonych podpisów.                           |                                                             |\n| 9105                | Nieprawidłowy podpis.                                               |                                                             |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ExceptionResponse"
+              }
+            }
+          },
+          "x-summary" : "Bad Request"
+        }
+      }
+    }
+  }
 
 
-      "TokenInfo": {
-        "required": [
+  "AuthenticationInitResponse" : {
+    "required" : [
+      "authenticationToken",
+      "referenceNumber"
+    ],
+    "type" : "object",
+    "properties" : {
+      "referenceNumber" : {
+        "type" : "string",
+        "description" : "Numer referencyjny operacji uwierzytelnienia."
+      },
+      "authenticationToken" : {
+        "required" : [
           "token",
           "validUntil"
         ],
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "Token w formacie JWT."
-          },
-          "validUntil": {
-            "type": "string",
-            "description": "Data ważności tokena.",
-            "format": "date-time"
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/TokenInfo"
           }
-        },
-        "additionalProperties": false
+        ],
+        "description" : "Token operacji uwierzytelnienia."
+      }
+    },
+    "additionalProperties" : false
+  }
+
+
+  "TokenInfo" : {
+    "required" : [
+      "token",
+      "validUntil"
+    ],
+    "type" : "object",
+    "properties" : {
+      "token" : {
+        "type" : "string",
+        "description" : "Token w formacie JWT."
       },
+      "validUntil" : {
+        "type" : "string",
+        "description" : "Data ważności tokena.",
+        "format" : "date-time"
+      }
+    },
+    "additionalProperties" : false
+  }
 
 
 
-request:  /api/v2/auth/xades-signature?verifyCertificateChain={true/false}: post: application/xml
-<?xml version="1.0" encoding="utf-8"?>
-<AuthTokenRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://ksef.mf.gov.pl/auth/token/2.0">
-  <Challenge>20250625-CR-20F5EE4000-DA48AE4124-46</Challenge>
-  <ContextIdentifier>
-    <Type>nip</Type>
-    <Value>5265877635</Value>
-  </ContextIdentifier>
-  <SubjectIdentifierType>certificateSubject</SubjectIdentifierType>
-  <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature-9707709">
-<!-- Tu powinien być podpis XAdES -->\n
-  </ds:Signature>
-</AuthTokenRequest>
+//---------------------------------------------------------------------------------------------------
+request: "/api/v2/auth/xades-signature?verifyCertificateChain={verifyCertificateChain}": post: application/xml
 
 
 
-response: application/json
+response (202): application/json
 {
-  "referenceNumber": "", // type: string; description: Numer referencyjny operacji uwierzytelnienia.
-  "authenticationToken": {
-    "token": "", // type: string
-    "validUntil": "" // type: string; format: date-time
+  "referenceNumber": "", // required; type: string; description: Numer referencyjny operacji uwierzytelnienia.
+  "authenticationToken": { // required; type: object; items: #/components/schemas/TokenInfo; description: Token operacji uwierzytelnienia.
+    "token": "", // required; type: string; description: Token w formacie JWT.
+    "validUntil": "" // required; type: string; format: date-time; description: Data ważności tokena.
   }
 }
