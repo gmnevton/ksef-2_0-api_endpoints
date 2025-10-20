@@ -1,0 +1,21 @@
+[ req ]
+default_bits       = 2048
+default_keyfile    = key.pem
+distinguished_name = req_distinguished_name
+x509_extensions    = v3_req
+prompt             = no
+
+[ req_distinguished_name ]
+C  = PL
+ST = Mazowieckie
+L  = Warszawa
+O  = MojaFirma
+OU = KSEF
+CN = moja.pl
+OID.2.5.4.97 = VATPL-9999999999
+
+[ v3_req ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = moja-firma.pl
