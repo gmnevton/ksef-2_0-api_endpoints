@@ -168,16 +168,10 @@
 
   "PermissionsOperationResponse" : {
     "required" : [
-      "operationReferenceNumber",
       "referenceNumber"
     ],
     "type" : "object",
     "properties" : {
-      "operationReferenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.",
-        "deprecated" : true
-      },
       "referenceNumber" : {
         "type" : "string",
         "description" : "Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień."
@@ -210,6 +204,5 @@ body:
 
 response (202): application/json
 {
-  "operationReferenceNumber": "", // required; type: string; description: Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.
   "referenceNumber": "" // required; type: string; description: Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.
 }

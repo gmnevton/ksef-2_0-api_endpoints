@@ -20,6 +20,18 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/EffectiveContextLimits"
+              },
+              "example" : {
+                "onlineSession" : {
+                  "maxInvoiceSizeInMB" : 1,
+                  "maxInvoiceWithAttachmentSizeInMB" : 3,
+                  "maxInvoices" : 10000
+                },
+                "batchSession" : {
+                  "maxInvoiceSizeInMB" : 1,
+                  "maxInvoiceWithAttachmentSizeInMB" : 3,
+                  "maxInvoices" : 10000
+                }
               }
             }
           }
@@ -59,9 +71,7 @@
     "properties" : {
       "onlineSession" : {
         "required" : [
-          "maxInvoiceSizeInMib",
           "maxInvoiceSizeInMB",
-          "maxInvoiceWithAttachmentSizeInMib",
           "maxInvoiceWithAttachmentSizeInMB",
           "maxInvoices"
         ],
@@ -74,9 +84,7 @@
       },
       "batchSession" : {
         "required" : [
-          "maxInvoiceSizeInMib",
           "maxInvoiceSizeInMB",
-          "maxInvoiceWithAttachmentSizeInMib",
           "maxInvoiceWithAttachmentSizeInMB",
           "maxInvoices"
         ],
@@ -96,34 +104,16 @@
     "required" : [
       "maxInvoices",
       "maxInvoiceSizeInMB",
-      "maxInvoiceSizeInMib",
-      "maxInvoiceWithAttachmentSizeInMB",
-      "maxInvoiceWithAttachmentSizeInMib"
+      "maxInvoiceWithAttachmentSizeInMB"
     ],
     "type" : "object",
     "properties" : {
-      "maxInvoiceSizeInMib" : {
-        "minimum" : 0,
-        "exclusiveMinimum" : false,
-        "type" : "integer",
-        "description" : "Maksymalny rozmiar faktury w MiB.",
-        "format" : "int32",
-        "deprecated" : true
-      },
       "maxInvoiceSizeInMB" : {
         "minimum" : 0,
         "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Maksymalny rozmiar faktury w MB.",
         "format" : "int32"
-      },
-      "maxInvoiceWithAttachmentSizeInMib" : {
-        "minimum" : 0,
-        "exclusiveMinimum" : false,
-        "type" : "integer",
-        "description" : "Maksymalny rozmiar faktury z załącznikiem w MiB.",
-        "format" : "int32",
-        "deprecated" : true
       },
       "maxInvoiceWithAttachmentSizeInMB" : {
         "minimum" : 0,
@@ -148,34 +138,16 @@
     "required" : [
       "maxInvoices",
       "maxInvoiceSizeInMB",
-      "maxInvoiceSizeInMib",
-      "maxInvoiceWithAttachmentSizeInMB",
-      "maxInvoiceWithAttachmentSizeInMib"
+      "maxInvoiceWithAttachmentSizeInMB"
     ],
     "type" : "object",
     "properties" : {
-      "maxInvoiceSizeInMib" : {
-        "minimum" : 0,
-        "exclusiveMinimum" : false,
-        "type" : "integer",
-        "description" : "Maksymalny rozmiar faktury w MiB.",
-        "format" : "int32",
-        "deprecated" : true
-      },
       "maxInvoiceSizeInMB" : {
         "minimum" : 0,
         "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Maksymalny rozmiar faktury w MB.",
         "format" : "int32"
-      },
-      "maxInvoiceWithAttachmentSizeInMib" : {
-        "minimum" : 0,
-        "exclusiveMinimum" : false,
-        "type" : "integer",
-        "description" : "Maksymalny rozmiar faktury z załącznikiem w MiB.",
-        "format" : "int32",
-        "deprecated" : true
       },
       "maxInvoiceWithAttachmentSizeInMB" : {
         "minimum" : 0,
@@ -209,16 +181,12 @@ body:
 response (200): application/json
 {
   "onlineSession": { // required; type: object; items: #/components/schemas/OnlineSessionEffectiveContextLimits; description: Limity dla sesji interaktywnych.
-    "maxInvoiceSizeInMib": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury w MiB.
     "maxInvoiceSizeInMB": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury w MB.
-    "maxInvoiceWithAttachmentSizeInMib": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury z załącznikiem w MiB.
     "maxInvoiceWithAttachmentSizeInMB": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury z załącznikiem w MB.
     "maxInvoices": 0 // required; type: integer; format: int32; description: Maksymalna ilość faktur które można przesłać w pojedynczej sesji.
   },
   "batchSession": { // required; type: object; items: #/components/schemas/BatchSessionEffectiveContextLimits; description: Limity dla sesji wsadowych.
-    "maxInvoiceSizeInMib": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury w MiB.
     "maxInvoiceSizeInMB": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury w MB.
-    "maxInvoiceWithAttachmentSizeInMib": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury z załącznikiem w MiB.
     "maxInvoiceWithAttachmentSizeInMB": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury z załącznikiem w MB.
     "maxInvoices": 0 // required; type: integer; format: int32; description: Maksymalna ilość faktur które można przesłać w pojedynczej sesji.
   }

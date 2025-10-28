@@ -121,7 +121,7 @@
             "$ref" : "#/components/schemas/IndirectPermissionsTargetIdentifier"
           }
         ],
-        "description" : "Identyfikator kontekstu klienta.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| AllPartners | Identyfikator oznaczający, że uprawnienie nadane w sposób pośredni jest typu generalnego |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |",
+        "description" : "Identyfikator kontekstu klienta. Nie przekazanie identyfikatora oznacza, że uprawnienie nadane w sposób pośredni jest typu generalnego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| AllPartners | Identyfikator oznaczający, że uprawnienie nadane w sposób pośredni jest typu generalnego |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |",
         "nullable" : true
       },
       "permissions" : {
@@ -196,7 +196,7 @@
       }
     },
     "additionalProperties" : false,
-    "description" : "Identyfikator kontekstu klienta.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| AllPartners | Identyfikator oznaczający, że uprawnienie nadane w sposób pośredni jest typu generalnego |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |"
+    "description" : "Identyfikator kontekstu klienta. Nie przekazanie identyfikatora oznacza, że uprawnienie nadane w sposób pośredni jest typu generalnego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| AllPartners | Identyfikator oznaczający, że uprawnienie nadane w sposób pośredni jest typu generalnego |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |"
   }
 
 
@@ -221,16 +221,10 @@
 
   "PermissionsOperationResponse" : {
     "required" : [
-      "operationReferenceNumber",
       "referenceNumber"
     ],
     "type" : "object",
     "properties" : {
-      "operationReferenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.",
-        "deprecated" : true
-      },
       "referenceNumber" : {
         "type" : "string",
         "description" : "Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień."
@@ -256,7 +250,7 @@ body:
     "type": "", // required; type: string; items: #/components/schemas/IndirectPermissionsSubjectIdentifierType; description: Typ identyfikatora.
     "value": "" // required; type: string; description: Wartość identyfikatora.
   },
-  "targetIdentifier": { // type: object; items: #/components/schemas/IndirectPermissionsTargetIdentifier; nullable: true; description: Identyfikator kontekstu klienta.
+  "targetIdentifier": { // type: object; items: #/components/schemas/IndirectPermissionsTargetIdentifier; nullable: true; description: Identyfikator kontekstu klienta. Nie przekazanie identyfikatora oznacza, że uprawnienie nadane w sposób pośredni jest typu generalnego.
 | Type | Value |
 | --- | --- |
 | Nip | 10 cyfrowy numer NIP |
@@ -274,6 +268,5 @@ body:
 
 response (202): application/json
 {
-  "operationReferenceNumber": "", // required; type: string; description: Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.
   "referenceNumber": "" // required; type: string; description: Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.
 }

@@ -36,7 +36,7 @@
           "in" : "query",
           "description" : "Rozmiar strony wyników.",
           "schema" : {
-            "maximum" : 100,
+            "maximum" : 500,
             "exclusiveMaximum" : false,
             "minimum" : 10,
             "exclusiveMinimum" : false,
@@ -67,6 +67,7 @@
                     "invoicingDate" : "2025-07-11T12:23:56.0154302+00:00",
                     "permanentStorageDate" : "2025-07-11T12:24:01.0154302+00:00",
                     "upoDownloadUrl" : "https://ksef-test.mf.gov.pl/storage/01/20250918-SB-3789A40000-20373E1269-A3/invoice-upo/upo_5265877635-20250626-010080DD2B5E-26.xml?sv=2025-01-05&st=2025-09-18T14%3A49%3A20Z&se=2025-09-21T14%3A54%3A20Z&sr=b&sp=r&sig=%2BUWFPA10gS580VhngGKW%2FZiOOtiHPOiTyMlxhG6ZvWs%3D",
+                    "upoDownloadUrlExpirationDate" : "2025-07-14T12:24:01.0154302+00:00",
                     "status" : {
                       "code" : 200,
                       "description" : "Sukces"
@@ -206,8 +207,14 @@
       },
       "upoDownloadUrl" : {
         "type" : "string",
-        "description" : "Adres do pobrania UPO.",
+        "description" : "Adres do pobrania UPO. Link generowany jest przy każdym odpytaniu o status. \nDostęp odbywa się metodą `HTTP GET` i <b>nie należy</b> wysyłać tokenu dostępowego. \nLink nie podlega limitom API i wygasa po określonym czasie w `UpoDownloadUrlExpirationDate`.",
         "format" : "uri",
+        "nullable" : true
+      },
+      "upoDownloadUrlExpirationDate" : {
+        "type" : "string",
+        "description" : "Data i godzina wygaśnięcia adresu. Po tej dacie link `UpoDownloadUrl` nie będzie już aktywny.",
+        "format" : "date-time",
         "nullable" : true
       },
       "invoicingMode" : {
@@ -296,7 +303,10 @@ response (200): application/json
       "acquisitionDate": "", // type: string; format: date-time; nullable: true; description: Data nadania numeru KSeF.
       "invoicingDate": "", // required; type: string; format: date-time; description: Data przyjęcia faktury w systemie KSeF (do dalszego przetwarzania).
       "permanentStorageDate": "", // type: string; format: date-time; nullable: true; description: Data trwałego zapisu faktury w repozytorium KSeF. Wartość uzupełniana asynchronicznie w momencie trwałego zapisu; zawsze późniejsza niż <b>acquisitionDate</b>. Podczas sprawdzania statusu może być jeszcze niedostępna.
-      "upoDownloadUrl": "", // type: string; format: uri; nullable: true; description: Adres do pobrania UPO.
+      "upoDownloadUrl": "", // type: string; format: uri; nullable: true; description: Adres do pobrania UPO. Link generowany jest przy każdym odpytaniu o status. 
+Dostęp odbywa się metodą `HTTP GET` i <b>nie należy</b> wysyłać tokenu dostępowego. 
+Link nie podlega limitom API i wygasa po określonym czasie w `UpoDownloadUrlExpirationDate`.
+      "upoDownloadUrlExpirationDate": "", // type: string; format: date-time; nullable: true; description: Data i godzina wygaśnięcia adresu. Po tej dacie link `UpoDownloadUrl` nie będzie już aktywny.
       "invoicingMode": "", // type: string; items: #/components/schemas/InvoicingMode; description: Tryb fakturowania (online/offline).
       "status": { // required; type: object; items: #/components/schemas/StatusInfo; description: Status faktury.
 

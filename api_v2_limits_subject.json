@@ -20,6 +20,14 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/EffectiveSubjectLimits"
+              },
+              "example" : {
+                "enrollment" : {
+                  "maxEnrollments" : 6
+                },
+                "certificate" : {
+                  "maxCertificates" : 2
+                }
               }
             }
           }

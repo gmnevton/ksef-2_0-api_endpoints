@@ -164,6 +164,7 @@
                       "type" : "Nip",
                       "value" : "5265877635"
                     },
+                    "description" : "Wystawianie i przeglądanie faktur.",
                     "requestedPermissions" : [
                       "InvoiceRead",
                       "InvoiceWrite"

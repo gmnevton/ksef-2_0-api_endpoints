@@ -105,11 +105,17 @@
             "$ref" : "#/components/schemas/StatusInfo"
           }
         ],
-        "description" : "Status eksportu.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Eksport faktur w toku | - |\n| 200 | Eksport faktur zakończony sukcesem | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza  | - |\n| 500 | Nieznany błąd ({statusCode}) | - |"
+        "description" : "Status eksportu.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Eksport faktur w toku | - |\n| 200 | Eksport faktur zakończony sukcesem | - |\n| 210 | Eksport faktur wygasł i nie jest już dostępny do pobrania | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza  | - |\n| 500 | Nieznany błąd ({statusCode}) | - |"
       },
       "completedDate" : {
         "type" : "string",
-        "description" : "Data zakończenia przetwarzania żądania.",
+        "description" : "Data zakończenia przetwarzania żądania eksportu faktur.",
+        "format" : "date-time",
+        "nullable" : true
+      },
+      "packageExpirationDate" : {
+        "type" : "string",
+        "description" : "Data wygaśnięcia paczki faktur przygotowanej do pobrania.\nPo upływie tej daty paczka nie będzie już dostępna do pobrania.",
         "format" : "date-time",
         "nullable" : true
       },
@@ -253,7 +259,7 @@
       },
       "url" : {
         "type" : "string",
-        "description" : "Adres URL, pod który należy wysłać żądanie pobrania.",
+        "description" : "Adres URL, pod który należy wysłać żądanie pobrania części paczki.\nLink jest generowany dynamicznie w momencie odpytania o status operacji eksportu.\nNie podlega limitom API i nie wymaga przesyłania tokenu dostępowego przy pobraniu.",
         "format" : "uri"
       },
       "partSize" : {
@@ -280,7 +286,7 @@
       },
       "expirationDate" : {
         "type" : "string",
-        "description" : "Moment wygaśnięcia linku do pobrania części.",
+        "description" : "Data i godzina wygaśnięcia linku umożliwiającego pobranie części paczki.\nPo upływie tego momentu link przestaje być aktywny.",
         "format" : "date-time"
       }
     },
@@ -306,6 +312,7 @@ response (200): application/json
 | --- | --- | --- |
 | 100 | Eksport faktur w toku | - |
 | 200 | Eksport faktur zakończony sukcesem | - |
+| 210 | Eksport faktur wygasł i nie jest już dostępny do pobrania | - |
 | 415 | Błąd odszyfrowania dostarczonego klucza  | - |
 | 500 | Nieznany błąd ({statusCode}) | - |
     "code": 0, // required; type: integer; format: int32; description: Kod statusu
@@ -313,7 +320,9 @@ response (200): application/json
     "details": [ // type: array; nullable: true; description: Dodatkowe szczegóły statusu
     ]
   },
-  "completedDate": "", // type: string; format: date-time; nullable: true; description: Data zakończenia przetwarzania żądania.
+  "completedDate": "", // type: string; format: date-time; nullable: true; description: Data zakończenia przetwarzania żądania eksportu faktur.
+  "packageExpirationDate": "", // type: string; format: date-time; nullable: true; description: Data wygaśnięcia paczki faktur przygotowanej do pobrania.
+Po upływie tej daty paczka nie będzie już dostępna do pobrania.
   "package": { // type: object; items: #/components/schemas/InvoicePackage; nullable: true; description: Dane paczki faktur przygotowanej do pobrania.
     "invoiceCount": 0, // required; type: integer; format: int64; description: Łączna liczba faktur w paczce.
     "size": 0, // required; type: integer; format: int64; description: Rozmiar paczki w bajtach.
@@ -322,12 +331,15 @@ response (200): application/json
         "ordinalNumber": 0, // required; type: integer; format: int32; description: Numer sekwencyjny pliku części paczki.
         "partName": "", // required; type: string; description: Nazwa pliku części paczki.
         "method": "", // required; type: string; description: Metoda HTTP, której należy użyć przy pobieraniu pliku.
-        "url": "", // required; type: string; format: uri; description: Adres URL, pod który należy wysłać żądanie pobrania.
+        "url": "", // required; type: string; format: uri; description: Adres URL, pod który należy wysłać żądanie pobrania części paczki.
+Link jest generowany dynamicznie w momencie odpytania o status operacji eksportu.
+Nie podlega limitom API i nie wymaga przesyłania tokenu dostępowego przy pobraniu.
         "partSize": 0, // required; type: integer; format: int64; description: Rozmiar części paczki w bajtach.
         "partHash": "", // required; type: string; description: Skrót SHA256 pliku części paczki, zakodowany w formacie Base64.
         "encryptedPartSize": 0, // required; type: integer; format: int64; description: Rozmiar zaszyfrowanej części paczki w bajtach.
         "encryptedPartHash": "", // required; type: string; description: Skrót SHA256 zaszyfrowanej części paczki, zakodowany w formacie Base64.
-        "expirationDate": "" // required; type: string; format: date-time; description: Moment wygaśnięcia linku do pobrania części.
+        "expirationDate": "" // required; type: string; format: date-time; description: Data i godzina wygaśnięcia linku umożliwiającego pobranie części paczki.
+Po upływie tego momentu link przestaje być aktywny.
       }
     ],
     "isTruncated": true/false, // required; type: boolean; description: Określa, czy wynik eksportu został ucięty z powodu przekroczenia limitu liczby faktur lub wielkości paczki.

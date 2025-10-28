@@ -177,7 +177,7 @@
             "$ref" : "#/components/schemas/AuthenticationMethod"
           }
         ],
-        "description" : "Użyta metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy uslug Peppol. |\n"
+        "description" : "Metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy uslug Peppol. |\n"
       },
       "status" : {
         "allOf" : [
@@ -267,7 +267,7 @@ body:
 response (200): application/json
 {
   "startDate": "", // required; type: string; format: date-time; description: Data rozpoczęcia operacji uwierzytelnienia.
-  "authenticationMethod": "", // required; type: string; items: #/components/schemas/AuthenticationMethod; description: Użyta metoda uwierzytelnienia.
+  "authenticationMethod": "", // required; type: string; items: #/components/schemas/AuthenticationMethod; description: Metoda uwierzytelnienia.
 | Wartość | Opis |
 | --- | --- |
 | Token | Token KSeF. |
