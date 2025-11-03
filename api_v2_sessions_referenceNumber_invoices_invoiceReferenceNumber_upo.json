@@ -12,7 +12,7 @@
         "Status wysyłki i UPO"
       ],
       "summary" : "Pobranie UPO faktury z sesji na podstawie numeru referencyjnego faktury",
-      "description" : "Zwraca UPO faktury przesłanego w sesji na podstawie jego numeru KSeF.\n\nWymagane uprawnienia: `InvoiceWrite`, `Introspection`, `PefInvoiceWrite`.",
+      "description" : "Zwraca UPO faktury przesłanego w sesji na podstawie jego numeru KSeF.\n\n**Wymagane uprawnienia**: `InvoiceWrite`, `Introspection`, `PefInvoiceWrite`.",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -20,7 +20,7 @@
           "description" : "Numer referencyjny sesji.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         },
         {
@@ -29,7 +29,7 @@
           "description" : "Numer referencyjny faktury.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         }
       ],
@@ -75,6 +75,22 @@
         "PefInvoiceWrite"
       ]
     }
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 

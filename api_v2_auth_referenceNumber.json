@@ -20,7 +20,7 @@
           "description" : "Numer referencyjny tokena otrzymanego przy inicjalizacji operacji uwierzytelniania.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         }
       ],
@@ -155,6 +155,14 @@
         }
       ]
     }
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 

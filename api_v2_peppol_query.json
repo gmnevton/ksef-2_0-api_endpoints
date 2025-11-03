@@ -12,7 +12,7 @@
         "Usługi Peppol"
       ],
       "summary" : "Pobranie listy dostawców usług Peppol",
-      "description" : "Zwraca listę dostawców usług Peppol zarejestrowanych w systemie.",
+      "description" : "Zwraca listę dostawców usług Peppol zarejestrowanych w systemie.\n\n**Sortowanie:**\n\n- dateCreated (Desc)\n\n",
       "parameters" : [
         {
           "name" : "pageOffset",
@@ -52,8 +52,9 @@
               "example" : {
                 "peppolProviders" : [
                   {
-                    "id" : "1234567890",
-                    "name" : "Dostawca usług Peppol"
+                    "id" : "P123456789",
+                    "name" : "Dostawca usług Peppol",
+                    "dateCreated" : "2025-07-11T12:23:56.0154302+00:00"
                   }
                 ],
                 "hasMore" : false
@@ -72,7 +73,13 @@
           },
           "x-summary" : "Bad Request"
         }
-      }
+      },
+      "x-sort" : [
+        {
+          "field" : "dateCreated",
+          "direction" : "Desc"
+        }
+      ]
     }
   }
 
@@ -101,20 +108,41 @@
 
 
   "PeppolProvider" : {
+    "required" : [
+      "dateCreated",
+      "id",
+      "name"
+    ],
     "type" : "object",
     "properties" : {
       "id" : {
-        "type" : "string",
-        "description" : "Identyfikator dostawcy usług Peppol.",
-        "nullable" : true
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/PeppolId"
+          }
+        ],
+        "description" : "Identyfikator dostawcy usług Peppol."
       },
       "name" : {
+        "maxLength" : 256,
         "type" : "string",
-        "description" : "Nazwa dostawcy usług Peppol.",
-        "nullable" : true
+        "description" : "Nazwa dostawcy usług Peppol."
+      },
+      "dateCreated" : {
+        "type" : "string",
+        "description" : "Data rejestracji dostawcy usług Peppol w systemie.",
+        "format" : "date-time"
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "PeppolId" : {
+    "maxLength" : 9,
+    "minLength" : 9,
+    "type" : "string",
+    "description" : "Identyfikator dostawcy usług Peppol"
   }
 
 
@@ -129,8 +157,9 @@ response (200): application/json
 {
   "peppolProviders": [ // required; type: array; description: Lista dostawców usług Peppol.
     {
-      "id": "", // type: string; nullable: true; description: Identyfikator dostawcy usług Peppol.
-      "name": "" // type: string; nullable: true; description: Nazwa dostawcy usług Peppol.
+      "id": "", // required; type: string; items: #/components/schemas/PeppolId; description: Identyfikator dostawcy usług Peppol.
+      "name": "", // required; type: string; description: Nazwa dostawcy usług Peppol.
+      "dateCreated": "" // required; type: string; format: date-time; description: Data rejestracji dostawcy usług Peppol w systemie.
     }
   ],
   "hasMore": true/false // required; type: boolean; description: Flaga informująca o dostępności kolejnej strony wyników.

@@ -17,10 +17,10 @@
         {
           "name" : "referenceNumber",
           "in" : "path",
-          "description" : "Numer referencyjny operacji",
+          "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         }
       ],
@@ -64,6 +64,14 @@
         }
       ]
     }
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 

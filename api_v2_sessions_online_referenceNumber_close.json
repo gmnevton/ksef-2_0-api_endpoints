@@ -12,7 +12,7 @@
         "Wysyłka interaktywna"
       ],
       "summary" : "Zamknięcie sesji interaktywnej",
-      "description" : "Zamyka sesję interaktywną i rozpoczyna generowanie zbiorczego UPO dla sesji.\n\nWymagane uprawnienia: `InvoiceWrite`, `PefInvoiceWrite`.",
+      "description" : "Zamyka sesję interaktywną i rozpoczyna generowanie zbiorczego UPO dla sesji.\n\n**Wymagane uprawnienia**: `InvoiceWrite`, `PefInvoiceWrite`.",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -20,7 +20,7 @@
           "description" : "Numer referencyjny sesji",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         }
       ],
@@ -58,6 +58,14 @@
         "PefInvoiceWrite"
       ]
     }
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 

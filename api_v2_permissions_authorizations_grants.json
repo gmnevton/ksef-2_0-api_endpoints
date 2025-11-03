@@ -12,7 +12,7 @@
         "Nadawanie uprawnień"
       ],
       "summary" : "Nadanie uprawnień podmiotowych",
-      "description" : "Metoda pozwala na nadanie jednego z uprawnień podmiotowych do obsługi podmiotu kontekstu  podmiotowi wskazanemu w żądaniu.\n\n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-uprawnie%C5%84-podmiotowych)\n\nWymagane uprawnienia: `CredentialsManage`.",
+      "description" : "Metoda pozwala na nadanie jednego z uprawnień podmiotowych do obsługi podmiotu kontekstu  podmiotowi wskazanemu w żądaniu.\n\n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-uprawnie%C5%84-podmiotowych)\n\n**Wymagane uprawnienia**: `CredentialsManage`.",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -114,6 +114,7 @@
         "description" : "Rodzaj uprawnienia."
       },
       "description" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Opis uprawnienia"
       }
@@ -174,11 +175,23 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień."
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
+        "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień."
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -205,5 +218,5 @@ body:
 
 response (202): application/json
 {
-  "referenceNumber": "" // required; type: string; description: Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.
+  "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny operacji nadania lub odbierania uprawnień.
 }

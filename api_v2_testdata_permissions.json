@@ -178,6 +178,7 @@
     "type" : "object",
     "properties" : {
       "description" : {
+        "maxLength" : 256,
         "type" : "string"
       },
       "permissionType" : {

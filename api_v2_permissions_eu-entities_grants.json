@@ -12,7 +12,7 @@
         "Nadawanie uprawnień"
       ],
       "summary" : "Nadanie uprawnień reprezentanta podmiotu unijnego",
-      "description" : "Metoda pozwala na nadanie wskazanemu w żądaniu podmiotowi lub osobie fizycznej uprawnień do wystawiania i/lub przeglądania faktur w kontekście złożonym kontekstu bieżącego.  \n            \nJedynym sposobem identyfikacji uprawnianego jest odcisk palca certyfikatu kwalifikowanego:  \n- certyfikat podpisu elektronicznego dla osób fizycznych  \n- certyfikat pieczęci elektronicznej dla podmiotów  \n            \nW żądaniu określane są nadawane uprawnienia ze zbioru:  \n- **InvoiceWrite** – wystawianie faktur  \n- **InvoiceRead** – przeglądanie faktur  \n            \nMetoda pozwala na wybór dowolnej kombinacji powyższych uprawnień.\n\n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-uprawnie%C5%84-reprezentanta-podmiotu-unijnego)\n\nWymagane uprawnienia: `VatUeManage`.",
+      "description" : "Metoda pozwala na nadanie wskazanemu w żądaniu podmiotowi lub osobie fizycznej uprawnień do wystawiania i/lub przeglądania faktur w kontekście złożonym kontekstu bieżącego.  \n            \nJedynym sposobem identyfikacji uprawnianego jest odcisk palca certyfikatu kwalifikowanego:  \n- certyfikat podpisu elektronicznego dla osób fizycznych  \n- certyfikat pieczęci elektronicznej dla podmiotów  \n            \nW żądaniu określane są nadawane uprawnienia ze zbioru:  \n- **InvoiceWrite** – wystawianie faktur  \n- **InvoiceRead** – przeglądanie faktur  \n            \nMetoda pozwala na wybór dowolnej kombinacji powyższych uprawnień.\n\n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-uprawnie%C5%84-reprezentanta-podmiotu-unijnego)\n\n**Wymagane uprawnienia**: `VatUeManage`.",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -116,6 +116,7 @@
         "description" : "Lista nadawanych uprawnień. Każda wartość może wystąpić tylko raz."
       },
       "description" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Opis uprawnienia"
       }
@@ -173,11 +174,23 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień."
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
+        "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień."
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -204,5 +217,5 @@ body:
 
 response (202): application/json
 {
-  "referenceNumber": "" // required; type: string; description: Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.
+  "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny operacji nadania lub odbierania uprawnień.
 }

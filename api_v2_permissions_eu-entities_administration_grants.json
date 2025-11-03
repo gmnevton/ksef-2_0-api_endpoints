@@ -12,7 +12,7 @@
         "Nadawanie uprawnień"
       ],
       "summary" : "Nadanie uprawnień administratora podmiotu unijnego",
-      "description" : "Metoda pozwala na nadanie wskazanemu w żądaniu podmiotowi lub osobie fizycznej uprawnień administratora w kontekście złożonym z identyfikatora NIP podmiotu kontekstu bieżącego oraz numeru VAT UE podmiotu unijnego wskazanego w żądaniu.  \nWraz z utworzeniem administratora podmiotu unijnego tworzony jest kontekst złożony składający się z numeru NIP podmiotu kontekstu logowania oraz wskazanego numeru identyfikacyjnego VAT UE podmiotu unijnego.  \nW żądaniu podaje się również nazwę i adres podmiotu unijnego.  \n            \nJedynym sposobem identyfikacji uprawnianego jest odcisk palca certyfikatu kwalifikowanego:  \n- certyfikat podpisu elektronicznego dla osób fizycznych  \n- certyfikat pieczęci elektronicznej dla podmiotów  \n            \nUprawnienia administratora podmiotu unijnego obejmują:  \n- **VatEuManage** – zarządzanie uprawnieniami w ramach podmiotu unijnego  \n- **InvoiceWrite** – wystawianie faktur  \n- **InvoiceRead** – przeglądanie faktur  \n- **Introspection** – przeglądanie historii sesji  \n            \nMetoda automatycznie nadaje wszystkie powyższe uprawnienia, bez konieczności ich wskazywania w żądaniu.\n            \n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-uprawnie%C5%84-administratora-podmiotu-unijnego)\n\nWymagane uprawnienia: `CredentialsManage`.",
+      "description" : "Metoda pozwala na nadanie wskazanemu w żądaniu podmiotowi lub osobie fizycznej uprawnień administratora w kontekście złożonym z identyfikatora NIP podmiotu kontekstu bieżącego oraz numeru VAT UE podmiotu unijnego wskazanego w żądaniu.  \nWraz z utworzeniem administratora podmiotu unijnego tworzony jest kontekst złożony składający się z numeru NIP podmiotu kontekstu logowania oraz wskazanego numeru identyfikacyjnego VAT UE podmiotu unijnego.  \nW żądaniu podaje się również nazwę i adres podmiotu unijnego.  \n            \nJedynym sposobem identyfikacji uprawnianego jest odcisk palca certyfikatu kwalifikowanego:  \n- certyfikat podpisu elektronicznego dla osób fizycznych  \n- certyfikat pieczęci elektronicznej dla podmiotów  \n            \nUprawnienia administratora podmiotu unijnego obejmują:  \n- **VatEuManage** – zarządzanie uprawnieniami w ramach podmiotu unijnego  \n- **InvoiceWrite** – wystawianie faktur  \n- **InvoiceRead** – przeglądanie faktur  \n- **Introspection** – przeglądanie historii sesji  \n            \nMetoda automatycznie nadaje wszystkie powyższe uprawnienia, bez konieczności ich wskazywania w żądaniu.\n            \n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-uprawnie%C5%84-administratora-podmiotu-unijnego)\n\n**Wymagane uprawnienia**: `CredentialsManage`.",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -124,10 +124,12 @@
         "description" : "Identyfikator kontekstu złożonego.\n| Type | Value |\n| --- | --- |\n| NipVatUe | Dwuczłonowy identyfikator składający się z numeru NIP i numeru VAT-UE: `{nip}-{vat_ue}` |"
       },
       "description" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Opis uprawnienia"
       },
       "euEntityName" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Nazwa i adres podmiotu unijnego w formacie: \n`{euSubjectName}, {euSubjectAddress}`"
       }
@@ -209,11 +211,23 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień."
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
+        "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień."
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -247,5 +261,5 @@ body:
 
 response (202): application/json
 {
-  "referenceNumber": "" // required; type: string; description: Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.
+  "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny operacji nadania lub odbierania uprawnień.
 }

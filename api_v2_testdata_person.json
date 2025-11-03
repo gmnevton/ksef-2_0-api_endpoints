@@ -70,15 +70,16 @@
     "type" : "object",
     "properties" : {
       "nip" : {
-        "type" : "string"
+        "$ref" : "#/components/schemas/Nip"
       },
       "pesel" : {
-        "type" : "string"
+        "$ref" : "#/components/schemas/Pesel"
       },
       "isBailiff" : {
         "type" : "boolean"
       },
       "description" : {
+        "maxLength" : 256,
         "type" : "string"
       },
       "isDeceased" : {
@@ -95,12 +96,30 @@
   }
 
 
+  "Nip" : {
+    "maxLength" : 10,
+    "minLength" : 10,
+    "pattern" : "^[1-9]((\\d[1-9])|([1-9]\\d))\\d{7}$",
+    "type" : "string",
+    "description" : "10 cyfrowy numer NIP"
+  }
+
+
+  "Pesel" : {
+    "maxLength" : 11,
+    "minLength" : 11,
+    "pattern" : "^\\d{2}(?:0[1-9]|1[0-2]|2[1-9]|3[0-2]|4[1-9]|5[0-2]|6[1-9]|7[0-2]|8[1-9]|9[0-2])\\d{7}$",
+    "type" : "string",
+    "description" : "11 cyfrowy numer PESEL"
+  }
+
+
 
 //---------------------------------------------------------------------------------------------------
 request: "/api/v2/testdata/person": post: application/json
 {
-  "nip": "", // required; type: string;
-  "pesel": "", // required; type: string;
+  "nip": "", // required; type: string; items: #/components/schemas/Nip;
+  "pesel": "", // required; type: string; items: #/components/schemas/Pesel;
   "isBailiff": true/false, // required; type: boolean;
   "description": "", // required; type: string;
   "isDeceased": true/false, // type: boolean;

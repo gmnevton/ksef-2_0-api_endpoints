@@ -12,7 +12,7 @@
         "Status wysyłki i UPO"
       ],
       "summary" : "Pobranie UPO faktury z sesji na podstawie numeru KSeF",
-      "description" : "Zwraca UPO faktury przesłanego w sesji na podstawie jego numeru KSeF.\n\nWymagane uprawnienia: `InvoiceWrite`, `Introspection`, `PefInvoiceWrite`.",
+      "description" : "Zwraca UPO faktury przesłanego w sesji na podstawie jego numeru KSeF.\n\n**Wymagane uprawnienia**: `InvoiceWrite`, `Introspection`, `PefInvoiceWrite`.",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -20,7 +20,7 @@
           "description" : "Numer referencyjny sesji.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         },
         {
@@ -29,7 +29,7 @@
           "description" : "Numer KSeF faktury.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/KsefNumber"
           }
         }
       ],
@@ -75,6 +75,23 @@
         "PefInvoiceWrite"
       ]
     }
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
+  }
+
+
+  "KsefNumber" : {
+    "maxLength" : 36,
+    "minLength" : 35,
+    "pattern" : "^([1-9](\\d[1-9]|[1-9]\\d)\\d{7})-(20[2-9][0-9]|2[1-9]\\d{2}|[3-9]\\d{3})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-([0-9A-F]{6})-?([0-9A-F]{6})-([0-9A-F]{2})$",
+    "type" : "string",
+    "description" : "Numer KSeF o długości 35 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 36-znakowym"
   }
 
 

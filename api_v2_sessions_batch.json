@@ -12,7 +12,7 @@
         "Wysyłka wsadowa"
       ],
       "summary" : "Otwarcie sesji wsadowej",
-      "description" : "Otwiera sesję do wysyłki wsadowej faktur. Należy przekazać schemat wysyłanych faktur, informacje o paczce faktur oraz informacje o kluczu używanym do szyfrowania.\n\n> Więcej informacji:\n> - [Przygotwanie paczki faktur](https://github.com/CIRFMF/ksef-docs/blob/main/sesja-wsadowa.md)\n> - [Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)\n\nWymagane uprawnienia: `InvoiceWrite`.",
+      "description" : "Otwiera sesję do wysyłki wsadowej faktur. Należy przekazać schemat wysyłanych faktur, informacje o paczce faktur oraz informacje o kluczu używanym do szyfrowania.\n\n> Więcej informacji:\n> - [Przygotwanie paczki faktur](https://github.com/CIRFMF/ksef-docs/blob/main/sesja-wsadowa.md)\n> - [Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)\n\n**Wymagane uprawnienia**: `InvoiceWrite`.",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -210,7 +210,11 @@
         "format" : "int64"
       },
       "fileHash" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Sha256HashBase64"
+          }
+        ],
         "description" : "Skrót SHA256 pliku paczki, zakodowany w formacie Base64."
       },
       "fileParts" : {
@@ -222,6 +226,15 @@
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "Sha256HashBase64" : {
+    "maxLength" : 44,
+    "minLength" : 44,
+    "type" : "string",
+    "description" : "SHA-256 w Base64",
+    "format" : "byte"
   }
 
 
@@ -242,6 +255,7 @@
         "format" : "int32"
       },
       "fileName" : {
+        "maxLength" : 100,
         "type" : "string",
         "description" : "Nazwa części pliku paczki."
       },
@@ -253,11 +267,24 @@
         "format" : "int64"
       },
       "fileHash" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Sha256HashBase64"
+          }
+        ],
         "description" : "Skrót SHA256 zaszyfrowanej części pliku paczki, zakodowany w formacie Base64."
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "Sha256HashBase64" : {
+    "maxLength" : 44,
+    "minLength" : 44,
+    "type" : "string",
+    "description" : "SHA-256 w Base64",
+    "format" : "byte"
   }
 
 
@@ -270,11 +297,13 @@
     "properties" : {
       "encryptedSymmetricKey" : {
         "type" : "string",
-        "description" : "Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.\n\n[Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)"
+        "description" : "Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.\n\n[Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)",
+        "format" : "byte"
       },
       "initializationVector" : {
         "type" : "string",
-        "description" : "Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64."
+        "description" : "Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64.",
+        "format" : "byte"
       }
     },
     "additionalProperties" : false
@@ -289,7 +318,11 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
         "description" : "Numer referencyjny sesji."
       },
       "partUploadRequests" : {
@@ -301,6 +334,14 @@
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -362,21 +403,21 @@ Obsługiwane schematy:
   },
   "batchFile": { // required; type: object; items: #/components/schemas/BatchFileInfo; description: Informacje o przesyłanej paczce faktur.
     "fileSize": 0, // required; type: integer; format: int64; description: Rozmiar pliku paczki w bajtach. Maksymalny rozmiar paczki to 5GB.
-    "fileHash": "", // required; type: string; description: Skrót SHA256 pliku paczki, zakodowany w formacie Base64.
+    "fileHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 pliku paczki, zakodowany w formacie Base64.
     "fileParts": [ // required; type: array; description: Informacje o częściach pliku paczki. Maksymalna liczba części to 50. Maksymalny dozwolony rozmiar części przed zaszyfrowaniem to 100MB.
       {
         "ordinalNumber": 0, // required; type: integer; format: int32; description: Numer sekwencyjny części pliku paczki.
         "fileName": "", // required; type: string; description: Nazwa części pliku paczki.
         "fileSize": 0, // required; type: integer; format: int64; description: Rozmiar zaszyfrowanej części pliku paczki w bajtach.
-        "fileHash": "" // required; type: string; description: Skrót SHA256 zaszyfrowanej części pliku paczki, zakodowany w formacie Base64.
+        "fileHash": "" // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 zaszyfrowanej części pliku paczki, zakodowany w formacie Base64.
       }
     ]
   },
   "encryption": { // required; type: object; items: #/components/schemas/EncryptionInfo; description: Symetryczny klucz szyfrujący plik paczki, zaszyfrowany kluczem publicznym Ministerstwa Finansów.
-    "encryptedSymmetricKey": "", // required; type: string; description: Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.
+    "encryptedSymmetricKey": "", // required; type: string; format: byte; description: Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.
 
 [Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)
-    "initializationVector": "" // required; type: string; description: Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64.
+    "initializationVector": "" // required; type: string; format: byte; description: Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64.
   },
   "offlineMode": true/false // type: boolean; description: Określa, czy podatnik deklaruje tryb fakurowania "offline" dla dokumentów przesyłanych w sesji wsadowej.
 }
@@ -385,7 +426,7 @@ Obsługiwane schematy:
 
 response (201): application/json
 {
-  "referenceNumber": "", // required; type: string; description: Numer referencyjny sesji.
+  "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny sesji.
   "partUploadRequests": [ // required; type: array; description: Dane wymagane do poprawnego przesłania poszczególnych części pliku paczki faktur.
 
 Każdą część pliku paczki zadeklarowaną w <b>fileParts</b> należy przesłać zgodnie z odpowiadającym jej obiektem w <b>partUploadRequests</b>.

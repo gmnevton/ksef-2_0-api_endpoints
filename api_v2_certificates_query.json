@@ -12,7 +12,7 @@
         "Certyfikaty"
       ],
       "summary" : "Pobranie listy metadanych certyfikatów",
-      "description" : "Zwraca listę certyfikatów spełniających podane kryteria wyszukiwania.\nW przypadku braku podania kryteriów wyszukiwania zwrócona zostanie nieprzefiltrowana lista.",
+      "description" : "Zwraca listę certyfikatów spełniających podane kryteria wyszukiwania.\nW przypadku braku podania kryteriów wyszukiwania zwrócona zostanie nieprzefiltrowana lista.\n\n**Sortowanie:**\n\n- requestDate (Desc)\n\n",
       "parameters" : [
         {
           "name" : "pageSize",
@@ -81,7 +81,8 @@
                     },
                     "validFrom" : "2025-08-24T14:15:22+00:00",
                     "validTo" : "2027-08-24T14:15:22+00:00",
-                    "lastUseDate" : "2025-08-25T14:15:22+00:00"
+                    "lastUseDate" : "2025-08-25T14:15:22+00:00",
+                    "requestDate" : "2025-08-24T14:15:22+00:00"
                   }
                 ],
                 "hasMore" : false
@@ -109,6 +110,12 @@
           "Bearer" : [
 
           ]
+        }
+      ],
+      "x-sort" : [
+        {
+          "field" : "requestDate",
+          "direction" : "Desc"
         }
       ]
     }
@@ -207,6 +214,7 @@
       "certificateSerialNumber",
       "commonName",
       "name",
+      "requestDate",
       "status",
       "subjectIdentifier",
       "type",
@@ -220,6 +228,7 @@
         "description" : "Numer seryjny certyfikatu (w formacie szesnastkowym)."
       },
       "name" : {
+        "maxLength" : 100,
         "type" : "string",
         "description" : "Nazwa własna certyfikatu."
       },
@@ -270,6 +279,11 @@
         "description" : "Data ostatniego użycia certyfikatu.",
         "format" : "date-time",
         "nullable" : true
+      },
+      "requestDate" : {
+        "type" : "string",
+        "description" : "Data złożenia wniosku certyfikacyjnego.",
+        "format" : "date-time"
       }
     },
     "additionalProperties" : false
@@ -384,7 +398,8 @@ response (200): application/json
       },
       "validFrom": "", // required; type: string; format: date-time; description: Data rozpoczęcia ważności certyfikatu.
       "validTo": "", // required; type: string; format: date-time; description: Data wygaśnięcia certyfikatu.
-      "lastUseDate": "" // type: string; format: date-time; nullable: true; description: Data ostatniego użycia certyfikatu.
+      "lastUseDate": "", // type: string; format: date-time; nullable: true; description: Data ostatniego użycia certyfikatu.
+      "requestDate": "" // required; type: string; format: date-time; description: Data złożenia wniosku certyfikacyjnego.
     }
   ],
   "hasMore": true/false // required; type: boolean; description: Flaga informująca o dostępności kolejnej strony wyników.

@@ -59,10 +59,19 @@
     "type" : "object",
     "properties" : {
       "nip" : {
-        "type" : "string"
+        "$ref" : "#/components/schemas/Nip"
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "Nip" : {
+    "maxLength" : 10,
+    "minLength" : 10,
+    "pattern" : "^[1-9]((\\d[1-9])|([1-9]\\d))\\d{7}$",
+    "type" : "string",
+    "description" : "10 cyfrowy numer NIP"
   }
 
 
@@ -70,7 +79,7 @@
 //---------------------------------------------------------------------------------------------------
 request: "/api/v2/testdata/attachment/revoke": post: application/json
 {
-  "nip": "" // required; type: string;
+  "nip": "" // required; type: string; items: #/components/schemas/Nip;
 }
 
 

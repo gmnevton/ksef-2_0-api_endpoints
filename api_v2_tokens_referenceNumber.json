@@ -16,10 +16,10 @@
         {
           "name" : "referenceNumber",
           "in" : "path",
-          "description" : "Numer referencyjny tokena.",
+          "description" : "Numer referencyjny tokena KSeF.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         }
       ],
@@ -89,10 +89,10 @@
         {
           "name" : "referenceNumber",
           "in" : "path",
-          "description" : "Numer referencyjny tokena do unieważeniania.",
+          "description" : "Numer referencyjny tokena KSeF.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         }
       ],
@@ -126,6 +126,14 @@
   }
 
 
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
+  }
+
+
   "TokenStatusResponse" : {
     "required" : [
       "authorIdentifier",
@@ -139,8 +147,12 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny tokena."
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
+        "description" : "Numer referencyjny tokena KSeF."
       },
       "authorIdentifier" : {
         "required" : [
@@ -167,6 +179,7 @@
         "description" : "Identyfikator kontekstu, w którym został wygenerowany token i do którego daje dostęp."
       },
       "description" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Opis tokena."
       },
@@ -206,6 +219,14 @@
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -318,7 +339,7 @@ body:
 
 response (200): application/json
 {
-  "referenceNumber": "", // required; type: string; description: Numer referencyjny tokena.
+  "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny tokena KSeF.
   "authorIdentifier": { // required; type: object; items: #/components/schemas/TokenAuthorIdentifierTypeIdentifier; description: Identyfikator osoby która wygenerowała token.
     "type": "", // required; type: string; items: #/components/schemas/TokenAuthorIdentifierType; description: Typ identyfikatora.
 | Wartość | Opis |
@@ -354,6 +375,14 @@ response (200): application/json
   "statusDetails": [ // type: array; nullable: true; description: Dodatkowe informacje na temat statusu, zwracane w przypadku błędów.
   ]
 }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
+  }
 
 
 

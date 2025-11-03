@@ -12,7 +12,7 @@
         "Pobieranie faktur"
       ],
       "summary" : "Pobranie listy metadanych faktur",
-      "description" : "Zwraca metadane faktur spełniających filtry.\n\nLimit techniczny: ≤ 10 000 rekordów na zestaw filtrów, po jego osiągnięciu <b>isTruncated = true</b> i należy ponownie ustawić <b>dateRange</b>, używając ostatniej daty z wyników (tj. ustawić from/to - w zależności od kierunku sortowania, od daty ostatniego zwróconego rekordu) oraz wyzerować <b>pageOffset</b>.\n\n`Do scenariusza przyrostowego należy używać daty PermanentStorage oraz kolejność sortowania Asc`.\n            \n<b>Scenariusz pobierania przyrostowego (skrót):</b>\n* Gdy <b>hasMore = false</b>, należy zakończyć,\n* Gdy <b>hasMore = true</b> i <b>isTruncated = false</b>, należy zwiększyć <b>pageOffset</b>,\n* Gdy <b>hasMore = true</b> i <b>isTruncated = true</b>, należy zawęzić <b>dateRange</b> (ustawić from od daty ostatniego rekordu), wyzerować <b>pageOffset</b> i kontynuować\n\nWymagane uprawnienia: `InvoiceRead`.",
+      "description" : "Zwraca metadane faktur spełniających filtry.\n\nLimit techniczny: ≤ 10 000 rekordów na zestaw filtrów, po jego osiągnięciu <b>isTruncated = true</b> i należy ponownie ustawić <b>dateRange</b>, używając ostatniej daty z wyników (tj. ustawić from/to - w zależności od kierunku sortowania, od daty ostatniego zwróconego rekordu) oraz wyzerować <b>pageOffset</b>.\n\n`Do scenariusza przyrostowego należy używać daty PermanentStorage oraz kolejność sortowania Asc`.\n            \n<b>Scenariusz pobierania przyrostowego (skrót):</b>\n* Gdy <b>hasMore = false</b>, należy zakończyć,\n* Gdy <b>hasMore = true</b> i <b>isTruncated = false</b>, należy zwiększyć <b>pageOffset</b>,\n* Gdy <b>hasMore = true</b> i <b>isTruncated = true</b>, należy zawęzić <b>dateRange</b> (ustawić from od daty ostatniego rekordu), wyzerować <b>pageOffset</b> i kontynuować\n\n**Sortowanie:**\n\n- permanentStorageDate | invoicingDate | issueDate (Asc | Desc) - pole wybierane na podstawie filtrów\n\n\n\n**Wymagane uprawnienia**: `InvoiceRead`.",
       "parameters" : [
         {
           "name" : "sortOrder",
@@ -56,7 +56,7 @@
         }
       ],
       "requestBody" : {
-        "description" : "Zestaw filtrów dla wyszukiwania metadanych.",
+        "description" : "Kryteria filtrowania.",
         "content" : {
           "application/json" : {
             "schema" : {
@@ -217,6 +217,19 @@
           ]
         }
       ],
+      "x-sort" : [
+        {
+          "allowedFields" : [
+            "permanentStorageDate",
+            "invoicingDate",
+            "issueDate"
+          ],
+          "allowedDirections" : [
+            "Asc",
+            "Desc"
+          ]
+        }
+      ],
       "x-required-permissions" : [
         "InvoiceRead"
       ]
@@ -262,13 +275,18 @@
         "description" : "Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 2 lata."
       },
       "ksefNumber" : {
-        "type" : "string",
-        "description" : "Numer KSeF faktury.",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/KsefNumber"
+          }
+        ],
+        "description" : "Numer KSeF faktury (exact match).",
         "nullable" : true
       },
       "invoiceNumber" : {
+        "maxLength" : 256,
         "type" : "string",
-        "description" : "Numer faktury nadany przez wystawcę.",
+        "description" : "Numer faktury nadany przez wystawcę (exact match).",
         "nullable" : true
       },
       "amount" : {
@@ -284,8 +302,12 @@
         "nullable" : true
       },
       "sellerNip" : {
-        "type" : "string",
-        "description" : "Nip sprzedawcy.",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Nip"
+          }
+        ],
+        "description" : "Nip sprzedawcy (exact match).",
         "nullable" : true
       },
       "buyerIdentifier" : {
@@ -403,6 +425,15 @@
   }
 
 
+  "KsefNumber" : {
+    "maxLength" : 36,
+    "minLength" : 35,
+    "pattern" : "^([1-9](\\d[1-9]|[1-9]\\d)\\d{7})-(20[2-9][0-9]|2[1-9]\\d{2}|[3-9]\\d{3})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-([0-9A-F]{6})-?([0-9A-F]{6})-([0-9A-F]{2})$",
+    "type" : "string",
+    "description" : "Numer KSeF o długości 35 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 36-znakowym"
+  }
+
+
   "InvoiceQueryAmount" : {
     "required" : [
       "type"
@@ -441,6 +472,15 @@
   }
 
 
+  "Nip" : {
+    "maxLength" : 10,
+    "minLength" : 10,
+    "pattern" : "^[1-9]((\\d[1-9])|([1-9]\\d))\\d{7}$",
+    "type" : "string",
+    "description" : "10 cyfrowy numer NIP"
+  }
+
+
   "InvoiceQueryBuyerIdentifier" : {
     "required" : [
       "type"
@@ -457,7 +497,7 @@
       },
       "value" : {
         "type" : "string",
-        "description" : "Wartość identyfikatora nabywcy.",
+        "description" : "Wartość identyfikatora nabywcy (exact match).",
         "nullable" : true
       }
     },
@@ -758,10 +798,15 @@
     "type" : "object",
     "properties" : {
       "ksefNumber" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/KsefNumber"
+          }
+        ],
         "description" : "Numer KSeF faktury."
       },
       "invoiceNumber" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Numer faktury nadany przez wystawcę."
       },
@@ -823,6 +868,8 @@
         "format" : "double"
       },
       "currency" : {
+        "maxLength" : 3,
+        "minLength" : 3,
         "type" : "string",
         "description" : "Kod waluty."
       },
@@ -864,11 +911,19 @@
         "description" : "Określa, czy faktura posiada załącznik."
       },
       "invoiceHash" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Sha256HashBase64"
+          }
+        ],
         "description" : "Skrót SHA256 faktury."
       },
       "hashOfCorrectedInvoice" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Sha256HashBase64"
+          }
+        ],
         "description" : "Skrót SHA256 korygowanej faktury.",
         "nullable" : true
       },
@@ -898,6 +953,15 @@
   }
 
 
+  "KsefNumber" : {
+    "maxLength" : 36,
+    "minLength" : 35,
+    "pattern" : "^([1-9](\\d[1-9]|[1-9]\\d)\\d{7})-(20[2-9][0-9]|2[1-9]\\d{2}|[3-9]\\d{3})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-([0-9A-F]{6})-?([0-9A-F]{6})-([0-9A-F]{2})$",
+    "type" : "string",
+    "description" : "Numer KSeF o długości 35 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 36-znakowym"
+  }
+
+
   "InvoiceMetadataSeller" : {
     "required" : [
       "nip"
@@ -905,16 +969,30 @@
     "type" : "object",
     "properties" : {
       "nip" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Nip"
+          }
+        ],
         "description" : "Nip sprzedawcy."
       },
       "name" : {
+        "maxLength" : 512,
         "type" : "string",
         "description" : "Nazwa sprzedawcy.",
         "nullable" : true
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "Nip" : {
+    "maxLength" : 10,
+    "minLength" : 10,
+    "pattern" : "^[1-9]((\\d[1-9])|([1-9]\\d))\\d{7}$",
+    "type" : "string",
+    "description" : "10 cyfrowy numer NIP"
   }
 
 
@@ -936,6 +1014,7 @@
         "description" : "Identyfikator nabywcy."
       },
       "name" : {
+        "maxLength" : 512,
         "type" : "string",
         "description" : "Nazwa nabywcy.",
         "nullable" : true
@@ -1035,6 +1114,24 @@
   }
 
 
+  "Sha256HashBase64" : {
+    "maxLength" : 44,
+    "minLength" : 44,
+    "type" : "string",
+    "description" : "SHA-256 w Base64",
+    "format" : "byte"
+  }
+
+
+  "Sha256HashBase64" : {
+    "maxLength" : 44,
+    "minLength" : 44,
+    "type" : "string",
+    "description" : "SHA-256 w Base64",
+    "format" : "byte"
+  }
+
+
   "InvoiceMetadataThirdSubject" : {
     "required" : [
       "identifier",
@@ -1051,6 +1148,7 @@
         "description" : "Identyfikator podmiotu trzeciego."
       },
       "name" : {
+        "maxLength" : 512,
         "type" : "string",
         "description" : "Nazwa podmiotu trzeciego.",
         "nullable" : true
@@ -1110,10 +1208,15 @@
     "type" : "object",
     "properties" : {
       "nip" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Nip"
+          }
+        ],
         "description" : "Nip podmiotu upoważnionego"
       },
       "name" : {
+        "maxLength" : 512,
         "type" : "string",
         "description" : "Nazwa podmiotu upoważnionego.",
         "nullable" : true
@@ -1125,6 +1228,15 @@
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "Nip" : {
+    "maxLength" : 10,
+    "minLength" : 10,
+    "pattern" : "^[1-9]((\\d[1-9])|([1-9]\\d))\\d{7}$",
+    "type" : "string",
+    "description" : "10 cyfrowy numer NIP"
   }
 
 
@@ -1153,14 +1265,14 @@ Określa kontekst, w jakim przeszukiwane są dane.
     "from": "", // required; type: string; format: date-time; description: Data początkowa zakresu(UTC).
     "to": "" // type: string; format: date-time; nullable: true; description: Data końcowa zakresu(UTC). Jeśli nie zostanie podana, przyjmowana jest bieżąca data i czas w UTC.
   },
-  "ksefNumber": "", // type: string; nullable: true; description: Numer KSeF faktury.
-  "invoiceNumber": "", // type: string; nullable: true; description: Numer faktury nadany przez wystawcę.
+  "ksefNumber": "", // type: string; items: #/components/schemas/KsefNumber; description: Numer KSeF faktury (exact match).
+  "invoiceNumber": "", // type: string; nullable: true; description: Numer faktury nadany przez wystawcę (exact match).
   "amount": { // type: object; items: #/components/schemas/InvoiceQueryAmount; nullable: true; description: Filtr kwotowy – brutto, netto lub VAT (z wartością).
     "type": "", // required; type: string; items: #/components/schemas/AmountType;
     "from": 0, // type: number; format: double; nullable: true;
     "to": 0 // type: number; format: double; nullable: true;
   },
-  "sellerNip": "", // type: string; nullable: true; description: Nip sprzedawcy.
+  "sellerNip": "", // type: string; items: #/components/schemas/Nip; description: Nip sprzedawcy (exact match).
   "buyerIdentifier": { // type: object; items: #/components/schemas/InvoiceQueryBuyerIdentifier; nullable: true; description: Identyfikator nabywcy.
     "type": "", // required; type: string; items: #/components/schemas/BuyerIdentifierType; description: Typ identyfikatora nabywcy.
 | Wartość | Opis |
@@ -1169,7 +1281,7 @@ Określa kontekst, w jakim przeszukiwane są dane.
 | Other | Inny |
 | Nip | NIP |
 | VatUe | VAT UE |
-    "value": "" // type: string; nullable: true; description: Wartość identyfikatora nabywcy.
+    "value": "" // type: string; nullable: true; description: Wartość identyfikatora nabywcy (exact match).
   },
   "currencyCodes": [ // type: array; nullable: true; description: Kody walut.
   ],
@@ -1208,14 +1320,14 @@ response (200): application/json
   "isTruncated": true/false, // required; type: boolean; description: Określa, czy osiągnięto maksymalny dopuszczalny zakres wyników zapytania (10 000).
   "invoices": [ // required; type: array; description: Lista faktur spełniających kryteria.
     {
-      "ksefNumber": "", // required; type: string; description: Numer KSeF faktury.
+      "ksefNumber": "", // required; type: string; items: #/components/schemas/KsefNumber; description: Numer KSeF faktury.
       "invoiceNumber": "", // required; type: string; description: Numer faktury nadany przez wystawcę.
       "issueDate": "", // required; type: string; format: date; description: Data wystawienia faktury.
       "invoicingDate": "", // required; type: string; format: date-time; description: Data przyjęcia faktury w systemie KSeF (do dalszego przetwarzania).
       "acquisitionDate": "", // required; type: string; format: date-time; description: Data nadania numeru KSeF.
       "permanentStorageDate": "", // required; type: string; format: date-time; description: Data trwałego zapisu faktury w repozytorium systemu KSeF.
       "seller": { // required; type: object; items: #/components/schemas/InvoiceMetadataSeller; description: Dane identyfikujące sprzedawcę.
-        "nip": "", // required; type: string; description: Nip sprzedawcy.
+        "nip": "", // required; type: string; items: #/components/schemas/Nip; description: Nip sprzedawcy.
         "name": "" // type: string; nullable: true; description: Nazwa sprzedawcy.
       },
       "buyer": { // required; type: object; items: #/components/schemas/InvoiceMetadataBuyer; description: Dane identyfikujące nabywcę.
@@ -1266,8 +1378,8 @@ Obsługiwane schematy:
       },
       "isSelfInvoicing": true/false, // required; type: boolean; description: Czy faktura została wystawiona w trybie samofakturowania.
       "hasAttachment": true/false, // required; type: boolean; description: Określa, czy faktura posiada załącznik.
-      "invoiceHash": "", // required; type: string; description: Skrót SHA256 faktury.
-      "hashOfCorrectedInvoice": "", // type: string; nullable: true; description: Skrót SHA256 korygowanej faktury.
+      "invoiceHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 faktury.
+      "hashOfCorrectedInvoice": "", // type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 korygowanej faktury.
       "thirdSubjects": [ // type: array; nullable: true; description: Lista podmiotów trzecich.
         {
           "identifier": { // required; type: object; items: #/components/schemas/InvoiceMetadataThirdSubjectIdentifier; description: Identyfikator podmiotu trzeciego.
@@ -1286,7 +1398,7 @@ Obsługiwane schematy:
         }
       ],
       "authorizedSubject": { // type: object; items: #/components/schemas/InvoiceMetadataAuthorizedSubject; nullable: true; description: Podmiot upoważniony.
-        "nip": "", // required; type: string; description: Nip podmiotu upoważnionego
+        "nip": "", // required; type: string; items: #/components/schemas/Nip; description: Nip podmiotu upoważnionego
         "name": "", // type: string; nullable: true; description: Nazwa podmiotu upoważnionego.
         "role": 0 // required; type: integer; format: int32; description: Rola podmiotu upoważnionego.
       }

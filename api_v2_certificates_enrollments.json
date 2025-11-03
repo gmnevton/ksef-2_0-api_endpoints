@@ -88,6 +88,8 @@
     "type" : "object",
     "properties" : {
       "certificateName" : {
+        "maxLength" : 100,
+        "pattern" : "^[a-zA-Z0-9_\\-\\ ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$",
         "type" : "string",
         "description" : "Nazwa własna certyfikatu."
       },
@@ -133,8 +135,12 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny operacji przetwarzania wniosku certyfikacyjnego."
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
+        "description" : "Numer referencyjny wniosku certyfikacyjnego."
       },
       "timestamp" : {
         "type" : "string",
@@ -143,6 +149,14 @@
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -168,6 +182,6 @@ Jeśli nie zostanie podana, certyfikat będzie ważny od momentu jego wystawieni
 
 response (202): application/json
 {
-  "referenceNumber": "", // required; type: string; description: Numer referencyjny operacji przetwarzania wniosku certyfikacyjnego.
+  "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny wniosku certyfikacyjnego.
   "timestamp": "" // required; type: string; format: date-time; description: Data złożenia wniosku certyfikacyjnego.
 }

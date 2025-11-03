@@ -66,7 +66,7 @@
     "type" : "object",
     "properties" : {
       "subjectNip" : {
-        "type" : "string"
+        "$ref" : "#/components/schemas/Nip"
       },
       "subjectType" : {
         "allOf" : [
@@ -83,6 +83,7 @@
         "nullable" : true
       },
       "description" : {
+        "maxLength" : 256,
         "type" : "string"
       },
       "createdDate" : {
@@ -93,6 +94,15 @@
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "Nip" : {
+    "maxLength" : 10,
+    "minLength" : 10,
+    "pattern" : "^[1-9]((\\d[1-9])|([1-9]\\d))\\d{7}$",
+    "type" : "string",
+    "description" : "10 cyfrowy numer NIP"
   }
 
 
@@ -114,9 +124,10 @@
     "type" : "object",
     "properties" : {
       "subjectNip" : {
-        "type" : "string"
+        "$ref" : "#/components/schemas/Nip"
       },
       "description" : {
+        "maxLength" : 256,
         "type" : "string"
       }
     },
@@ -124,15 +135,24 @@
   }
 
 
+  "Nip" : {
+    "maxLength" : 10,
+    "minLength" : 10,
+    "pattern" : "^[1-9]((\\d[1-9])|([1-9]\\d))\\d{7}$",
+    "type" : "string",
+    "description" : "10 cyfrowy numer NIP"
+  }
+
+
 
 //---------------------------------------------------------------------------------------------------
 request: "/api/v2/testdata/subject": post: application/json
 {
-  "subjectNip": "", // required; type: string;
+  "subjectNip": "", // required; type: string; items: #/components/schemas/Nip;
   "subjectType": "", // required; type: string; items: #/components/schemas/SubjectType;
   "subunits": [ // type: array; nullable: true;
     {
-      "subjectNip": "", // required; type: string;
+      "subjectNip": "", // required; type: string; items: #/components/schemas/Nip;
       "description": "" // required; type: string;
     }
   ],

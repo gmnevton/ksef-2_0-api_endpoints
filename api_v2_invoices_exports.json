@@ -12,7 +12,7 @@
         "Pobieranie faktur"
       ],
       "summary" : "Eksport paczki faktur",
-      "description" : "Rozpoczyna asynchroniczny proces wyszukiwania faktur w systemie KSeF na podstawie przekazanych filtrów oraz przygotowania ich w formie zaszyfrowanej paczki.\nWymagane jest przekazanie informacji o szyfrowaniu w polu <b>Encryption</b>, które służą do zabezpieczenia przygotowanej paczki z fakturami.\nMaksymalnie można uruchomić 10 równoczesnych eksportów w zalogowanym kontekście.\n            \nSystem pobiera faktury rosnąco według daty określonej w filtrze (Invoicing, Issue, PermanentStorage) i dodaje je do paczki aż do osiągnięcia jednego z poniższych limitów:\n* Limit liczby faktur: 10 000 sztuk\n* Limit rozmiaru danych(skompresowanych): 1GB\n\nPaczka eksportu zawiera dodatkowy plik z metadanymi faktur w formacie JSON (`_metadata.json`). Zawartość pliku to\nobiekt z tablicą <b>invoices</b>, gdzie każdy element jest obiektem typu <b>InvoiceMetadata</b>\n(taki jak zwracany przez endpoint `POST /invoices/query/metadata`).\n\n<b>Plik z metadanymi(_metadata.json) nie jest wliczany do limitów algorytmu budowania paczki</b>. \n\n`Do realizacji pobierania przyrostowego należy stosować filtrowanie po dacie PermanentStorage`.\n\nWymagane uprawnienia: `InvoiceRead`.",
+      "description" : "Rozpoczyna asynchroniczny proces wyszukiwania faktur w systemie KSeF na podstawie przekazanych filtrów oraz przygotowania ich w formie zaszyfrowanej paczki.\nWymagane jest przekazanie informacji o szyfrowaniu w polu <b>Encryption</b>, które służą do zabezpieczenia przygotowanej paczki z fakturami.\nMaksymalnie można uruchomić 10 równoczesnych eksportów w zalogowanym kontekście.\n            \nSystem pobiera faktury rosnąco według daty określonej w filtrze (Invoicing, Issue, PermanentStorage) i dodaje je do paczki aż do osiągnięcia jednego z poniższych limitów:\n* Limit liczby faktur: 10 000 sztuk\n* Limit rozmiaru danych(skompresowanych): 1GB\n\nPaczka eksportu zawiera dodatkowy plik z metadanymi faktur w formacie JSON (`_metadata.json`). Zawartość pliku to\nobiekt z tablicą <b>invoices</b>, gdzie każdy element jest obiektem typu <b>InvoiceMetadata</b>\n(taki jak zwracany przez endpoint `POST /invoices/query/metadata`).\n\n<b>Plik z metadanymi(_metadata.json) nie jest wliczany do limitów algorytmu budowania paczki</b>. \n\n`Do realizacji pobierania przyrostowego należy stosować filtrowanie po dacie PermanentStorage`.\n\n**Sortowanie:**\n\n- permanentStorageDate | invoicingDate | issueDate (Asc) - pole wybierane na podstawie filtrów\n\n\n\n**Wymagane uprawnienia**: `InvoiceRead`.",
       "requestBody" : {
         "description" : "Dane wejściowe określające kryteria i format eksportu paczki faktur.",
         "content" : {
@@ -84,6 +84,16 @@
           ]
         }
       ],
+      "x-sort" : [
+        {
+          "allowedFields" : [
+            "permanentStorageDate",
+            "invoicingDate",
+            "issueDate"
+          ],
+          "allowedDirections" : "Asc"
+        }
+      ],
       "x-required-permissions" : [
         "InvoiceRead"
       ]
@@ -136,11 +146,13 @@
     "properties" : {
       "encryptedSymmetricKey" : {
         "type" : "string",
-        "description" : "Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.\n\n[Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)"
+        "description" : "Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.\n\n[Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)",
+        "format" : "byte"
       },
       "initializationVector" : {
         "type" : "string",
-        "description" : "Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64."
+        "description" : "Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64.",
+        "format" : "byte"
       }
     },
     "additionalProperties" : false
@@ -175,13 +187,18 @@
         "description" : "Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 2 lata."
       },
       "ksefNumber" : {
-        "type" : "string",
-        "description" : "Numer KSeF faktury.",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/KsefNumber"
+          }
+        ],
+        "description" : "Numer KSeF faktury (exact match).",
         "nullable" : true
       },
       "invoiceNumber" : {
+        "maxLength" : 256,
         "type" : "string",
-        "description" : "Numer faktury nadany przez wystawcę.",
+        "description" : "Numer faktury nadany przez wystawcę (exact match).",
         "nullable" : true
       },
       "amount" : {
@@ -197,8 +214,12 @@
         "nullable" : true
       },
       "sellerNip" : {
-        "type" : "string",
-        "description" : "Nip sprzedawcy.",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Nip"
+          }
+        ],
+        "description" : "Nip sprzedawcy (exact match).",
         "nullable" : true
       },
       "buyerIdentifier" : {
@@ -316,6 +337,15 @@
   }
 
 
+  "KsefNumber" : {
+    "maxLength" : 36,
+    "minLength" : 35,
+    "pattern" : "^([1-9](\\d[1-9]|[1-9]\\d)\\d{7})-(20[2-9][0-9]|2[1-9]\\d{2}|[3-9]\\d{3})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-([0-9A-F]{6})-?([0-9A-F]{6})-([0-9A-F]{2})$",
+    "type" : "string",
+    "description" : "Numer KSeF o długości 35 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 36-znakowym"
+  }
+
+
   "InvoiceQueryAmount" : {
     "required" : [
       "type"
@@ -354,6 +384,15 @@
   }
 
 
+  "Nip" : {
+    "maxLength" : 10,
+    "minLength" : 10,
+    "pattern" : "^[1-9]((\\d[1-9])|([1-9]\\d))\\d{7}$",
+    "type" : "string",
+    "description" : "10 cyfrowy numer NIP"
+  }
+
+
   "InvoiceQueryBuyerIdentifier" : {
     "required" : [
       "type"
@@ -370,7 +409,7 @@
       },
       "value" : {
         "type" : "string",
-        "description" : "Wartość identyfikatora nabywcy.",
+        "description" : "Wartość identyfikatora nabywcy (exact match).",
         "nullable" : true
       }
     },
@@ -626,11 +665,23 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny operacji eksportu paczki faktur."
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
+        "description" : "Numer referencyjny eksportu faktur."
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -642,10 +693,10 @@ Authentication: Bearer {securityToken}
 body:
 {
   "encryption": { // required; type: object; items: #/components/schemas/EncryptionInfo; description: Informacje wymagane do zaszyfrowania wyniku zapytania.
-    "encryptedSymmetricKey": "", // required; type: string; description: Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.
+    "encryptedSymmetricKey": "", // required; type: string; format: byte; description: Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.
 
 [Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)
-    "initializationVector": "" // required; type: string; description: Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64.
+    "initializationVector": "" // required; type: string; format: byte; description: Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64.
   },
   "filters": { // required; type: object; items: #/components/schemas/InvoiceQueryFilters; description: Zestaw filtrów do wyszukiwania faktur.
     "subjectType": "", // required; type: string; items: #/components/schemas/InvoiceQuerySubjectType; description: Typ podmiotu, którego dotyczą kryteria filtrowania metadanych faktur.
@@ -666,14 +717,14 @@ Określa kontekst, w jakim przeszukiwane są dane.
       "from": "", // required; type: string; format: date-time; description: Data początkowa zakresu(UTC).
       "to": "" // type: string; format: date-time; nullable: true; description: Data końcowa zakresu(UTC). Jeśli nie zostanie podana, przyjmowana jest bieżąca data i czas w UTC.
     },
-    "ksefNumber": "", // type: string; nullable: true; description: Numer KSeF faktury.
-    "invoiceNumber": "", // type: string; nullable: true; description: Numer faktury nadany przez wystawcę.
+    "ksefNumber": "", // type: string; items: #/components/schemas/KsefNumber; description: Numer KSeF faktury (exact match).
+    "invoiceNumber": "", // type: string; nullable: true; description: Numer faktury nadany przez wystawcę (exact match).
     "amount": { // type: object; items: #/components/schemas/InvoiceQueryAmount; nullable: true; description: Filtr kwotowy – brutto, netto lub VAT (z wartością).
       "type": "", // required; type: string; items: #/components/schemas/AmountType;
       "from": 0, // type: number; format: double; nullable: true;
       "to": 0 // type: number; format: double; nullable: true;
     },
-    "sellerNip": "", // type: string; nullable: true; description: Nip sprzedawcy.
+    "sellerNip": "", // type: string; items: #/components/schemas/Nip; description: Nip sprzedawcy (exact match).
     "buyerIdentifier": { // type: object; items: #/components/schemas/InvoiceQueryBuyerIdentifier; nullable: true; description: Identyfikator nabywcy.
       "type": "", // required; type: string; items: #/components/schemas/BuyerIdentifierType; description: Typ identyfikatora nabywcy.
 | Wartość | Opis |
@@ -682,7 +733,7 @@ Określa kontekst, w jakim przeszukiwane są dane.
 | Other | Inny |
 | Nip | NIP |
 | VatUe | VAT UE |
-      "value": "" // type: string; nullable: true; description: Wartość identyfikatora nabywcy.
+      "value": "" // type: string; nullable: true; description: Wartość identyfikatora nabywcy (exact match).
     },
     "currencyCodes": [ // type: array; nullable: true; description: Kody walut.
     ],
@@ -718,5 +769,5 @@ Określa kontekst, w jakim przeszukiwane są dane.
 
 response (201): application/json
 {
-  "referenceNumber": "" // required; type: string; description: Numer referencyjny operacji eksportu paczki faktur.
+  "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny eksportu faktur.
 }

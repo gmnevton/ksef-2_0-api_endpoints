@@ -12,7 +12,7 @@
         "Wysyłka interaktywna"
       ],
       "summary" : "Wysłanie faktury",
-      "description" : "Przyjmuje zaszyfrowaną fakturę oraz jej metadane i rozpoczyna jej przetwarzanie.\n\n> Więcej informacji:\n> - [Wysłanie faktury](https://github.com/CIRFMF/ksef-docs/blob/main/sesja-interaktywna.md#2-wys%C5%82anie-faktury)\n\nWymagane uprawnienia: `InvoiceWrite`, `PefInvoiceWrite`.",
+      "description" : "Przyjmuje zaszyfrowaną fakturę oraz jej metadane i rozpoczyna jej przetwarzanie.\n\n> Więcej informacji:\n> - [Wysłanie faktury](https://github.com/CIRFMF/ksef-docs/blob/main/sesja-interaktywna.md#2-wys%C5%82anie-faktury)\n\n**Wymagane uprawnienia**: `InvoiceWrite`, `PefInvoiceWrite`.",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -20,7 +20,7 @@
           "description" : "Numer referencyjny sesji",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         }
       ],
@@ -100,6 +100,14 @@
   }
 
 
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
+  }
+
+
   "SendInvoiceRequest" : {
     "required" : [
       "encryptedInvoiceContent",
@@ -111,7 +119,11 @@
     "type" : "object",
     "properties" : {
       "invoiceHash" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Sha256HashBase64"
+          }
+        ],
         "description" : "Skrót SHA256 oryginalnej faktury, zakodowany w formacie Base64."
       },
       "invoiceSize" : {
@@ -122,7 +134,11 @@
         "format" : "int64"
       },
       "encryptedInvoiceHash" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Sha256HashBase64"
+          }
+        ],
         "description" : "Skrót SHA256 zaszyfrowanej faktury, zakodowany w formacie Base64."
       },
       "encryptedInvoiceSize" : {
@@ -134,7 +150,8 @@
       },
       "encryptedInvoiceContent" : {
         "type" : "string",
-        "description" : "Faktura zaszyfrowana algorytmem AES-256-CBC z dopełnianiem PKCS#7 (kluczem przekazanym przy otwarciu sesji), zakodowana w formacie Base64."
+        "description" : "Faktura zaszyfrowana algorytmem AES-256-CBC z dopełnianiem PKCS#7 (kluczem przekazanym przy otwarciu sesji), zakodowana w formacie Base64.",
+        "format" : "byte"
       },
       "offlineMode" : {
         "type" : "boolean",
@@ -142,12 +159,43 @@
         "default" : false
       },
       "hashOfCorrectedInvoice" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Sha256HashBase64"
+          }
+        ],
         "description" : "Skrót SHA256 korygowanej faktury, zakodowany w formacie Base64. Wymagany przy wysyłaniu korekty technicznej faktury.",
         "nullable" : true
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "Sha256HashBase64" : {
+    "maxLength" : 44,
+    "minLength" : 44,
+    "type" : "string",
+    "description" : "SHA-256 w Base64",
+    "format" : "byte"
+  }
+
+
+  "Sha256HashBase64" : {
+    "maxLength" : 44,
+    "minLength" : 44,
+    "type" : "string",
+    "description" : "SHA-256 w Base64",
+    "format" : "byte"
+  }
+
+
+  "Sha256HashBase64" : {
+    "maxLength" : 44,
+    "minLength" : 44,
+    "type" : "string",
+    "description" : "SHA-256 w Base64",
+    "format" : "byte"
   }
 
 
@@ -158,11 +206,23 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
         "description" : "Numer referencyjny faktury."
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -173,18 +233,18 @@ headers:
 Authentication: Bearer {securityToken}
 body:
 {
-  "invoiceHash": "", // required; type: string; description: Skrót SHA256 oryginalnej faktury, zakodowany w formacie Base64.
+  "invoiceHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 oryginalnej faktury, zakodowany w formacie Base64.
   "invoiceSize": 0, // required; type: integer; format: int64; description: Rozmiar oryginalnej faktury w bajtach. Maksymalny rozmiar zależy od limitów ustawionych dla uwierzytelnionego kontekstu.
-  "encryptedInvoiceHash": "", // required; type: string; description: Skrót SHA256 zaszyfrowanej faktury, zakodowany w formacie Base64.
+  "encryptedInvoiceHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 zaszyfrowanej faktury, zakodowany w formacie Base64.
   "encryptedInvoiceSize": 0, // required; type: integer; format: int64; description: Rozmiar zaszyfrowanej faktury w bajtach.
-  "encryptedInvoiceContent": "", // required; type: string; description: Faktura zaszyfrowana algorytmem AES-256-CBC z dopełnianiem PKCS#7 (kluczem przekazanym przy otwarciu sesji), zakodowana w formacie Base64.
+  "encryptedInvoiceContent": "", // required; type: string; format: byte; description: Faktura zaszyfrowana algorytmem AES-256-CBC z dopełnianiem PKCS#7 (kluczem przekazanym przy otwarciu sesji), zakodowana w formacie Base64.
   "offlineMode": true/false, // type: boolean; description: Określa, czy podatnik deklaruje tryb fakturowania "offline" dla przesyłanego dokumentu.
-  "hashOfCorrectedInvoice": "" // type: string; nullable: true; description: Skrót SHA256 korygowanej faktury, zakodowany w formacie Base64. Wymagany przy wysyłaniu korekty technicznej faktury.
+  "hashOfCorrectedInvoice": "" // type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 korygowanej faktury, zakodowany w formacie Base64. Wymagany przy wysyłaniu korekty technicznej faktury.
 }
 
 
 
 response (202): application/json
 {
-  "referenceNumber": "" // required; type: string; description: Numer referencyjny faktury.
+  "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny faktury.
 }

@@ -12,7 +12,7 @@
         "Wysyłka wsadowa"
       ],
       "summary" : "Zamknięcie sesji wsadowej",
-      "description" : "Zamyka sesję wsadową, rozpoczyna procesowanie paczki faktur i generowanie UPO dla prawidłowych faktur oraz zbiorczego UPO dla sesji.\n\nWymagane uprawnienia: `InvoiceWrite`.",
+      "description" : "Zamyka sesję wsadową, rozpoczyna procesowanie paczki faktur i generowanie UPO dla prawidłowych faktur oraz zbiorczego UPO dla sesji.\n\n**Wymagane uprawnienia**: `InvoiceWrite`.",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -20,7 +20,7 @@
           "description" : "Numer referencyjny sesji",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         }
       ],
@@ -57,6 +57,14 @@
         "InvoiceWrite"
       ]
     }
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 

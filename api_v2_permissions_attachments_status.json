@@ -12,7 +12,7 @@
         "Operacje"
       ],
       "summary" : "Sprawdzenie statusu zgody na wystawianie faktur z załącznikiem",
-      "description" : "Sprawdzenie czy obecny kontekst posiada zgodę na wystawianie faktur z załącznikiem.\n\nWymagane uprawnienia: `CredentialsManage`, `CredentialsRead`.",
+      "description" : "Sprawdzenie czy obecny kontekst posiada zgodę na wystawianie faktur z załącznikiem.\n\n**Wymagane uprawnienia**: `CredentialsManage`, `CredentialsRead`.",
       "responses" : {
         "200" : {
           "description" : "OK",

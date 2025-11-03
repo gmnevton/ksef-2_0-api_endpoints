@@ -12,7 +12,7 @@
         "Status wysyłki i UPO"
       ],
       "summary" : "Pobranie listy sesji",
-      "description" : "Zwraca listę sesji spełniających podane kryteria wyszukiwania.\n\nWymagane uprawnienia:\n- `Introspection` – pozwala pobrać wszystkie sesje w bieżącym kontekście uwierzytelnienia `(ContextIdentifier)`.\n- `InvoiceWrite` – pozwala pobrać wyłącznie sesje utworzone przez podmiot uwierzytelniający, czyli podmiot inicjujący uwierzytelnienie.",
+      "description" : "Zwraca listę sesji spełniających podane kryteria wyszukiwania.\n\n\n\n**Sortowanie:**\n\n- dateCreated (Desc)\n\n\n**Wymagane uprawnienia**:\n- `Introspection` – pozwala pobrać wszystkie sesje w bieżącym kontekście uwierzytelnienia `(ContextIdentifier)`.\n- `InvoiceWrite` – pozwala pobrać wyłącznie sesje utworzone przez podmiot uwierzytelniający, czyli podmiot inicjujący uwierzytelnienie.",
       "parameters" : [
         {
           "name" : "pageSize",
@@ -46,7 +46,7 @@
           "in" : "query",
           "description" : "Numer referencyjny sesji.",
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         },
         {
@@ -191,6 +191,12 @@
           ]
         }
       ],
+      "x-sort" : [
+        {
+          "field" : "dateCreated",
+          "direction" : "Desc"
+        }
+      ],
       "x-required-permissions" : [
         "InvoiceWrite",
         "Introspection"
@@ -206,6 +212,14 @@
     ],
     "type" : "string",
     "description" : "| Wartość | Opis |\n| --- | --- |\n| Online | Wysyłka interaktywna (pojedyncze faktury). |\n| Batch | Wysyłka wsadowa (paczka faktur). |\n"
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -257,7 +271,11 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
         "description" : "Numer referencyjny sesji."
       },
       "status" : {
@@ -310,6 +328,14 @@
   }
 
 
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
+  }
+
+
   "StatusInfo" : {
     "required" : [
       "code",
@@ -356,7 +382,7 @@ response (200): application/json
   "continuationToken": "", // type: string; nullable: true; description: Token służący do pobrania kolejnej strony wyników. Jeśli jest pusty, to nie ma kolejnych stron.
   "sessions": [ // required; type: array; description: Lista sesji.
     {
-      "referenceNumber": "", // required; type: string; description: Numer referencyjny sesji.
+      "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny sesji.
       "status": { // required; type: object; items: #/components/schemas/StatusInfo; description: Status sesji.
         "code": 0, // required; type: integer; format: int32; description: Kod statusu
         "description": "", // required; type: string; description: Opis statusu

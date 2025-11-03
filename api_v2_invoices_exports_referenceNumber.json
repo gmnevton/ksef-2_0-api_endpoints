@@ -12,15 +12,15 @@
         "Pobieranie faktur"
       ],
       "summary" : "Pobranie statusu eksportu paczki faktur",
-      "description" : "Wyniki sortowane są rosnąco według typu daty przekazanej w <b>DateRange</b> przy inicjalizacji. \n\nPaczka faktur jest dzielona na części o maksymalnym rozmiarze 50 MB. Każda część jest zaszyfrowana algorytmem AES-256-CBC z dopełnieniem PKCS#7, przy użyciu klucza symetrycznego przekazanego podczas inicjowania eksportu. \n\nW przypadku ucięcia wyniku eksportu z powodu przekroczenia limitów, zwracana jest flaga <b>IsTruncated = true</b> oraz odpowiednia data, którą należy wykorzystać do wykonania kolejnego eksportu, aż do momentu, gdy flaga <b>IsTruncated = false</b>.\n\nWymagane uprawnienia: `InvoiceRead`.",
+      "description" : "Paczka faktur jest dzielona na części o maksymalnym rozmiarze 50 MB. Każda część jest zaszyfrowana algorytmem AES-256-CBC z dopełnieniem PKCS#7, przy użyciu klucza symetrycznego przekazanego podczas inicjowania eksportu. \n\nW przypadku ucięcia wyniku eksportu z powodu przekroczenia limitów, zwracana jest flaga <b>IsTruncated = true</b> oraz odpowiednia data, którą należy wykorzystać do wykonania kolejnego eksportu, aż do momentu, gdy flaga <b>IsTruncated = false</b>.\n\n**Sortowanie:**\n\n- permanentStorageDate | invoicingDate | issueDate (Asc) - pole wybierane na podstawie filtrów\n\n\n\n**Wymagane uprawnienia**: `InvoiceRead`.",
       "parameters" : [
         {
           "name" : "referenceNumber",
           "in" : "path",
-          "description" : "Numer referencyjny operacji eksportu paczki faktur.",
+          "description" : "Numer referencyjny eksportu faktur.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/ReferenceNumber"
           }
         }
       ],
@@ -86,10 +86,28 @@
           ]
         }
       ],
+      "x-sort" : [
+        {
+          "allowedFields" : [
+            "permanentStorageDate",
+            "invoicingDate",
+            "issueDate"
+          ],
+          "allowedDirections" : "Asc"
+        }
+      ],
       "x-required-permissions" : [
         "InvoiceRead"
       ]
     }
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -250,6 +268,7 @@
         "format" : "int32"
       },
       "partName" : {
+        "maxLength" : 100,
         "type" : "string",
         "description" : "Nazwa pliku części paczki."
       },
@@ -270,7 +289,11 @@
         "format" : "int64"
       },
       "partHash" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Sha256HashBase64"
+          }
+        ],
         "description" : "Skrót SHA256 pliku części paczki, zakodowany w formacie Base64."
       },
       "encryptedPartSize" : {
@@ -281,7 +304,11 @@
         "format" : "int64"
       },
       "encryptedPartHash" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/Sha256HashBase64"
+          }
+        ],
         "description" : "Skrót SHA256 zaszyfrowanej części paczki, zakodowany w formacie Base64."
       },
       "expirationDate" : {
@@ -291,6 +318,24 @@
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "Sha256HashBase64" : {
+    "maxLength" : 44,
+    "minLength" : 44,
+    "type" : "string",
+    "description" : "SHA-256 w Base64",
+    "format" : "byte"
+  }
+
+
+  "Sha256HashBase64" : {
+    "maxLength" : 44,
+    "minLength" : 44,
+    "type" : "string",
+    "description" : "SHA-256 w Base64",
+    "format" : "byte"
   }
 
 
@@ -335,9 +380,9 @@ Po upływie tej daty paczka nie będzie już dostępna do pobrania.
 Link jest generowany dynamicznie w momencie odpytania o status operacji eksportu.
 Nie podlega limitom API i nie wymaga przesyłania tokenu dostępowego przy pobraniu.
         "partSize": 0, // required; type: integer; format: int64; description: Rozmiar części paczki w bajtach.
-        "partHash": "", // required; type: string; description: Skrót SHA256 pliku części paczki, zakodowany w formacie Base64.
+        "partHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 pliku części paczki, zakodowany w formacie Base64.
         "encryptedPartSize": 0, // required; type: integer; format: int64; description: Rozmiar zaszyfrowanej części paczki w bajtach.
-        "encryptedPartHash": "", // required; type: string; description: Skrót SHA256 zaszyfrowanej części paczki, zakodowany w formacie Base64.
+        "encryptedPartHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 zaszyfrowanej części paczki, zakodowany w formacie Base64.
         "expirationDate": "" // required; type: string; format: date-time; description: Data i godzina wygaśnięcia linku umożliwiającego pobranie części paczki.
 Po upływie tego momentu link przestaje być aktywny.
       }

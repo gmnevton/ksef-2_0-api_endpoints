@@ -12,7 +12,7 @@
         "Nadawanie uprawnień"
       ],
       "summary" : "Nadanie uprawnień administratora podmiotu podrzędnego",
-      "description" : "Metoda pozwala na nadanie wskazanemu w żądaniu podmiotowi lub osobie fizycznej uprawnień administratora w kontekście:  \n- wskazanego NIP podmiotu podrzędnego – wyłącznie jeżeli podmiot bieżącego kontekstu logowania ma rolę podmiotu nadrzędnego:\n  - **LocalGovernmentUnit** \n  - **VatGroupUnit**  \n- wskazanego lub utworzonego identyfikatora wewnętrznego  \n            \nWraz z utworzeniem administratora jednostki podrzędnej tworzony jest identyfikator wewnętrzny składający się z numeru NIP podmiotu kontekstu logowania oraz 5 cyfr unikalnie identyfikujących jednostkę wewnętrzną.  \nW żądaniu podaje się również nazwę tej jednostki.  \n            \nUprawnienia administratora jednostki podrzędnej obejmują:  \n- **CredentialsManage** – zarządzanie uprawnieniami  \n            \nMetoda automatycznie nadaje powyższe uprawnienie, bez konieczności podawania go w żądaniu.\n            \n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-uprawnie%C5%84-administratora-podmiotu-podrz%C4%99dnego)\n\nWymagane uprawnienia: `SubunitManage`.",
+      "description" : "Metoda pozwala na nadanie wskazanemu w żądaniu podmiotowi lub osobie fizycznej uprawnień administratora w kontekście:  \n- wskazanego NIP podmiotu podrzędnego – wyłącznie jeżeli podmiot bieżącego kontekstu logowania ma rolę podmiotu nadrzędnego:\n  - **LocalGovernmentUnit** \n  - **VatGroupUnit**  \n- wskazanego lub utworzonego identyfikatora wewnętrznego  \n            \nWraz z utworzeniem administratora jednostki podrzędnej tworzony jest identyfikator wewnętrzny składający się z numeru NIP podmiotu kontekstu logowania oraz 5 cyfr unikalnie identyfikujących jednostkę wewnętrzną.  \nW żądaniu podaje się również nazwę tej jednostki.  \n            \nUprawnienia administratora jednostki podrzędnej obejmują:  \n- **CredentialsManage** – zarządzanie uprawnieniami  \n            \nMetoda automatycznie nadaje powyższe uprawnienie, bez konieczności podawania go w żądaniu.\n            \n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-uprawnie%C5%84-administratora-podmiotu-podrz%C4%99dnego)\n\n**Wymagane uprawnienia**: `SubunitManage`.",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -122,10 +122,12 @@
         "description" : "Identyfikator podmiotu podrzędnego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |"
       },
       "description" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Opis uprawnienia"
       },
       "subunitName" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Nazwa jednostki podrzędnej. W przypadku jednostki podrzędnej z identyfikatorem wewnętrznym pole jest wymagane.",
         "nullable" : true
@@ -211,11 +213,23 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień."
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
+        "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień."
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -251,5 +265,5 @@ body:
 
 response (202): application/json
 {
-  "referenceNumber": "" // required; type: string; description: Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.
+  "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny operacji nadania lub odbierania uprawnień.
 }

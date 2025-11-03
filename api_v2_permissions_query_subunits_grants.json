@@ -12,7 +12,7 @@
         "Wyszukiwanie nadanych uprawnień"
       ],
       "summary" : "Pobranie listy uprawnień administratorów jednostek i podmiotów podrzędnych",
-      "description" : " Metoda pozwala na odczytanie uprawnień do zarządzania uprawnieniami nadanych administratorom:  \n - jednostek podrzędnych identyfikowanych identyfikatorem wewnętrznym  \n - podmiotów podrzędnych (podrzędnych JST lub członków grupy VAT) identyfikowanych przez NIP  \n\n Lista zwraca wyłącznie uprawnienia do zarządzania uprawnieniami nadane z kontekstu bieżącego (z podmiotu nadrzędnego).  \n Nie są odczytywane uprawnienia nadane przez administratorów jednostek podrzędnych wewnątrz tych jednostek.  \n\n Odpowiedź może być filtrowana na podstawie parametru:  \n - **subunitIdentifier** – identyfikator jednostki lub podmiotu podrzędnego  \n\n#### Stronicowanie wyników\nZapytanie zwraca **jedną stronę wyników** o numerze i rozmiarze podanym w ścieżce.\n- Przy pierwszym wywołaniu należy ustawić parametr `pageOffset = 0`.  \n- Jeżeli dostępna jest kolejna strona wyników, w odpowiedzi pojawi się flaga **`hasMore`**.  \n- W takim przypadku można wywołać zapytanie ponownie z kolejnym numerem strony.\n\n > Więcej informacji:\n > - [Pobieranie listy uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#pobranie-listy-uprawnie%C5%84-administrator%C3%B3w-jednostek-i-podmiot%C3%B3w-podrz%C4%99dnych)\n\nWymagane uprawnienia: `CredentialsManage`, `CredentialsRead`, `SubunitManage`.",
+      "description" : " Metoda pozwala na odczytanie uprawnień do zarządzania uprawnieniami nadanych administratorom:  \n - jednostek podrzędnych identyfikowanych identyfikatorem wewnętrznym  \n - podmiotów podrzędnych (podrzędnych JST lub członków grupy VAT) identyfikowanych przez NIP  \n\n Lista zwraca wyłącznie uprawnienia do zarządzania uprawnieniami nadane z kontekstu bieżącego (z podmiotu nadrzędnego).  \n Nie są odczytywane uprawnienia nadane przez administratorów jednostek podrzędnych wewnątrz tych jednostek.  \n\n Odpowiedź może być filtrowana na podstawie parametru:  \n - **subunitIdentifier** – identyfikator jednostki lub podmiotu podrzędnego  \n\n#### Stronicowanie wyników\nZapytanie zwraca **jedną stronę wyników** o numerze i rozmiarze podanym w ścieżce.\n- Przy pierwszym wywołaniu należy ustawić parametr `pageOffset = 0`.  \n- Jeżeli dostępna jest kolejna strona wyników, w odpowiedzi pojawi się flaga **`hasMore`**.  \n- W takim przypadku można wywołać zapytanie ponownie z kolejnym numerem strony.\n\n > Więcej informacji:\n > - [Pobieranie listy uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#pobranie-listy-uprawnie%C5%84-administrator%C3%B3w-jednostek-i-podmiot%C3%B3w-podrz%C4%99dnych)\n\n**Sortowanie:**\n\n- startDate (Desc)\n\n\n\n**Wymagane uprawnienia**: `CredentialsManage`, `CredentialsRead`, `SubunitManage`.",
       "parameters" : [
         {
           "name" : "pageOffset",
@@ -119,6 +119,12 @@
           ]
         }
       ],
+      "x-sort" : [
+        {
+          "field" : "startDate",
+          "direction" : "Desc"
+        }
+      ],
       "x-required-permissions" : [
         "CredentialsManage",
         "CredentialsRead",
@@ -219,7 +225,11 @@
     "type" : "object",
     "properties" : {
       "id" : {
-        "type" : "string",
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/PermissionId"
+          }
+        ],
         "description" : "Identyfikator uprawnienia."
       },
       "authorizedIdentifier" : {
@@ -267,10 +277,12 @@
         "description" : "Rodzaj uprawnienia."
       },
       "description" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Opis uprawnienia."
       },
       "subunitName" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Nazwa jednostki podrzędnej.",
         "nullable" : true
@@ -282,6 +294,14 @@
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "PermissionId" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Techniczny identyfikator nadanego uprawnienia – wymagany m.in. przy operacjach odbierania."
   }
 
 
@@ -420,7 +440,7 @@ response (200): application/json
 {
   "permissions": [ // required; type: array; description: Lista odczytanych uprawnień.
     {
-      "id": "", // required; type: string; description: Identyfikator uprawnienia.
+      "id": "", // required; type: string; items: #/components/schemas/PermissionId; description: Identyfikator uprawnienia.
       "authorizedIdentifier": { // required; type: object; items: #/components/schemas/SubunitPermissionsAuthorizedIdentifier; description: Identyfikator uprawnionego.
 | Type | Value |
 | --- | --- |

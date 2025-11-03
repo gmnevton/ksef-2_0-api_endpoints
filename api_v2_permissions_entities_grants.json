@@ -12,7 +12,7 @@
         "Nadawanie uprawnień"
       ],
       "summary" : "Nadanie podmiotom uprawnień do obsługi faktur",
-      "description" : "Metoda pozwala na nadanie podmiotowi wskazanemu w żądaniu uprawnień do obsługi faktur podmiotu kontekstu.  \nW żądaniu określane są nadawane uprawnienia ze zbioru:  \n- **InvoiceWrite** – wystawianie faktur  \n- **InvoiceRead** – przeglądanie faktur  \n            \nMetoda pozwala na wybór dowolnej kombinacji powyższych uprawnień.  \nDla każdego uprawnienia może być ustawiona flaga **canDelegate**, mówiąca o możliwości jego dalszego przekazywania poprzez nadawanie w sposób pośredni.\n\n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-podmiotom-uprawnie%C5%84-do-obs%C5%82ugi-faktur)\n\nWymagane uprawnienia: `CredentialsManage`.",
+      "description" : "Metoda pozwala na nadanie podmiotowi wskazanemu w żądaniu uprawnień do obsługi faktur podmiotu kontekstu.  \nW żądaniu określane są nadawane uprawnienia ze zbioru:  \n- **InvoiceWrite** – wystawianie faktur  \n- **InvoiceRead** – przeglądanie faktur  \n            \nMetoda pozwala na wybór dowolnej kombinacji powyższych uprawnień.  \nDla każdego uprawnienia może być ustawiona flaga **canDelegate**, mówiąca o możliwości jego dalszego przekazywania poprzez nadawanie w sposób pośredni.\n\n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-podmiotom-uprawnie%C5%84-do-obs%C5%82ugi-faktur)\n\n**Wymagane uprawnienia**: `CredentialsManage`.",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -122,6 +122,7 @@
         "description" : "Lista nadawanych uprawnień. Każda wartość może wystąpić tylko raz."
       },
       "description" : {
+        "maxLength" : 256,
         "type" : "string",
         "description" : "Opis uprawnienia"
       }
@@ -202,11 +203,23 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień."
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
+        "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień."
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -237,5 +250,5 @@ body:
 
 response (202): application/json
 {
-  "referenceNumber": "" // required; type: string; description: Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.
+  "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny operacji nadania lub odbierania uprawnień.
 }

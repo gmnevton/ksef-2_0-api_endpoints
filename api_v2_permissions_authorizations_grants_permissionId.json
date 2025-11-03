@@ -12,7 +12,7 @@
         "Odbieranie uprawnień"
       ],
       "summary" : "Odebranie uprawnień podmiotowych",
-      "description" : "Metoda pozwala na odebranie uprawnienia podmiotowego o wskazanym identyfikatorze.  \nWymagane jest wcześniejsze odczytanie uprawnień w celu uzyskania  \nidentyfikatora uprawnienia, które ma zostać odebrane.\n            \n> Więcej informacji:\n> - [Odbieranie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#odebranie-uprawnie%C5%84-podmiotowych)\n\nWymagane uprawnienia: `CredentialsManage`.",
+      "description" : "Metoda pozwala na odebranie uprawnienia podmiotowego o wskazanym identyfikatorze.  \nWymagane jest wcześniejsze odczytanie uprawnień w celu uzyskania  \nidentyfikatora uprawnienia, które ma zostać odebrane.\n            \n> Więcej informacji:\n> - [Odbieranie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#odebranie-uprawnie%C5%84-podmiotowych)\n\n**Wymagane uprawnienia**: `CredentialsManage`.",
       "parameters" : [
         {
           "name" : "permissionId",
@@ -20,7 +20,7 @@
           "description" : "Id uprawnienia.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "$ref" : "#/components/schemas/PermissionId"
           }
         }
       ],
@@ -70,6 +70,14 @@
   }
 
 
+  "PermissionId" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Techniczny identyfikator nadanego uprawnienia – wymagany m.in. przy operacjach odbierania."
+  }
+
+
   "PermissionsOperationResponse" : {
     "required" : [
       "referenceNumber"
@@ -77,11 +85,23 @@
     "type" : "object",
     "properties" : {
       "referenceNumber" : {
-        "type" : "string",
-        "description" : "Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień."
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        ],
+        "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień."
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "ReferenceNumber" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Numer referencyjny"
   }
 
 
@@ -97,5 +117,5 @@ body:
 
 response (202): application/json
 {
-  "referenceNumber": "" // required; type: string; description: Numer referencyjny asynchronicznej operacji nadawania lub odbierania uprawnień.
+  "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny operacji nadania lub odbierania uprawnień.
 }

@@ -52,8 +52,7 @@
     "type" : "object",
     "properties" : {
       "challenge" : {
-        "type" : "string",
-        "description" : "Unikalny challenge."
+        "$ref" : "#/components/schemas/Challenge"
       },
       "timestamp" : {
         "type" : "string",
@@ -62,6 +61,14 @@
       }
     },
     "additionalProperties" : false
+  }
+
+
+  "Challenge" : {
+    "maxLength" : 36,
+    "minLength" : 36,
+    "type" : "string",
+    "description" : "Unikalny challenge."
   }
 
 
@@ -74,6 +81,6 @@ request: "/api/v2/auth/challenge": post: text/plain
 
 response (200): application/json
 {
-  "challenge": "", // required; type: string; description: Unikalny challenge.
+  "challenge": "", // required; type: string; items: #/components/schemas/Challenge;
   "timestamp": "" // required; type: string; format: date-time; description: Czas wygenerowania challenge-a.
 }
