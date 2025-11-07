@@ -107,7 +107,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
@@ -123,7 +123,7 @@
             "$ref" : "#/components/schemas/StatusInfo"
           }
         ],
-        "description" : "Status eksportu.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Eksport faktur w toku | - |\n| 200 | Eksport faktur zakończony sukcesem | - |\n| 210 | Eksport faktur wygasł i nie jest już dostępny do pobrania | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza  | - |\n| 500 | Nieznany błąd ({statusCode}) | - |"
+        "description" : "Status eksportu.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Eksport faktur w toku | - |\n| 200 | Eksport faktur zakończony sukcesem | - |\n| 210 | Eksport faktur wygasł i nie jest już dostępny do pobrania | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza  | - |\n| 500 | Nieznany błąd ({statusCode}) | - |\n| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |"
       },
       "completedDate" : {
         "type" : "string",
@@ -325,7 +325,7 @@
     "maxLength" : 44,
     "minLength" : 44,
     "type" : "string",
-    "description" : "SHA-256 w Base64",
+    "description" : "SHA-256 w Base64.",
     "format" : "byte"
   }
 
@@ -334,7 +334,7 @@
     "maxLength" : 44,
     "minLength" : 44,
     "type" : "string",
-    "description" : "SHA-256 w Base64",
+    "description" : "SHA-256 w Base64.",
     "format" : "byte"
   }
 
@@ -360,6 +360,7 @@ response (200): application/json
 | 210 | Eksport faktur wygasł i nie jest już dostępny do pobrania | - |
 | 415 | Błąd odszyfrowania dostarczonego klucza  | - |
 | 500 | Nieznany błąd ({statusCode}) | - |
+| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |
     "code": 0, // required; type: integer; format: int32; description: Kod statusu
     "description": "", // required; type: string; description: Opis statusu
     "details": [ // type: array; nullable: true; description: Dodatkowe szczegóły statusu

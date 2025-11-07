@@ -104,7 +104,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
@@ -176,7 +176,7 @@
     "maxLength" : 44,
     "minLength" : 44,
     "type" : "string",
-    "description" : "SHA-256 w Base64",
+    "description" : "SHA-256 w Base64.",
     "format" : "byte"
   }
 
@@ -185,7 +185,7 @@
     "maxLength" : 44,
     "minLength" : 44,
     "type" : "string",
-    "description" : "SHA-256 w Base64",
+    "description" : "SHA-256 w Base64.",
     "format" : "byte"
   }
 
@@ -194,7 +194,7 @@
     "maxLength" : 44,
     "minLength" : 44,
     "type" : "string",
-    "description" : "SHA-256 w Base64",
+    "description" : "SHA-256 w Base64.",
     "format" : "byte"
   }
 
@@ -222,7 +222,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 

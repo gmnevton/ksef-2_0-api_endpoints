@@ -82,7 +82,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
@@ -90,7 +90,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 

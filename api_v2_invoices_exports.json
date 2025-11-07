@@ -172,7 +172,7 @@
             "$ref" : "#/components/schemas/InvoiceQuerySubjectType"
           }
         ],
-        "description" : "Typ podmiotu, którego dotyczą kryteria filtrowania metadanych faktur.\nOkreśla kontekst, w jakim przeszukiwane są dane.\n| Wartość | Opis |\n| --- | --- |\n| Subject1 | Podmiot 1 |\n| Subject2 | Podmiot 2 |\n| Subject3 | Podmiot 3 |\n| SubjectAuthorized | Podmiot upoważniony |\n"
+        "description" : "Typ podmiotu, którego dotyczą kryteria filtrowania metadanych faktur.\nOkreśla kontekst, w jakim przeszukiwane są dane.\n| Wartość | Opis |\n| --- | --- |\n| Subject1 | Podmiot 1 - sprzedawca |\n| Subject2 | Podmiot 2 - nabywca |\n| Subject3 | Podmiot 3 |\n| SubjectAuthorized | Podmiot upoważniony |\n"
       },
       "dateRange" : {
         "required" : [
@@ -231,7 +231,7 @@
             "$ref" : "#/components/schemas/InvoiceQueryBuyerIdentifier"
           }
         ],
-        "description" : "Identyfikator nabywcy.",
+        "description" : "Identyfikator nabywcy.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| VatUe | Identyfikator VAT UE podmiotu unijnego. |\n| Other | Inny identyfikator|\n| None  | Brak identyfikatora nabywcy |",
         "nullable" : true
       },
       "currencyCodes" : {
@@ -291,7 +291,7 @@
       "SubjectAuthorized"
     ],
     "type" : "string",
-    "description" : "| Wartość | Opis |\n| --- | --- |\n| Subject1 | Podmiot 1 |\n| Subject2 | Podmiot 2 |\n| Subject3 | Podmiot 3 |\n| SubjectAuthorized | Podmiot upoważniony |\n"
+    "description" : "| Wartość | Opis |\n| --- | --- |\n| Subject1 | Podmiot 1 - sprzedawca |\n| Subject2 | Podmiot 2 - nabywca |\n| Subject3 | Podmiot 3 |\n| SubjectAuthorized | Podmiot upoważniony |\n"
   }
 
 
@@ -342,7 +342,7 @@
     "minLength" : 35,
     "pattern" : "^([1-9](\\d[1-9]|[1-9]\\d)\\d{7})-(20[2-9][0-9]|2[1-9]\\d{2}|[3-9]\\d{3})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-([0-9A-F]{6})-?([0-9A-F]{6})-([0-9A-F]{2})$",
     "type" : "string",
-    "description" : "Numer KSeF o długości 35 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 36-znakowym"
+    "description" : "Numer KSeF o długości 35 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 36-znakowym."
   }
 
 
@@ -389,7 +389,7 @@
     "minLength" : 10,
     "pattern" : "^[1-9]((\\d[1-9])|([1-9]\\d))\\d{7}$",
     "type" : "string",
-    "description" : "10 cyfrowy numer NIP"
+    "description" : "10 cyfrowy numer NIP."
   }
 
 
@@ -681,7 +681,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
@@ -703,8 +703,8 @@ body:
 Określa kontekst, w jakim przeszukiwane są dane.
 | Wartość | Opis |
 | --- | --- |
-| Subject1 | Podmiot 1 |
-| Subject2 | Podmiot 2 |
+| Subject1 | Podmiot 1 - sprzedawca |
+| Subject2 | Podmiot 2 - nabywca |
 | Subject3 | Podmiot 3 |
 | SubjectAuthorized | Podmiot upoważniony |
     "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 2 lata.
@@ -726,6 +726,12 @@ Określa kontekst, w jakim przeszukiwane są dane.
     },
     "sellerNip": "", // type: string; items: #/components/schemas/Nip; description: Nip sprzedawcy (exact match).
     "buyerIdentifier": { // type: object; items: #/components/schemas/InvoiceQueryBuyerIdentifier; nullable: true; description: Identyfikator nabywcy.
+| Type | Value |
+| --- | --- |
+| Nip | 10 cyfrowy numer NIP |
+| VatUe | Identyfikator VAT UE podmiotu unijnego. |
+| Other | Inny identyfikator|
+| None  | Brak identyfikatora nabywcy |
       "type": "", // required; type: string; items: #/components/schemas/BuyerIdentifierType; description: Typ identyfikatora nabywcy.
 | Wartość | Opis |
 | --- | --- |

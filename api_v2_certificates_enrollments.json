@@ -89,6 +89,7 @@
     "properties" : {
       "certificateName" : {
         "maxLength" : 100,
+        "minLength" : 5,
         "pattern" : "^[a-zA-Z0-9_\\-\\ ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$",
         "type" : "string",
         "description" : "Nazwa własna certyfikatu."
@@ -156,7 +157,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 

@@ -278,11 +278,13 @@
       },
       "description" : {
         "maxLength" : 256,
+        "minLength" : 5,
         "type" : "string",
         "description" : "Opis uprawnienia."
       },
       "subunitName" : {
         "maxLength" : 256,
+        "minLength" : 5,
         "type" : "string",
         "description" : "Nazwa jednostki podrzędnej.",
         "nullable" : true

@@ -40,7 +40,6 @@
                 "fileParts" : [
                   {
                     "ordinalNumber" : 1,
-                    "fileName" : "92cca5be-7f37-4d36-98bb-1f5369841038.zip.aes",
                     "fileSize" : 16048,
                     "fileHash" : "23ZyDAN0H/+yhC/En2xbNfF0tajAWSfejDaXD7fc2AE="
                   }
@@ -69,7 +68,7 @@
                   {
                     "ordinalNumber" : 1,
                     "method" : "PUT",
-                    "url" : "https://ksef-api-storage/storage/00/20250626-sb-213d593000-4de10d80a5-e9/batch-parts/92cca5be-7f37-4d36-98bb-1f5369841038.zip.aes?skoid=1ad7cfe8-2cb2-406b-b96c-6eefb55794db&sktid=647754c7-3974-4442-a425-c61341b61c69&skt=2025-06-26T09%3A40%3A54Z&ske=2025-06-26T10%3A10%3A54Z&sks=b&skv=2025-01-05&sv=2025-01-05&se=2025-06-26T10%3A10%3A54Z&sr=b&sp=w&sig=8mKZEU8Reuz%2Fn7wHi4T%2FY8BzLeD5l8bR2xJsBxIgDEY%3D",
+                    "url" : "https://ksef-api-storage/storage/00/20250626-sb-213d593000-4de10d80a5-e9/batch-parts/1?skoid=1ad7cfe8-2cb2-406b-b96c-6eefb55794db&sktid=647754c7-3974-4442-a425-c61341b61c69&skt=2025-06-26T09%3A40%3A54Z&ske=2025-06-26T10%3A10%3A54Z&sks=b&skv=2025-01-05&sv=2025-01-05&se=2025-06-26T10%3A10%3A54Z&sr=b&sp=w&sig=8mKZEU8Reuz%2Fn7wHi4T%2FY8BzLeD5l8bR2xJsBxIgDEY%3D",
                     "headers" : {
                       "x-ms-blob-type" : "BlockBlob"
                     }
@@ -218,6 +217,8 @@
         "description" : "Skrót SHA256 pliku paczki, zakodowany w formacie Base64."
       },
       "fileParts" : {
+        "maxItems" : 50,
+        "minItems" : 1,
         "type" : "array",
         "items" : {
           "$ref" : "#/components/schemas/BatchFilePartInfo"
@@ -233,7 +234,7 @@
     "maxLength" : 44,
     "minLength" : 44,
     "type" : "string",
-    "description" : "SHA-256 w Base64",
+    "description" : "SHA-256 w Base64.",
     "format" : "byte"
   }
 
@@ -241,7 +242,6 @@
   "BatchFilePartInfo" : {
     "required" : [
       "fileHash",
-      "fileName",
       "fileSize",
       "ordinalNumber"
     ],
@@ -257,7 +257,10 @@
       "fileName" : {
         "maxLength" : 100,
         "type" : "string",
-        "description" : "Nazwa części pliku paczki."
+        "description" : "Nazwa części pliku paczki.",
+        "nullable" : true,
+        "deprecated" : true,
+        "x-removal-date" : "2025-12-07"
       },
       "fileSize" : {
         "minimum" : 1,
@@ -283,7 +286,7 @@
     "maxLength" : 44,
     "minLength" : 44,
     "type" : "string",
-    "description" : "SHA-256 w Base64",
+    "description" : "SHA-256 w Base64.",
     "format" : "byte"
   }
 
@@ -341,7 +344,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
@@ -407,7 +410,7 @@ Obsługiwane schematy:
     "fileParts": [ // required; type: array; description: Informacje o częściach pliku paczki. Maksymalna liczba części to 50. Maksymalny dozwolony rozmiar części przed zaszyfrowaniem to 100MB.
       {
         "ordinalNumber": 0, // required; type: integer; format: int32; description: Numer sekwencyjny części pliku paczki.
-        "fileName": "", // required; type: string; description: Nazwa części pliku paczki.
+        "fileName": "", // type: string; nullable: true; description: Nazwa części pliku paczki.
         "fileSize": 0, // required; type: integer; format: int64; description: Rozmiar zaszyfrowanej części pliku paczki w bajtach.
         "fileHash": "" // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 zaszyfrowanej części pliku paczki, zakodowany w formacie Base64.
       }

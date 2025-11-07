@@ -94,7 +94,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
@@ -102,7 +102,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
@@ -204,7 +204,7 @@
             "$ref" : "#/components/schemas/StatusInfo"
           }
         ],
-        "description" : "Status faktury.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Faktura przyjęta do dalszego przetwarzania | - |\n| 150 | Trwa przetwarzanie | - |\n| 200 | Sukces | - |\n| 405 | Przetwarzanie anulowane | - |\n| 410 | Nieprawidłowy zakres uprawnień | - |\n| 415 | Brak możliwości wysyłania faktury z załącznikiem | - |\n| 430 | Błąd weryfikacji pliku faktury | - |\n| 435 | Błąd odszyfrowania pliku | - |\n| 440 | Duplikat faktury | - |\n| 450 | Błąd weryfikacji semantyki dokumentu faktury | - |\n| 500 | Nieznany błąd ({statusCode}) | - |"
+        "description" : "Status faktury.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Faktura przyjęta do dalszego przetwarzania | - |\n| 150 | Trwa przetwarzanie | - |\n| 200 | Sukces | - |\n| 405 | Przetwarzanie anulowane | - |\n| 410 | Nieprawidłowy zakres uprawnień | - |\n| 415 | Brak możliwości wysyłania faktury z załącznikiem | - |\n| 430 | Błąd weryfikacji pliku faktury | - |\n| 435 | Błąd odszyfrowania pliku | - |\n| 440 | Duplikat faktury | - |\n| 450 | Błąd weryfikacji semantyki dokumentu faktury | - |\n| 500 | Nieznany błąd ({statusCode}) | - |\n| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |"
       }
     },
     "additionalProperties" : false
@@ -216,7 +216,7 @@
     "minLength" : 35,
     "pattern" : "^([1-9](\\d[1-9]|[1-9]\\d)\\d{7})-(20[2-9][0-9]|2[1-9]\\d{2}|[3-9]\\d{3})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-([0-9A-F]{6})-?([0-9A-F]{6})-([0-9A-F]{2})$",
     "type" : "string",
-    "description" : "Numer KSeF o długości 35 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 36-znakowym"
+    "description" : "Numer KSeF o długości 35 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 36-znakowym."
   }
 
 
@@ -224,7 +224,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
@@ -232,7 +232,7 @@
     "maxLength" : 44,
     "minLength" : 44,
     "type" : "string",
-    "description" : "SHA-256 w Base64",
+    "description" : "SHA-256 w Base64.",
     "format" : "byte"
   }
 
@@ -317,6 +317,7 @@ Link nie podlega limitom API i wygasa po określonym czasie w `UpoDownloadUrlExp
 | 440 | Duplikat faktury | - |
 | 450 | Błąd weryfikacji semantyki dokumentu faktury | - |
 | 500 | Nieznany błąd ({statusCode}) | - |
+| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |
     "code": 0, // required; type: integer; format: int32; description: Kod statusu
     "description": "", // required; type: string; description: Opis statusu
     "details": [ // type: array; nullable: true; description: Dodatkowe szczegóły statusu

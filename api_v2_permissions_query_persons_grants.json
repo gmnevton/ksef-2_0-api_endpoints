@@ -506,6 +506,7 @@
       },
       "description" : {
         "maxLength" : 256,
+        "minLength" : 5,
         "type" : "string",
         "description" : "Opis uprawnienia."
       },

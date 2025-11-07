@@ -130,7 +130,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
@@ -180,6 +180,7 @@
       },
       "description" : {
         "maxLength" : 256,
+        "minLength" : 5,
         "type" : "string",
         "description" : "Opis tokena."
       },
@@ -226,7 +227,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
@@ -381,7 +382,7 @@ response (200): application/json
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 

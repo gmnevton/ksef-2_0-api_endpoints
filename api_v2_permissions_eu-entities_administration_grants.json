@@ -125,11 +125,13 @@
       },
       "description" : {
         "maxLength" : 256,
+        "minLength" : 5,
         "type" : "string",
         "description" : "Opis uprawnienia"
       },
       "euEntityName" : {
         "maxLength" : 256,
+        "minLength" : 5,
         "type" : "string",
         "description" : "Nazwa i adres podmiotu unijnego w formacie: \n`{euSubjectName}, {euSubjectAddress}`"
       }
@@ -227,7 +229,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 

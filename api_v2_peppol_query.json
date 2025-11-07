@@ -141,8 +141,9 @@
   "PeppolId" : {
     "maxLength" : 9,
     "minLength" : 9,
+    "pattern" : "^P[A-Z]{2}[0-9]{6}$",
     "type" : "string",
-    "description" : "Identyfikator dostawcy usług Peppol"
+    "description" : "Identyfikator dostawcy usług Peppol."
   }
 
 

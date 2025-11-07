@@ -123,11 +123,13 @@
       },
       "description" : {
         "maxLength" : 256,
+        "minLength" : 5,
         "type" : "string",
         "description" : "Opis uprawnienia"
       },
       "subunitName" : {
         "maxLength" : 256,
+        "minLength" : 5,
         "type" : "string",
         "description" : "Nazwa jednostki podrzędnej. W przypadku jednostki podrzędnej z identyfikatorem wewnętrznym pole jest wymagane.",
         "nullable" : true
@@ -229,7 +231,7 @@
     "maxLength" : 36,
     "minLength" : 36,
     "type" : "string",
-    "description" : "Numer referencyjny"
+    "description" : "Numer referencyjny."
   }
 
 
