@@ -73,8 +73,8 @@ from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
 if isinstance(cert_pubkey, EllipticCurvePublicKey):
     nums = cert_pubkey.public_numbers()
     pubkey_info['curve'] = cert_pubkey.curve.name
-    pubkey_info['x'] = nums.x
-    pubkey_info['y'] = nums.y
+    pubkey_info['x'] = hex(nums.x)[2:].upper()
+    pubkey_info['y'] = hex(nums.y)[2:].upper()
 
 cert_sha256_b64 = base64.b64encode(hashlib.sha256(cert_der).digest()).decode()
 
