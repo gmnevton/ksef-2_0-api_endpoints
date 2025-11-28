@@ -2,7 +2,7 @@
 
 !!! UWAGA !!!  
 Pliku skryptu odwoluje sie do pliku 'signed_xml.xml',  
-umiesc ten plik obok tego skryptu luz zmien nazwe w pliku skryptu.  
+umiesc ten plik obok tego skryptu lub zmien nazwe w pliku skryptu.  
 
 Skrypt sprawdza podpisany za pomoca certyfikatu KSeF plik XML.  
 
