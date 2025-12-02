@@ -63,6 +63,10 @@
           },
           "x-summary" : "Bad Request"
         },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "x-summary" : "Too Many Requests"
+        },
         "401" : {
           "description" : "Unauthorized"
         }
@@ -73,7 +77,12 @@
 
           ]
         }
-      ]
+      ],
+      "x-rate-limits" : {
+        "perSecond" : 100,
+        "perMinute" : 300,
+        "perHour" : 1200
+      }
     },
     "get" : {
       "tags" : [
@@ -86,7 +95,6 @@
           "name" : "status",
           "in" : "query",
           "description" : "Status tokenów do zwrócenia. W przypadku braku parametru zwracane są wszystkie tokeny. Parametr można przekazać wielokrotnie.\n| Wartość | Opis |\n| --- | --- |\n| Pending | Token został utworzony ale jest jeszcze w trakcie aktywacji i nadawania uprawnień. Nie może być jeszcze wykorzystywany do uwierzytelniania. |\n| Active | Token jest aktywny i może być wykorzystywany do uwierzytelniania. |\n| Revoking | Token jest w trakcie unieważniania. Nie może już być wykorzystywany do uwierzytelniania. |\n| Revoked | Token został unieważniony i nie może być wykorzystywany do uwierzytelniania. |\n| Failed | Nie udało się aktywować tokena. Należy wygenerować nowy token, obecny nie może być wykorzystywany do uwierzytelniania. |\n",
-          "style" : "form",
           "schema" : {
             "type" : "array",
             "items" : {
@@ -130,9 +138,7 @@
           "description" : "Rozmiar strony wyników.",
           "schema" : {
             "maximum" : 100,
-            "exclusiveMaximum" : false,
             "minimum" : 10,
-            "exclusiveMinimum" : false,
             "type" : "integer",
             "format" : "int32",
             "default" : 10
@@ -195,6 +201,10 @@
           },
           "x-summary" : "Bad Request"
         },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "x-summary" : "Too Many Requests"
+        },
         "401" : {
           "description" : "Unauthorized"
         }
@@ -206,6 +216,11 @@
           ]
         }
       ],
+      "x-rate-limits" : {
+        "perSecond" : 100,
+        "perMinute" : 300,
+        "perHour" : 1200
+      },
       "x-sort" : [
         {
           "field" : "dateCreated",

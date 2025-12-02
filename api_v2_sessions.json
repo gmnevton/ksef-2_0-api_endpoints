@@ -20,9 +20,7 @@
           "description" : "Rozmiar strony.",
           "schema" : {
             "maximum" : 500,
-            "exclusiveMaximum" : false,
             "minimum" : 10,
-            "exclusiveMinimum" : false,
             "type" : "integer",
             "format" : "int32",
             "default" : 10
@@ -107,7 +105,6 @@
           "name" : "statuses",
           "in" : "query",
           "description" : "Statusy sesji.\n| Wartość | Opis |\n| --- | --- |\n| InProgress | Sesja aktywna. |\n| Succeeded | Sesja przetworzona poprawnie.            W trakcie przetwarzania sesji nie wystąpiły żadne błędy, ale część faktur nadal mogła zostać odrzucona. |\n| Failed | Sesja nie przetworzona z powodu błędów.            Na etapie rozpoczynania lub kończenia sesji wystąpiły błędy, które nie pozwoliły na jej poprawne przetworzenie. |\n| Cancelled | Sesja anulowania.            Został przekroczony czas na wysyłkę w sesji wsadowej, lub nie przesłano żadnych faktur w sesji interaktywnej. |\n",
-          "style" : "form",
           "schema" : {
             "type" : "array",
             "items" : {
@@ -177,6 +174,10 @@
           },
           "x-summary" : "Bad Request"
         },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 50 | 100 | 600 | sessionList\n",
+          "x-summary" : "Too Many Requests"
+        },
         "403" : {
           "description" : "Forbidden"
         },
@@ -191,6 +192,11 @@
           ]
         }
       ],
+      "x-rate-limits" : {
+        "perSecond" : 50,
+        "perMinute" : 100,
+        "perHour" : 600
+      },
       "x-sort" : [
         {
           "field" : "dateCreated",
@@ -304,21 +310,18 @@
       },
       "totalInvoiceCount" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Łączna liczba faktur (uwzględnia również te w trakcie przetwarzania).",
         "format" : "int32"
       },
       "successfulInvoiceCount" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Liczba poprawnie przetworzonych faktur.",
         "format" : "int32"
       },
       "failedInvoiceCount" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Liczba błędnie przetworzonych faktur.",
         "format" : "int32"

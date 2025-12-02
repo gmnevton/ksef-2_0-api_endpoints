@@ -20,7 +20,6 @@
           "description" : "Numer strony wyników.",
           "schema" : {
             "minimum" : 0,
-            "exclusiveMinimum" : false,
             "type" : "integer",
             "format" : "int32",
             "default" : 0
@@ -32,9 +31,7 @@
           "description" : "Rozmiar strony wyników.",
           "schema" : {
             "maximum" : 100,
-            "exclusiveMaximum" : false,
             "minimum" : 10,
-            "exclusiveMinimum" : false,
             "type" : "integer",
             "format" : "int32",
             "default" : 10
@@ -72,7 +69,14 @@
             }
           },
           "x-summary" : "Bad Request"
+        },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 60 | - | - | -\n",
+          "x-summary" : "Too Many Requests"
         }
+      },
+      "x-rate-limits" : {
+        "perSecond" : 60
       },
       "x-sort" : [
         {

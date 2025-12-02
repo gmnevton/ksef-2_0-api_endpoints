@@ -55,6 +55,10 @@
           },
           "x-summary" : "Bad Request"
         },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 1200 | 7200 | sessionMisc\n",
+          "x-summary" : "Too Many Requests"
+        },
         "403" : {
           "description" : "Forbidden"
         },
@@ -69,6 +73,11 @@
           ]
         }
       ],
+      "x-rate-limits" : {
+        "perSecond" : 100,
+        "perMinute" : 1200,
+        "perHour" : 7200
+      },
       "x-required-permissions" : [
         "InvoiceWrite",
         "Introspection",

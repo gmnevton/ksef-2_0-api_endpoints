@@ -47,6 +47,10 @@
           },
           "x-summary" : "Bad Request"
         },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "x-summary" : "Too Many Requests"
+        },
         "401" : {
           "description" : "Unauthorized"
         }
@@ -57,7 +61,12 @@
 
           ]
         }
-      ]
+      ],
+      "x-rate-limits" : {
+        "perSecond" : 100,
+        "perMinute" : 300,
+        "perHour" : 1200
+      }
     }
   }
 
@@ -110,21 +119,18 @@
     "properties" : {
       "maxInvoiceSizeInMB" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Maksymalny rozmiar faktury w MB.",
         "format" : "int32"
       },
       "maxInvoiceWithAttachmentSizeInMB" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Maksymalny rozmiar faktury z załącznikiem w MB.",
         "format" : "int32"
       },
       "maxInvoices" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Maksymalna ilość faktur które można przesłać w pojedynczej sesji.",
         "format" : "int32"
@@ -144,21 +150,18 @@
     "properties" : {
       "maxInvoiceSizeInMB" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Maksymalny rozmiar faktury w MB.",
         "format" : "int32"
       },
       "maxInvoiceWithAttachmentSizeInMB" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Maksymalny rozmiar faktury z załącznikiem w MB.",
         "format" : "int32"
       },
       "maxInvoices" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Maksymalna ilość faktur które można przesłać w pojedynczej sesji.",
         "format" : "int32"

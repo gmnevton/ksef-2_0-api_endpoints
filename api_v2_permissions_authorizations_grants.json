@@ -64,6 +64,10 @@
           },
           "x-summary" : "Bad Request"
         },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "x-summary" : "Too Many Requests"
+        },
         "403" : {
           "description" : "Forbidden"
         },
@@ -78,6 +82,11 @@
           ]
         }
       ],
+      "x-rate-limits" : {
+        "perSecond" : 100,
+        "perMinute" : 300,
+        "perHour" : 1200
+      },
       "x-required-permissions" : [
         "CredentialsManage"
       ]
@@ -118,6 +127,18 @@
         "minLength" : 5,
         "type" : "string",
         "description" : "Opis uprawnienia"
+      },
+      "subjectDetails" : {
+        "required" : [
+          "fullName"
+        ],
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/EntityDetails"
+          }
+        ],
+        "description" : "Dane podmiotu, któremu nadawane są uprawnienia.",
+        "nullable" : true
       }
     },
     "additionalProperties" : false
@@ -169,6 +190,21 @@
   }
 
 
+  "EntityDetails" : {
+    "required" : [
+      "fullName"
+    ],
+    "type" : "object",
+    "properties" : {
+      "fullName" : {
+        "type" : "string",
+        "description" : "Pełna nazwa podmiotu."
+      }
+    },
+    "additionalProperties" : false
+  }
+
+
   "PermissionsOperationResponse" : {
     "required" : [
       "referenceNumber"
@@ -212,7 +248,10 @@ body:
     "value": "" // required; type: string; description: Wartość identyfikatora.
   },
   "permission": "", // required; type: string; items: #/components/schemas/EntityAuthorizationPermissionType; description: Rodzaj uprawnienia.
-  "description": "" // required; type: string; description: Opis uprawnienia
+  "description": "", // required; type: string; description: Opis uprawnienia
+  "subjectDetails": { // type: object; items: #/components/schemas/EntityDetails; description: Dane podmiotu, któremu nadawane są uprawnienia.
+    "fullName": "" // required; type: string; description: Pełna nazwa podmiotu.
+  }
 }
 
 

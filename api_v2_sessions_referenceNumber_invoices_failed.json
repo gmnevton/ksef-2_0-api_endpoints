@@ -37,9 +37,7 @@
           "description" : "Rozmiar strony wyników.",
           "schema" : {
             "maximum" : 500,
-            "exclusiveMaximum" : false,
             "minimum" : 10,
-            "exclusiveMinimum" : false,
             "type" : "integer",
             "format" : "int32",
             "default" : 10
@@ -68,7 +66,11 @@
                       "description" : "Duplikat faktury",
                       "details" : [
                         "Duplikat faktury. Faktura o numerze KSeF: 5265877635-20250626-010080DD2B5E-26 została już prawidłowo przesłana do systemu w sesji: 20250626-SO-2F14610000-242991F8C9-B4"
-                      ]
+                      ],
+                      "extensions" : {
+                        "originalSessionReferenceNumber" : "20250626-SO-2F14610000-242991F8C9-B4",
+                        "originalKsefNumber" : "5265877635-20250626-010080DD2B5E-26"
+                      }
                     }
                   }
                 ]
@@ -87,6 +89,10 @@
           },
           "x-summary" : "Bad Request"
         },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 200 | 2000 | sessionInvoiceList\n",
+          "x-summary" : "Too Many Requests"
+        },
         "403" : {
           "description" : "Forbidden"
         },
@@ -101,6 +107,11 @@
           ]
         }
       ],
+      "x-rate-limits" : {
+        "perSecond" : 100,
+        "perMinute" : 200,
+        "perHour" : 2000
+      },
       "x-required-permissions" : [
         "InvoiceWrite",
         "Introspection",
@@ -153,7 +164,6 @@
     "properties" : {
       "ordinalNumber" : {
         "minimum" : 1,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Numer sekwencyjny faktury w ramach sesji.",
         "format" : "int32"
@@ -236,10 +246,10 @@
       "status" : {
         "allOf" : [
           {
-            "$ref" : "#/components/schemas/StatusInfo"
+            "$ref" : "#/components/schemas/InvoiceStatusInfo"
           }
         ],
-        "description" : "Status faktury.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Faktura przyjęta do dalszego przetwarzania | - |\n| 150 | Trwa przetwarzanie | - |\n| 200 | Sukces | - |\n| 405 | Przetwarzanie anulowane | - |\n| 410 | Nieprawidłowy zakres uprawnień | - |\n| 415 | Brak możliwości wysyłania faktury z załącznikiem | - |\n| 430 | Błąd weryfikacji pliku faktury | - |\n| 435 | Błąd odszyfrowania pliku | - |\n| 440 | Duplikat faktury | - |\n| 450 | Błąd weryfikacji semantyki dokumentu faktury | - |\n| 500 | Nieznany błąd ({statusCode}) | - |\n| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |"
+        "description" : "Status faktury.\n\n| Code | Description | Details | Extensions |\n| --- | --- | --- | ---|\n| 100 | Faktura przyjęta do dalszego przetwarzania | - | - |\n| 150 | Trwa przetwarzanie | - | - |\n| 200 | Sukces | - | - |\n| 405 | Przetwarzanie anulowane z powodu błędu sesji | - | - |\n| 410 | Nieprawidłowy zakres uprawnień | - |  - |\n| 415 | Brak możliwości wysyłania faktury z załącznikiem | - | - |\n| 430 | Błąd weryfikacji pliku faktury | - | -  |\n| 435 | Błąd odszyfrowania pliku | - | - |\n| 440 | Duplikat faktury | - | 'originalSessionReferenceNumber', 'originalKsefNumber'|\n| 450 | Błąd weryfikacji semantyki dokumentu faktury | - | - |\n| 500 | Nieznany błąd ({statusCode}) | - | - |\n| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |- |"
       }
     },
     "additionalProperties" : false
@@ -251,7 +261,7 @@
     "minLength" : 35,
     "pattern" : "^([1-9](\\d[1-9]|[1-9]\\d)\\d{7})-(20[2-9][0-9]|2[1-9]\\d{2}|[3-9]\\d{3})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-([0-9A-F]{6})-?([0-9A-F]{6})-([0-9A-F]{2})$",
     "type" : "string",
-    "description" : "Numer KSeF o długości 35 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 36-znakowym."
+    "description" : "Numer KSeF o długości 36 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 35-znakowym."
   }
 
 
@@ -281,7 +291,7 @@
   }
 
 
-  "StatusInfo" : {
+  "InvoiceStatusInfo" : {
     "required" : [
       "code",
       "description"
@@ -290,7 +300,7 @@
     "properties" : {
       "code" : {
         "type" : "integer",
-        "description" : "Kod statusu",
+        "description" : "Kod statusu faktury",
         "format" : "int32"
       },
       "description" : {
@@ -304,6 +314,15 @@
           "type" : "string"
         },
         "description" : "Dodatkowe szczegóły statusu",
+        "nullable" : true
+      },
+      "extensions" : {
+        "type" : "object",
+        "additionalProperties" : {
+          "type" : "string",
+          "nullable" : true
+        },
+        "description" : "Zbiór dodatkowych informacji związanych ze statusem faktury, zapisanych jako pary klucz–wartość.\nUmożliwia rozszerzenie modelu o dane specyficzne dla danego przypadku.",
         "nullable" : true
       }
     },
@@ -341,26 +360,29 @@ Dostęp odbywa się metodą `HTTP GET` i <b>nie należy</b> wysyłać tokenu dos
 Link nie podlega limitom API i wygasa po określonym czasie w `UpoDownloadUrlExpirationDate`.
       "upoDownloadUrlExpirationDate": "", // type: string; format: date-time; nullable: true; description: Data i godzina wygaśnięcia adresu. Po tej dacie link `UpoDownloadUrl` nie będzie już aktywny.
       "invoicingMode": "", // type: string; items: #/components/schemas/InvoicingMode; description: Tryb fakturowania (online/offline).
-      "status": { // required; type: object; items: #/components/schemas/StatusInfo; description: Status faktury.
+      "status": { // required; type: object; items: #/components/schemas/InvoiceStatusInfo; description: Status faktury.
 
-| Code | Description | Details |
-| --- | --- | --- |
-| 100 | Faktura przyjęta do dalszego przetwarzania | - |
-| 150 | Trwa przetwarzanie | - |
-| 200 | Sukces | - |
-| 405 | Przetwarzanie anulowane | - |
-| 410 | Nieprawidłowy zakres uprawnień | - |
-| 415 | Brak możliwości wysyłania faktury z załącznikiem | - |
-| 430 | Błąd weryfikacji pliku faktury | - |
-| 435 | Błąd odszyfrowania pliku | - |
-| 440 | Duplikat faktury | - |
-| 450 | Błąd weryfikacji semantyki dokumentu faktury | - |
-| 500 | Nieznany błąd ({statusCode}) | - |
-| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |
-        "code": 0, // required; type: integer; format: int32; description: Kod statusu
+| Code | Description | Details | Extensions |
+| --- | --- | --- | ---|
+| 100 | Faktura przyjęta do dalszego przetwarzania | - | - |
+| 150 | Trwa przetwarzanie | - | - |
+| 200 | Sukces | - | - |
+| 405 | Przetwarzanie anulowane z powodu błędu sesji | - | - |
+| 410 | Nieprawidłowy zakres uprawnień | - |  - |
+| 415 | Brak możliwości wysyłania faktury z załącznikiem | - | - |
+| 430 | Błąd weryfikacji pliku faktury | - | -  |
+| 435 | Błąd odszyfrowania pliku | - | - |
+| 440 | Duplikat faktury | - | 'originalSessionReferenceNumber', 'originalKsefNumber'|
+| 450 | Błąd weryfikacji semantyki dokumentu faktury | - | - |
+| 500 | Nieznany błąd ({statusCode}) | - | - |
+| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |- |
+        "code": 0, // required; type: integer; format: int32; description: Kod statusu faktury
         "description": "", // required; type: string; description: Opis statusu
         "details": [ // type: array; nullable: true; description: Dodatkowe szczegóły statusu
-        ]
+        ],
+        "extensions": { // type: object; nullable: true; description: Zbiór dodatkowych informacji związanych ze statusem faktury, zapisanych jako pary klucz–wartość.
+Umożliwia rozszerzenie modelu o dane specyficzne dla danego przypadku.
+        }
       }
     }
   ]

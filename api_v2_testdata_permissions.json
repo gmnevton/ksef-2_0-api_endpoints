@@ -61,7 +61,14 @@
             }
           },
           "x-summary" : "Bad Request"
+        },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 60 | - | - | -\n",
+          "x-summary" : "Too Many Requests"
         }
+      },
+      "x-rate-limits" : {
+        "perSecond" : 60
       }
     }
   }

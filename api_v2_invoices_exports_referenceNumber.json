@@ -55,7 +55,8 @@
                     }
                   ],
                   "isTruncated" : true,
-                  "lastPermanentStorageDate" : "2025-09-11T11:40:40.266578+00:00"
+                  "lastPermanentStorageDate" : "2025-09-11T11:40:40.266578+00:00",
+                  "permanentStorageHwmDate" : "2025-09-11T12:00:40.266578+00:00"
                 }
               }
             }
@@ -123,7 +124,7 @@
             "$ref" : "#/components/schemas/StatusInfo"
           }
         ],
-        "description" : "Status eksportu.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Eksport faktur w toku | - |\n| 200 | Eksport faktur zakończony sukcesem | - |\n| 210 | Eksport faktur wygasł i nie jest już dostępny do pobrania | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza  | - |\n| 500 | Nieznany błąd ({statusCode}) | - |\n| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |"
+        "description" : "Status eksportu.\n\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Eksport faktur w toku | - |\n| 200 | Eksport faktur zakończony sukcesem | - |\n| 210 | Eksport faktur wygasł i nie jest już dostępny do pobrania | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza  | - |\n| 420 | Zakres filtrowania wykracza poza dostępny zakres danych | Parametr dateRange.from jest późniejszy niż PermanentStorageHwmDate przy włączonym restrictToPermanentStorageHwmDate. |\n| 500 | Nieznany błąd ({statusCode}) | - |\n| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |"
       },
       "completedDate" : {
         "type" : "string",
@@ -198,16 +199,13 @@
     "properties" : {
       "invoiceCount" : {
         "maximum" : 10000,
-        "exclusiveMaximum" : false,
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Łączna liczba faktur w paczce.",
         "format" : "int64"
       },
       "size" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Rozmiar paczki w bajtach.",
         "format" : "int64"
@@ -240,6 +238,12 @@
         "description" : "Data trwałego zapisu ostatniej faktury ujętej w paczce.\nPole występuje wyłącznie wtedy, gdy paczka została ucięta i eksport był filtrowany po typie daty `PermanentStorage`.",
         "format" : "date-time",
         "nullable" : true
+      },
+      "permanentStorageHwmDate" : {
+        "type" : "string",
+        "description" : "Dotyczy wyłącznie zapytań filtrowanych po typie daty <b>PermanentStorage</b>.\nJeśli zapytanie dotyczyło najnowszego okresu, wartość ta może być wartością nieznacznie skorygowaną względem górnej granicy podanej w warunkach zapytania.\nDla okresów starszych, będzie to zgodne z warunkami zapytania. \n\nSystem gwarantuje, że dane poniżej tej wartości są spójne i kompletne.\nPonowne zapytania obejmujące zakresem dane poniżej tego kroczącego znacznika czasu nie zwrócą w przyszłości innych wyników (np.dodatkowych faktur). \n\nDla dateType = Issue lub Invoicing – null.",
+        "format" : "date-time",
+        "nullable" : true
       }
     },
     "additionalProperties" : false
@@ -262,7 +266,6 @@
     "properties" : {
       "ordinalNumber" : {
         "minimum" : 1,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Numer sekwencyjny pliku części paczki.",
         "format" : "int32"
@@ -283,7 +286,6 @@
       },
       "partSize" : {
         "minimum" : 1,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Rozmiar części paczki w bajtach.",
         "format" : "int64"
@@ -298,7 +300,6 @@
       },
       "encryptedPartSize" : {
         "minimum" : 1,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Rozmiar zaszyfrowanej części paczki w bajtach.",
         "format" : "int64"
@@ -359,6 +360,7 @@ response (200): application/json
 | 200 | Eksport faktur zakończony sukcesem | - |
 | 210 | Eksport faktur wygasł i nie jest już dostępny do pobrania | - |
 | 415 | Błąd odszyfrowania dostarczonego klucza  | - |
+| 420 | Zakres filtrowania wykracza poza dostępny zakres danych | Parametr dateRange.from jest późniejszy niż PermanentStorageHwmDate przy włączonym restrictToPermanentStorageHwmDate. |
 | 500 | Nieznany błąd ({statusCode}) | - |
 | 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |
     "code": 0, // required; type: integer; format: int32; description: Kod statusu
@@ -393,7 +395,15 @@ Po upływie tego momentu link przestaje być aktywny.
 Pole występuje wyłącznie wtedy, gdy paczka została ucięta i eksport był filtrowany po typie daty `Issue`.
     "lastInvoicingDate": "", // type: string; format: date-time; nullable: true; description: Data przyjęcia ostatniej faktury ujętej w paczce.
 Pole występuje wyłącznie wtedy, gdy paczka została ucięta i eksport był filtrowany po typie daty `Invoicing`.
-    "lastPermanentStorageDate": "" // type: string; format: date-time; nullable: true; description: Data trwałego zapisu ostatniej faktury ujętej w paczce.
+    "lastPermanentStorageDate": "", // type: string; format: date-time; nullable: true; description: Data trwałego zapisu ostatniej faktury ujętej w paczce.
 Pole występuje wyłącznie wtedy, gdy paczka została ucięta i eksport był filtrowany po typie daty `PermanentStorage`.
+    "permanentStorageHwmDate": "" // type: string; format: date-time; nullable: true; description: Dotyczy wyłącznie zapytań filtrowanych po typie daty <b>PermanentStorage</b>.
+Jeśli zapytanie dotyczyło najnowszego okresu, wartość ta może być wartością nieznacznie skorygowaną względem górnej granicy podanej w warunkach zapytania.
+Dla okresów starszych, będzie to zgodne z warunkami zapytania. 
+
+System gwarantuje, że dane poniżej tej wartości są spójne i kompletne.
+Ponowne zapytania obejmujące zakresem dane poniżej tego kroczącego znacznika czasu nie zwrócą w przyszłości innych wyników (np.dodatkowych faktur). 
+
+Dla dateType = Issue lub Invoicing – null.
   }
 }

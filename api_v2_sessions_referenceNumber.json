@@ -64,6 +64,10 @@
           },
           "x-summary" : "Bad Request"
         },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 1200 | 7200 | sessionMisc\n",
+          "x-summary" : "Too Many Requests"
+        },
         "403" : {
           "description" : "Forbidden"
         },
@@ -78,6 +82,11 @@
           ]
         }
       ],
+      "x-rate-limits" : {
+        "perSecond" : 100,
+        "perMinute" : 1200,
+        "perHour" : 7200
+      },
       "x-required-permissions" : [
         "InvoiceWrite",
         "Introspection",
@@ -107,7 +116,7 @@
             "$ref" : "#/components/schemas/StatusInfo"
           }
         ],
-        "description" : "Informacje o aktualnym statusie.\n            \nSesja wsadowa:\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Sesja wsadowa rozpoczęta | - |\n| 150 | Trwa przetwarzanie | - |\n| 200 | Sesja wsadowa przetworzona pomyślnie | - |\n| 405 | Błąd weryfikacji poprawności dostarczonych elementów paczki | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza | - |\n| 420 | Przekroczony limit faktur w sesji | - |\n| 430 | Błąd dekompresji pierwotnego archiwum | - |\n| 435 | Błąd odszyfrowania zaszyfrowanych części archiwum | - |\n| 440 | Sesja anulowana, przekroczono czas wysyłki | - |\n| 445 | Błąd weryfikacji, brak poprawnych faktur | - |\n| 500 | Nieznany błąd ({statusCode}) | - |\n\nSesja interaktywna:\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Sesja interaktywna otwarta | - |\n| 170 | Sesja interaktywna zamknięta | - |\n| 200 | Sesja interaktywna przetworzona pomyślnie | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza | - |\n| 440 | Sesja anulowana, nie przesłano faktur | - |\n| 445 | Błąd weryfikacji, brak poprawnych faktur | - |\n| * | description missing | - |"
+        "description" : "Informacje o aktualnym statusie.\n            \nSesja wsadowa:\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Sesja wsadowa rozpoczęta | - |\n| 150 | Trwa przetwarzanie | - |\n| 200 | Sesja wsadowa przetworzona pomyślnie | - |\n| 405 | Błąd weryfikacji poprawności dostarczonych elementów paczki | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza | - |\n| 420 | Przekroczony limit faktur w sesji | - |\n| 430 | Błąd dekompresji pierwotnego archiwum | - |\n| 435 | Błąd odszyfrowania zaszyfrowanych części archiwum | - |\n| 440 | Sesja anulowana | Przekroczono czas wysyłki |\n| 440 | Sesja anulowana | Nie przesłano faktur |\n| 445 | Błąd weryfikacji, brak poprawnych faktur | - |\n| 500 | Nieznany błąd ({statusCode}) | - |\n\nSesja interaktywna:\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Sesja interaktywna otwarta | - |\n| 170 | Sesja interaktywna zamknięta | - |\n| 200 | Sesja interaktywna przetworzona pomyślnie | - |\n| 415 | Błąd odszyfrowania dostarczonego klucza | - |\n| 440 | Sesja anulowana | Nie przesłano faktur |\n| 445 | Błąd weryfikacji, brak poprawnych faktur | - |\n| * | description missing | - |"
       },
       "validUntil" : {
         "type" : "string",
@@ -130,7 +139,6 @@
       },
       "invoiceCount" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Liczba przyjętych faktur w ramach sesji.",
         "format" : "int32",
@@ -138,7 +146,6 @@
       },
       "successfulInvoiceCount" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Liczba faktur przeprocesowanych w ramach sesji z sukcesem .",
         "format" : "int32",
@@ -146,7 +153,6 @@
       },
       "failedInvoiceCount" : {
         "minimum" : 0,
-        "exclusiveMinimum" : false,
         "type" : "integer",
         "description" : "Liczba faktur przeprocesowanych w ramach sesji z błędem.",
         "format" : "int32",
@@ -269,7 +275,8 @@ Sesja wsadowa:
 | 420 | Przekroczony limit faktur w sesji | - |
 | 430 | Błąd dekompresji pierwotnego archiwum | - |
 | 435 | Błąd odszyfrowania zaszyfrowanych części archiwum | - |
-| 440 | Sesja anulowana, przekroczono czas wysyłki | - |
+| 440 | Sesja anulowana | Przekroczono czas wysyłki |
+| 440 | Sesja anulowana | Nie przesłano faktur |
 | 445 | Błąd weryfikacji, brak poprawnych faktur | - |
 | 500 | Nieznany błąd ({statusCode}) | - |
 
@@ -280,7 +287,7 @@ Sesja interaktywna:
 | 170 | Sesja interaktywna zamknięta | - |
 | 200 | Sesja interaktywna przetworzona pomyślnie | - |
 | 415 | Błąd odszyfrowania dostarczonego klucza | - |
-| 440 | Sesja anulowana, nie przesłano faktur | - |
+| 440 | Sesja anulowana | Nie przesłano faktur |
 | 445 | Błąd weryfikacji, brak poprawnych faktur | - |
 | * | description missing | - |
     "code": 0, // required; type: integer; format: int32; description: Kod statusu
