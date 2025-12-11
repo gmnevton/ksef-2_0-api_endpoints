@@ -186,13 +186,18 @@ end;
 procedure TXAdESSign.LoadPublicKeyCertificate(const FileName: String; Encoding: TEncoding = Nil);
 var
   stream: TStringStream;
+  path: String;
 begin
   if Encoding = Nil then
     Encoding := TEncoding.ASCII;
   //
+  path := ExtractFilePath(FileName);
+  if Length(path) = 0 then
+    path := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
+  //
   stream := TStringStream.Create('', Encoding);
   try
-    stream.LoadFromFile(FileName);
+    stream.LoadFromFile(path + ExtractFileName(FileName));
     LoadPublicKeyCertificate(stream);
   finally
     stream.Free;
@@ -208,13 +213,18 @@ end;
 procedure TXAdESSign.LoadPrivateKey(const FileName: String; Encoding: TEncoding = Nil);
 var
   stream: TStringStream;
+  path: String;
 begin
   if Encoding = Nil then
     Encoding := TEncoding.ASCII;
   //
+  path := ExtractFilePath(FileName);
+  if Length(path) = 0 then
+    path := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
+  //
   stream := TStringStream.Create('', Encoding);
   try
-    stream.LoadFromFile(FileName);
+    stream.LoadFromFile(path + ExtractFileName(FileName));
     LoadPrivateKey(stream);
   finally
     stream.Free;
