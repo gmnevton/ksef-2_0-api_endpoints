@@ -106,6 +106,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "401" : {
@@ -390,7 +404,7 @@
             "$ref" : "#/components/schemas/PermissionsSubjectPersonDetails"
           }
         ],
-        "description" : "Dane osoby, której dotyczy uprawnienie.",
+        "description" : "Dane osoby uprawnionej.",
         "nullable" : true
       },
       "subjectEntityDetails" : {
@@ -403,7 +417,7 @@
             "$ref" : "#/components/schemas/PermissionsSubjectEntityDetails"
           }
         ],
-        "description" : "Dane podmiotu, którego dotyczy uprawnienie.",
+        "description" : "Dane podmiotu uprawnionego.",
         "nullable" : true
       },
       "permissionState" : {
@@ -500,8 +514,8 @@ response (200): application/json
       },
       "permissionScope": "", // required; type: string; items: #/components/schemas/PersonalPermissionScope; description: Rodzaj uprawnienia.
       "description": "", // required; type: string; description: Opis uprawnienia.
-      "subjectPersonDetails": { // type: object; items: #/components/schemas/PermissionsSubjectPersonDetails; nullable: true; description: Dane osoby, której dotyczy uprawnienie.
-        "subjectDetailsType": "", // required; type: string; items: #/components/schemas/PersonSubjectDetailsType; description: Typ danych osoby fizycznej, której dotyczy uprawnienie.
+      "subjectPersonDetails": { // type: object; items: #/components/schemas/PermissionsSubjectPersonDetails; nullable: true; description: Dane osoby uprawnionej.
+        "subjectDetailsType": "", // required; type: string; items: #/components/schemas/PersonSubjectDetailsType; description: Typ danych uprawnionej osoby fizycznej.
 | Wartość | Opis |
 | --- | --- |
 | PersonByIdentifier | Osoba fizyczna posługująca się Profilem Zaufanym lub certyfikatem zawierającym identyfikator NIP lub PESEL. |
@@ -520,8 +534,8 @@ response (200): application/json
           "country": "" // required; type: string; description: Kraj wydania dokumentu tożsamości. Musi być zgodny z ISO 3166-1 alpha-2 (np. PL, DE, US) oraz zawierać dokładnie 2 wielkie litery.
         }
       },
-      "subjectEntityDetails": { // type: object; items: #/components/schemas/PermissionsSubjectEntityDetails; nullable: true; description: Dane podmiotu, którego dotyczy uprawnienie.
-        "subjectDetailsType": "", // required; type: string; items: #/components/schemas/EntitySubjectDetailsType; description: Typ danych podmiotu, którego dotyczy uprawnienie.
+      "subjectEntityDetails": { // type: object; items: #/components/schemas/PermissionsSubjectEntityDetails; nullable: true; description: Dane podmiotu uprawnionego.
+        "subjectDetailsType": "", // required; type: string; items: #/components/schemas/EntitySubjectDetailsType; description: Typ danych podmiotu uprawnionego.
 | Wartość | Opis |
 | --- | --- |
 | EntityByIdentifier | Podmiot identyfikowany numerem NIP. |

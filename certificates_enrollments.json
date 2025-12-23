@@ -66,6 +66,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "401" : {
@@ -113,7 +127,7 @@
       },
       "csr" : {
         "type" : "string",
-        "description" : "Wniosek certyfikacyjny PKCS#10 (CSR) w formacie DER zakodowany w Base64.",
+        "description" : "Wniosek certyfikacyjny PKCS#10 (CSR) w formacie DER, zakodowany w formacie Base64.",
         "format" : "byte"
       },
       "validFrom" : {
@@ -183,7 +197,7 @@ body:
 | --- | --- |
 | Authentication | Certyfikat używany do uwierzytelnienia w systemie. |
 | Offline | Certyfikat używany wyłącznie do potwierdzania autentyczności wystawcy i integralności faktury w trybie offline |
-  "csr": "", // required; type: string; format: byte; description: Wniosek certyfikacyjny PKCS#10 (CSR) w formacie DER zakodowany w Base64.
+  "csr": "", // required; type: string; format: byte; description: Wniosek certyfikacyjny PKCS#10 (CSR) w formacie DER, zakodowany w formacie Base64.
   "validFrom": "" // type: string; format: date-time; nullable: true; description: Data rozpoczęcia ważności certyfikatu.
 Jeśli nie zostanie podana, certyfikat będzie ważny od momentu jego wystawienia.
 }

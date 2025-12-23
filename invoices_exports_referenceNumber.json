@@ -75,6 +75,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 600 | 6000 | invoiceExportStatus\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "403" : {
@@ -290,7 +304,7 @@
       },
       "url" : {
         "type" : "string",
-        "description" : "Adres URL, pod który należy wysłać żądanie pobrania części paczki.\nLink jest generowany dynamicznie w momencie odpytania o status operacji eksportu.\nNie podlega limitom API i nie wymaga przesyłania tokenu dostępowego przy pobraniu.",
+        "description" : "Adres URL, pod który należy wysłać żądanie pobrania części paczki.\nLink jest generowany dynamicznie w momencie odpytania o status operacji eksportu.\nNie podlega limitom API i nie wymaga przesyłania tokenu dostępowego przy pobraniu.\n\nOdpowiedź HTTP zawiera dodatkowe nagłówki:\n- `x-ms-meta-hash` – zaszyfrowanej części paczki, zakodowany w formacie Base64.",
         "format" : "uri"
       },
       "partSize" : {
@@ -382,6 +396,9 @@ Po upływie tej daty paczka nie będzie już dostępna do pobrania.
         "url": "", // required; type: string; format: uri; description: Adres URL, pod który należy wysłać żądanie pobrania części paczki.
 Link jest generowany dynamicznie w momencie odpytania o status operacji eksportu.
 Nie podlega limitom API i nie wymaga przesyłania tokenu dostępowego przy pobraniu.
+
+Odpowiedź HTTP zawiera dodatkowe nagłówki:
+- `x-ms-meta-hash` – zaszyfrowanej części paczki, zakodowany w formacie Base64.
         "partSize": 0, // required; type: integer; format: int64; description: Rozmiar części paczki w bajtach.
         "partHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 pliku części paczki, zakodowany w formacie Base64.
         "encryptedPartSize": 0, // required; type: integer; format: int64; description: Rozmiar zaszyfrowanej części paczki w bajtach.

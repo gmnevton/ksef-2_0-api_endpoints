@@ -203,6 +203,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 80 | 160 | 200 | invoiceMetadata\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "403" : {
@@ -279,7 +293,7 @@
             "$ref" : "#/components/schemas/InvoiceQueryDateRange"
           }
         ],
-        "description" : "Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 2 lata."
+        "description" : "Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące."
       },
       "ksefNumber" : {
         "allOf" : [
@@ -365,7 +379,7 @@
         "items" : {
           "$ref" : "#/components/schemas/InvoiceType"
         },
-        "description" : "Rodzaje faktur.\n| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n",
+        "description" : "Rodzaje faktur.\n| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n",
         "nullable" : true
       },
       "hasAttachment" : {
@@ -755,7 +769,7 @@
       "KorVatRr"
     ],
     "type" : "string",
-    "description" : "| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n"
+    "description" : "| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n"
   }
 
 
@@ -906,7 +920,7 @@
             "$ref" : "#/components/schemas/InvoiceType"
           }
         ],
-        "description" : "Rodzaj faktury.\n| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n"
+        "description" : "Rodzaj faktury.\n| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n"
       },
       "formCode" : {
         "required" : [
@@ -935,7 +949,7 @@
             "$ref" : "#/components/schemas/Sha256HashBase64"
           }
         ],
-        "description" : "Skrót SHA256 faktury."
+        "description" : "Skrót SHA256 faktury, zakodowany w formacie Base64."
       },
       "hashOfCorrectedInvoice" : {
         "allOf" : [
@@ -943,7 +957,7 @@
             "$ref" : "#/components/schemas/Sha256HashBase64"
           }
         ],
-        "description" : "Skrót SHA256 korygowanej faktury.",
+        "description" : "Skrót SHA256 korygowanej faktury, zakodowany w formacie Base64.",
         "nullable" : true
       },
       "thirdSubjects" : {
@@ -987,7 +1001,7 @@ Określa kontekst, w jakim przeszukiwane są dane.
 | Subject2 | Podmiot 2 - nabywca |
 | Subject3 | Podmiot 3 |
 | SubjectAuthorized | Podmiot upoważniony |
-  "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 2 lata.
+  "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące.
     "dateType": "", // required; type: string; items: #/components/schemas/InvoiceQueryDateType; description: Typ daty, według której ma być zastosowany zakres.
 | Wartość | Opis |
 | --- | --- |
@@ -1046,7 +1060,7 @@ Określa kontekst, w jakim przeszukiwane są dane.
 | Upr | (FA) Uproszczona |
 | KorZal | (FA) Korygująca fakturę zaliczkową |
 | KorRoz | (FA) Korygująca fakturę rozliczeniową |
-| VatPef | (PEF) Podstawowowa |
+| VatPef | (PEF) Podstawowa |
 | VatPefSp | (PEF) Specjalizowana |
 | KorPef | (PEF) Korygująca |
 | VatRr | (RR) Podstawowa |
@@ -1099,7 +1113,7 @@ Dla dateType = Issue lub Invoicing – null.
 | VatUe | Identyfikator VAT UE podmiotu unijnego |
 | Other | Inny identyfikator |
 | None | Brak identyfikatora nabywcy |
-          "value": "" // type: string; nullable: true; description: Wartośc identyfikatora nabywcy.
+          "value": "" // type: string; nullable: true; description: Wartość identyfikatora nabywcy.
         },
         "name": "" // type: string; nullable: true; description: Nazwa nabywcy.
       },
@@ -1118,7 +1132,7 @@ Dla dateType = Issue lub Invoicing – null.
 | Upr | (FA) Uproszczona |
 | KorZal | (FA) Korygująca fakturę zaliczkową |
 | KorRoz | (FA) Korygująca fakturę rozliczeniową |
-| VatPef | (PEF) Podstawowowa |
+| VatPef | (PEF) Podstawowa |
 | VatPefSp | (PEF) Specjalizowana |
 | KorPef | (PEF) Korygująca |
 | VatRr | (RR) Podstawowa |
@@ -1139,8 +1153,8 @@ Obsługiwane schematy:
       },
       "isSelfInvoicing": true/false, // required; type: boolean; description: Czy faktura została wystawiona w trybie samofakturowania.
       "hasAttachment": true/false, // required; type: boolean; description: Określa, czy faktura posiada załącznik.
-      "invoiceHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 faktury.
-      "hashOfCorrectedInvoice": "", // type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 korygowanej faktury.
+      "invoiceHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 faktury, zakodowany w formacie Base64.
+      "hashOfCorrectedInvoice": "", // type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 korygowanej faktury, zakodowany w formacie Base64.
       "thirdSubjects": [ // type: array; nullable: true; description: Lista podmiotów trzecich.
         {
           "identifier": { // required; type: object; items: #/components/schemas/InvoiceMetadataThirdSubjectIdentifier;

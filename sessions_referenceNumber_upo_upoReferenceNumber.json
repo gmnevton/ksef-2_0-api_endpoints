@@ -36,6 +36,14 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "x-ms-meta-hash" : {
+              "description" : "Skrót SHA-256 dokumentu UPO, zakodowany w formacie Base64",
+              "schema" : {
+                "$ref" : "#/components/schemas/Sha256HashBase64"
+              }
+            }
+          },
           "content" : {
             "application/xml" : {
               "schema" : {
@@ -57,6 +65,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 1200 | 12000 | sessionMisc\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "403" : {
@@ -93,6 +115,15 @@
     "minLength" : 36,
     "type" : "string",
     "description" : "Numer referencyjny."
+  }
+
+
+  "Sha256HashBase64" : {
+    "maxLength" : 44,
+    "minLength" : 44,
+    "type" : "string",
+    "description" : "SHA-256 w Base64.",
+    "format" : "byte"
   }
 
 

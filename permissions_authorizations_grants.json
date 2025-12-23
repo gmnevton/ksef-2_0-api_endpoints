@@ -20,7 +20,8 @@
               "required" : [
                 "subjectIdentifier",
                 "permission",
-                "description"
+                "description",
+                "subjectDetails"
               ],
               "allOf" : [
                 {
@@ -66,6 +67,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "403" : {
@@ -98,6 +113,7 @@
     "required" : [
       "description",
       "permission",
+      "subjectDetails",
       "subjectIdentifier"
     ],
     "type" : "object",
@@ -137,8 +153,7 @@
             "$ref" : "#/components/schemas/EntityDetails"
           }
         ],
-        "description" : "Dane podmiotu, któremu nadawane są uprawnienia.",
-        "nullable" : true
+        "description" : "Dane podmiotu, któremu nadawane są uprawnienia."
       }
     },
     "additionalProperties" : false
@@ -253,7 +268,7 @@ body:
   },
   "permission": "", // required; type: string; items: #/components/schemas/EntityAuthorizationPermissionType; description: Rodzaj uprawnienia.
   "description": "", // required; type: string; description: Opis uprawnienia
-  "subjectDetails": { // type: object; items: #/components/schemas/EntityDetails; description: Dane podmiotu, któremu nadawane są uprawnienia.
+  "subjectDetails": { // required; type: object; items: #/components/schemas/EntityDetails; description: Dane podmiotu, któremu nadawane są uprawnienia.
     "fullName": "" // required; type: string; description: Pełna nazwa podmiotu.
   }
 }

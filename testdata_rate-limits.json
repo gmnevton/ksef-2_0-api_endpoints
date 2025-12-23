@@ -12,7 +12,7 @@
         "Limity i ograniczenia"
       ],
       "summary" : "Zmiana limitów API dla bieżącego kontekstu",
-      "description" : "Zmienia wartości aktualnie obowiązujących limitów żądań przesyłąnych do API dla bieżącego kontekstu. **Tylko na środowiskach testowych.**",
+      "description" : "Zmienia wartości aktualnie obowiązujących limitów żądań przesyłanych do API dla bieżącego kontekstu. **Tylko na środowiskach testowych.**",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -46,6 +46,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "401" : {
@@ -70,7 +84,7 @@
         "Limity i ograniczenia"
       ],
       "summary" : "Przywrócenie domyślnych wartości limitów API dla bieżącego kontekstu",
-      "description" : "Przywraca wartości aktualnie obowiązujących limitów żądań przesyłąnych do API dla bieżącego kontekstu do wartości domyślnych. **Tylko na środowiskach testowych.**",
+      "description" : "Przywraca wartości aktualnie obowiązujących limitów żądań przesyłanych do API dla bieżącego kontekstu do wartości domyślnych. **Tylko na środowiskach testowych.**",
       "responses" : {
         "200" : {
           "description" : "OK"
@@ -88,6 +102,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "401" : {

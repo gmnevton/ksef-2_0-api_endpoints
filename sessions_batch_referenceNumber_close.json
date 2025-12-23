@@ -29,7 +29,7 @@
           "description" : "No Content"
         },
         "400" : {
-          "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                                   | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------------------|\n| 21157               | Nieprawidłowy rozmiar części pakietu.               | Zadeklarowany rozmiar części '{ordinalNumber}' nie zgadza się z rzeczywistym.  | \n| 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została znaleziona.   |\n| 21180               | Status sesji nie pozwala na wykonanie operacji.     | Status sesji {code} uniemożliwia jej zamknięcie.                          |\n| 21205               | Pakiet nie może być pusty.                          | Nie przesłano zadeklarowanej '{ordinalNumber}' części pliku.               |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode       | ExceptionDescription                                                 | Details                                                                        | \n|---------------------|----------------------------------------------------------------------|--------------------------------------------------------------------------------|\n| 21157               | Nieprawidłowy rozmiar części pakietu.                                | Zadeklarowany rozmiar części '{ordinalNumber}' nie zgadza się z rzeczywistym.  | \n| 21173               | Brak sesji o wskazanym numerze referencyjnym.                        | Sesja o numerze referencyjnym {referenceNumber} nie została znaleziona.        |\n| 21180               | Status sesji nie pozwala na wykonanie operacji.                      | Status sesji {code} uniemożliwia jej zamknięcie.                               |\n| 21205               | Pakiet nie może być pusty.                                           | Nie przesłano zadeklarowanej '{ordinalNumber}' części pliku.                   | \n| 21208               | Czas oczekiwania na requesty upload lub finish został przekroczony.  | Sesja anulowana, przekroczony czas wysyłki.                                    |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -41,6 +41,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 200 | 600 | batchSession\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "403" : {

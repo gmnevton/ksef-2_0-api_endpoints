@@ -113,6 +113,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "403" : {
@@ -397,10 +411,10 @@
         ],
         "allOf" : [
           {
-            "$ref" : "#/components/schemas/PermissionsSubjectEntityDetails"
+            "$ref" : "#/components/schemas/PermissionsSubjectEntityByIdentifierDetails"
           }
         ],
-        "description" : "Dane podmiotu, którego dotyczy uprawnienie.",
+        "description" : "Dane podmiotu uprawnionego.",
         "nullable" : true
       },
       "startDate" : {
@@ -522,14 +536,12 @@ response (200): application/json
       },
       "authorizationScope": "", // required; type: string; items: #/components/schemas/InvoicePermissionType; description: Rodzaj uprawnienia.
       "description": "", // required; type: string; description: Opis uprawnienia.
-      "subjectEntityDetails": { // type: object; items: #/components/schemas/PermissionsSubjectEntityDetails; nullable: true; description: Dane podmiotu, którego dotyczy uprawnienie.
-        "subjectDetailsType": "", // required; type: string; items: #/components/schemas/EntitySubjectDetailsType; description: Typ danych podmiotu, którego dotyczy uprawnienie.
+      "subjectEntityDetails": { // type: object; items: #/components/schemas/PermissionsSubjectEntityByIdentifierDetails; description: Dane podmiotu uprawnionego.
+        "subjectDetailsType": "", // required; type: string; items: #/components/schemas/EntitySubjectByIdentifierDetailsType; description: Typ danych podmiotu uprawnionego.
 | Wartość | Opis |
 | --- | --- |
 | EntityByIdentifier | Podmiot identyfikowany numerem NIP. |
-| EntityByFingerprint | Podmiot identyfikowany odciskiem palca pieczęci kwalifikowanej. |
-        "fullName": "", // required; type: string; description: Pełna nazwa podmiotu.
-        "address": "" // type: string; nullable: true; description: Adres podmiotu.
+        "fullName": "" // required; type: string; description: Pełna nazwa podmiotu.
       },
       "startDate": "" // required; type: string; format: date-time; description: Data rozpoczęcia obowiązywania uprawnienia.
     }

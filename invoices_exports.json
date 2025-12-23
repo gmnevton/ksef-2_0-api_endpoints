@@ -61,7 +61,7 @@
           }
         },
         "400" : {
-          "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                       | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------|\n| 21181               | Nieprawidłowe żądanie eksportu faktur.              | Nie można wyeksportować paczki faktur dla wybranego podmiotu ({subjecttype}) i zalogowanego identyfikatoru kontekstu ({type}). |\n| 21182               | Osiągnięto limit trwających eksportów.              | Dla uwierzytelnionego podmiotu w bieżącym kontekście osiągnięto maksymalny limit {count} równoczesnych eksportów faktur. Spróbuj ponownie później. |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                       | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------|\n| 21181               | Nieprawidłowe żądanie eksportu faktur.              | Nie można wyeksportować paczki faktur dla wybranego podmiotu ({subjecttype}) i zalogowanego identyfikatora kontekstu ({type}). |\n| 21182               | Osiągnięto limit trwających eksportów.              | Dla uwierzytelnionego podmiotu w bieżącym kontekście osiągnięto maksymalny limit {count} równoczesnych eksportów faktur. Spróbuj ponownie później. |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -73,6 +73,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 40 | 80 | 200 | invoiceExport\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "403" : {
@@ -156,7 +170,7 @@
     "properties" : {
       "encryptedSymmetricKey" : {
         "type" : "string",
-        "description" : "Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.\n\n[Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)",
+        "description" : "Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.\n\n[Klucz publiczny Ministerstwa Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)",
         "format" : "byte"
       },
       "initializationVector" : {
@@ -194,7 +208,7 @@
             "$ref" : "#/components/schemas/InvoiceQueryDateRange"
           }
         ],
-        "description" : "Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 2 lata."
+        "description" : "Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące."
       },
       "ksefNumber" : {
         "allOf" : [
@@ -280,7 +294,7 @@
         "items" : {
           "$ref" : "#/components/schemas/InvoiceType"
         },
-        "description" : "Rodzaje faktur.\n| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n",
+        "description" : "Rodzaje faktur.\n| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n",
         "nullable" : true
       },
       "hasAttachment" : {
@@ -670,7 +684,7 @@
       "KorVatRr"
     ],
     "type" : "string",
-    "description" : "| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n"
+    "description" : "| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n"
   }
 
 
@@ -711,7 +725,7 @@ body:
   "encryption": { // required; type: object; items: #/components/schemas/EncryptionInfo; description: Informacje wymagane do zaszyfrowania wyniku zapytania.
     "encryptedSymmetricKey": "", // required; type: string; format: byte; description: Klucz symetryczny o długości 32 bajtów, zaszyfrowany algorytmem RSA (Padding: OAEP z SHA-256), zakodowany w formacie Base64.
 
-[Klucz publiczny Ministersta Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)
+[Klucz publiczny Ministerstwa Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)
     "initializationVector": "" // required; type: string; format: byte; description: Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64.
   },
   "filters": { // required; type: object; items: #/components/schemas/InvoiceQueryFilters; description: Zestaw filtrów do wyszukiwania faktur.
@@ -723,7 +737,7 @@ Określa kontekst, w jakim przeszukiwane są dane.
 | Subject2 | Podmiot 2 - nabywca |
 | Subject3 | Podmiot 3 |
 | SubjectAuthorized | Podmiot upoważniony |
-    "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 2 lata.
+    "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące.
       "dateType": "", // required; type: string; items: #/components/schemas/InvoiceQueryDateType; description: Typ daty, według której ma być zastosowany zakres.
 | Wartość | Opis |
 | --- | --- |
@@ -782,7 +796,7 @@ Określa kontekst, w jakim przeszukiwane są dane.
 | Upr | (FA) Uproszczona |
 | KorZal | (FA) Korygująca fakturę zaliczkową |
 | KorRoz | (FA) Korygująca fakturę rozliczeniową |
-| VatPef | (PEF) Podstawowowa |
+| VatPef | (PEF) Podstawowa |
 | VatPefSp | (PEF) Specjalizowana |
 | KorPef | (PEF) Korygująca |
 | VatRr | (RR) Podstawowa |

@@ -58,7 +58,7 @@
           }
         },
         "400" : {
-          "description" : "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode       | ExceptionDescription                           | Details                                                                     | \n|---------------------|------------------------------------------------|-----------------------------------------------------------------------------|\n| 21111               | Nieprawidłowe wyzwanie autoryzacyjne.          |  |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -70,6 +70,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 60 | - | - | -\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         }
       },
@@ -106,11 +120,11 @@
             "$ref" : "#/components/schemas/AuthenticationContextIdentifier"
           }
         ],
-        "description" : "Indentyfikator kontekstu do którego następuje uwierzytelnienie."
+        "description" : "Identyfikator kontekstu do którego następuje uwierzytelnienie."
       },
       "encryptedToken" : {
         "type" : "string",
-        "description" : "Zaszyfrowany token wraz z timestampem z challenge'a, w formacie `token|timestamp`.",
+        "description" : "Zaszyfrowany token wraz z timestampem z challenge'a, w postaci `token|timestamp`, zakodowany w formacie Base64.",
         "format" : "byte"
       },
       "authorizationPolicy" : {
@@ -288,11 +302,11 @@
 request: "/auth/ksef-token": post: application/json
 {
   "challenge": "", // required; type: string; items: #/components/schemas/Challenge; description: Wygenerowany wcześniej challenge.
-  "contextIdentifier": { // required; type: object; items: #/components/schemas/AuthenticationContextIdentifier; description: Indentyfikator kontekstu do którego następuje uwierzytelnienie.
+  "contextIdentifier": { // required; type: object; items: #/components/schemas/AuthenticationContextIdentifier; description: Identyfikator kontekstu do którego następuje uwierzytelnienie.
     "type": "", // required; type: string; items: #/components/schemas/AuthenticationContextIdentifierType; description: Typ identyfikatora
     "value": "" // required; type: string; description: Wartość identyfikatora
   },
-  "encryptedToken": "", // required; type: string; format: byte; description: Zaszyfrowany token wraz z timestampem z challenge'a, w formacie `token|timestamp`.
+  "encryptedToken": "", // required; type: string; format: byte; description: Zaszyfrowany token wraz z timestampem z challenge'a, w postaci `token|timestamp`, zakodowany w formacie Base64.
   "authorizationPolicy": { // type: object; items: #/components/schemas/AuthorizationPolicy; nullable: true; description: Polityka autoryzacji żądań przy każdym użyciu tokena dostępu.
     "allowedIps": { // type: object; items: #/components/schemas/AllowedIps; nullable: true; description: Lista dozwolonych adresów IP.
       "ip4Addresses": [ // type: array; nullable: true; description: Lista adresów IPv4 w notacji dziesiętnej kropkowanej, np. `192.168.0.10`.

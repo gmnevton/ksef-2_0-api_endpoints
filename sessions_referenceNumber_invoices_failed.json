@@ -91,6 +91,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 200 | 2000 | sessionInvoiceList\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "403" : {
@@ -225,7 +239,7 @@
       },
       "upoDownloadUrl" : {
         "type" : "string",
-        "description" : "Adres do pobrania UPO. Link generowany jest przy każdym odpytaniu o status. \nDostęp odbywa się metodą `HTTP GET` i <b>nie należy</b> wysyłać tokenu dostępowego. \nLink nie podlega limitom API i wygasa po określonym czasie w `UpoDownloadUrlExpirationDate`.",
+        "description" : "Adres do pobrania UPO. Link generowany jest przy każdym odpytaniu o status. \nDostęp odbywa się metodą `HTTP GET` i <b>nie należy</b> wysyłać tokenu dostępowego. \nLink nie podlega limitom API i wygasa po określonym czasie w `UpoDownloadUrlExpirationDate`.\n\nOdpowiedź HTTP zawiera dodatkowe nagłówki:\n- `x-ms-meta-hash` – skrót SHA-256 dokumentu UPO, zakodowany w formacie Base64.",
         "format" : "uri",
         "nullable" : true
       },
@@ -294,6 +308,9 @@ response (200): application/json
       "upoDownloadUrl": "", // type: string; format: uri; nullable: true; description: Adres do pobrania UPO. Link generowany jest przy każdym odpytaniu o status. 
 Dostęp odbywa się metodą `HTTP GET` i <b>nie należy</b> wysyłać tokenu dostępowego. 
 Link nie podlega limitom API i wygasa po określonym czasie w `UpoDownloadUrlExpirationDate`.
+
+Odpowiedź HTTP zawiera dodatkowe nagłówki:
+- `x-ms-meta-hash` – skrót SHA-256 dokumentu UPO, zakodowany w formacie Base64.
       "upoDownloadUrlExpirationDate": "", // type: string; format: date-time; nullable: true; description: Data i godzina wygaśnięcia adresu. Po tej dacie link `UpoDownloadUrl` nie będzie już aktywny.
       "invoicingMode": "", // type: string; items: #/components/schemas/InvoicingMode; description: Tryb fakturowania (online/offline).
       "status": { // required; type: object; items: #/components/schemas/InvoiceStatusInfo; description: Status faktury.

@@ -20,7 +20,8 @@
               "required" : [
                 "subjectIdentifier",
                 "permissions",
-                "description"
+                "description",
+                "subjectDetails"
               ],
               "allOf" : [
                 {
@@ -71,6 +72,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "403" : {
@@ -103,6 +118,7 @@
     "required" : [
       "description",
       "permissions",
+      "subjectDetails",
       "subjectIdentifier"
     ],
     "type" : "object",
@@ -141,8 +157,7 @@
             "$ref" : "#/components/schemas/PersonPermissionSubjectDetails"
           }
         ],
-        "description" : "Dane podmiotu, któremu nadawane są uprawnienia.",
-        "nullable" : true
+        "description" : "Dane podmiotu, któremu nadawane są uprawnienia."
       }
     },
     "additionalProperties" : false
@@ -489,7 +504,7 @@ body:
   "permissions": [ // required; type: array; description: Lista nadawanych uprawnień. Każda wartość może wystąpić tylko raz.
   ],
   "description": "", // required; type: string; description: Opis uprawnienia
-  "subjectDetails": { // type: object; items: #/components/schemas/PersonPermissionSubjectDetails; nullable: true; description: Dane podmiotu, któremu nadawane są uprawnienia.
+  "subjectDetails": { // required; type: object; items: #/components/schemas/PersonPermissionSubjectDetails; description: Dane podmiotu, któremu nadawane są uprawnienia.
     "subjectDetailsType": "", // required; type: string; items: #/components/schemas/PersonPermissionSubjectDetailsType; description: Typ danych podmiotu.
 | Wartość | Opis |
 | --- | --- |

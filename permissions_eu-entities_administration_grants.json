@@ -21,7 +21,9 @@
                 "subjectIdentifier",
                 "contextIdentifier",
                 "description",
-                "euEntityName"
+                "euEntityName",
+                "subjectDetails",
+                "euEntityDetails"
               ],
               "allOf" : [
                 {
@@ -71,6 +73,20 @@
         },
         "429" : {
           "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            }
+          },
           "x-summary" : "Too Many Requests"
         },
         "403" : {
@@ -103,7 +119,9 @@
     "required" : [
       "contextIdentifier",
       "description",
+      "euEntityDetails",
       "euEntityName",
+      "subjectDetails",
       "subjectIdentifier"
     ],
     "type" : "object",
@@ -153,8 +171,7 @@
             "$ref" : "#/components/schemas/EuEntityPermissionSubjectDetails"
           }
         ],
-        "description" : "Dane podmiotu, któremu nadawane są uprawnienia.",
-        "nullable" : true
+        "description" : "Dane podmiotu, któremu nadawane są uprawnienia."
       },
       "euEntityDetails" : {
         "required" : [
@@ -166,8 +183,7 @@
             "$ref" : "#/components/schemas/EuEntityDetails"
           }
         ],
-        "description" : "Dane podmiotu unijnego, którego dotyczy nadawane uprawnienie.",
-        "nullable" : true
+        "description" : "Dane podmiotu unijnego, w kontekście którego nadawane są uprawnienia."
       }
     },
     "additionalProperties" : false
@@ -256,7 +272,21 @@
             "$ref" : "#/components/schemas/EuEntityPermissionSubjectDetailsType"
           }
         ],
-        "description" : "Typ danych podmiotu.\n| Wartość | Opis |\n| --- | --- |\n| PersonByFingerprintWithoutIdentifier | Osoba fizyczna posługująca się certyfikatem niezawierającym identyfikatora NIP ani PESEL i niemająca NIP ani PESEL. |\n| EntityByFingerprint | Podmiot identyfikowany odciskiem palca pieczęci kwalifikowanej. |\n"
+        "description" : "Typ danych podmiotu.\n| Wartość | Opis |\n| --- | --- |\n| PersonByFingerprintWithIdentifier | Osoba fizyczna posługująca się certyfikatem niezawierającym identyfikatora NIP ani PESEL, ale mająca NIP lub PESEL. |\n| PersonByFingerprintWithoutIdentifier | Osoba fizyczna posługująca się certyfikatem niezawierającym identyfikatora NIP ani PESEL i niemająca NIP ani PESEL. |\n| EntityByFingerprint | Podmiot identyfikowany odciskiem palca pieczęci kwalifikowanej. |\n"
+      },
+      "personByFpWithId" : {
+        "required" : [
+          "firstName",
+          "lastName",
+          "identifier"
+        ],
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/PersonByFingerprintWithIdentifierDetails"
+          }
+        ],
+        "description" : "Dane podmiotu.\n*Wymagane, gdy subjectDetailsType = PersonByFingerprintWithIdentifier.*",
+        "nullable" : true
       },
       "personByFpNoId" : {
         "required" : [
@@ -293,11 +323,85 @@
 
   "EuEntityPermissionSubjectDetailsType" : {
     "enum" : [
+      "PersonByFingerprintWithIdentifier",
       "PersonByFingerprintWithoutIdentifier",
       "EntityByFingerprint"
     ],
     "type" : "string",
-    "description" : "| Wartość | Opis |\n| --- | --- |\n| PersonByFingerprintWithoutIdentifier | Osoba fizyczna posługująca się certyfikatem niezawierającym identyfikatora NIP ani PESEL i niemająca NIP ani PESEL. |\n| EntityByFingerprint | Podmiot identyfikowany odciskiem palca pieczęci kwalifikowanej. |\n"
+    "description" : "| Wartość | Opis |\n| --- | --- |\n| PersonByFingerprintWithIdentifier | Osoba fizyczna posługująca się certyfikatem niezawierającym identyfikatora NIP ani PESEL, ale mająca NIP lub PESEL. |\n| PersonByFingerprintWithoutIdentifier | Osoba fizyczna posługująca się certyfikatem niezawierającym identyfikatora NIP ani PESEL i niemająca NIP ani PESEL. |\n| EntityByFingerprint | Podmiot identyfikowany odciskiem palca pieczęci kwalifikowanej. |\n"
+  }
+
+
+  "PersonByFingerprintWithIdentifierDetails" : {
+    "required" : [
+      "firstName",
+      "identifier",
+      "lastName"
+    ],
+    "type" : "object",
+    "properties" : {
+      "firstName" : {
+        "maxLength" : 30,
+        "minLength" : 2,
+        "type" : "string",
+        "description" : "Imię osoby fizycznej."
+      },
+      "lastName" : {
+        "maxLength" : 81,
+        "minLength" : 2,
+        "type" : "string",
+        "description" : "Nazwisko osoby fizycznej."
+      },
+      "identifier" : {
+        "required" : [
+          "type",
+          "value"
+        ],
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/PersonIdentifier"
+          }
+        ],
+        "description" : "Identyfikator osoby fizycznej."
+      }
+    },
+    "additionalProperties" : false
+  }
+
+
+  "PersonIdentifier" : {
+    "required" : [
+      "type",
+      "value"
+    ],
+    "type" : "object",
+    "properties" : {
+      "type" : {
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/PersonIdentifierType"
+          }
+        ],
+        "description" : "Typ identyfikatora."
+      },
+      "value" : {
+        "maxLength" : 11,
+        "minLength" : 10,
+        "type" : "string",
+        "description" : "Wartość identyfikatora."
+      }
+    },
+    "additionalProperties" : false
+  }
+
+
+  "PersonIdentifierType" : {
+    "enum" : [
+      "Pesel",
+      "Nip"
+    ],
+    "type" : "string",
+    "description" : "Typ identyfikatora osoby fizycznej."
   }
 
 
@@ -470,12 +574,22 @@ body:
   "description": "", // required; type: string; description: Opis uprawnienia
   "euEntityName": "", // required; type: string; description: Nazwa i adres podmiotu unijnego w formacie: 
 `{euSubjectName}, {euSubjectAddress}`
-  "subjectDetails": { // type: object; items: #/components/schemas/EuEntityPermissionSubjectDetails; nullable: true; description: Dane podmiotu, któremu nadawane są uprawnienia.
+  "subjectDetails": { // required; type: object; items: #/components/schemas/EuEntityPermissionSubjectDetails; description: Dane podmiotu, któremu nadawane są uprawnienia.
     "subjectDetailsType": "", // required; type: string; items: #/components/schemas/EuEntityPermissionSubjectDetailsType; description: Typ danych podmiotu.
 | Wartość | Opis |
 | --- | --- |
+| PersonByFingerprintWithIdentifier | Osoba fizyczna posługująca się certyfikatem niezawierającym identyfikatora NIP ani PESEL, ale mająca NIP lub PESEL. |
 | PersonByFingerprintWithoutIdentifier | Osoba fizyczna posługująca się certyfikatem niezawierającym identyfikatora NIP ani PESEL i niemająca NIP ani PESEL. |
 | EntityByFingerprint | Podmiot identyfikowany odciskiem palca pieczęci kwalifikowanej. |
+    "personByFpWithId": { // type: object; items: #/components/schemas/PersonByFingerprintWithIdentifierDetails; description: Dane podmiotu.
+*Wymagane, gdy subjectDetailsType = PersonByFingerprintWithIdentifier.*
+      "firstName": "", // required; type: string; description: Imię osoby fizycznej.
+      "lastName": "", // required; type: string; description: Nazwisko osoby fizycznej.
+      "identifier": { // required; type: object; items: #/components/schemas/PersonIdentifier; description: Identyfikator osoby fizycznej.
+        "type": "", // required; type: string; items: #/components/schemas/PersonIdentifierType; description: Typ identyfikatora.
+        "value": "" // required; type: string; description: Wartość identyfikatora.
+      }
+    },
     "personByFpNoId": { // type: object; items: #/components/schemas/PersonByFingerprintWithoutIdentifierDetails; description: Dane podmiotu.
 *Wymagane, gdy subjectDetailsType = PersonByFingerprintWithoutIdentifier.*
       "firstName": "", // required; type: string; description: Imię osoby fizycznej.
@@ -493,7 +607,7 @@ body:
       "address": "" // required; type: string; description: Adres podmiotu.
     }
   },
-  "euEntityDetails": { // type: object; items: #/components/schemas/EuEntityDetails; description: Dane podmiotu unijnego, którego dotyczy nadawane uprawnienie.
+  "euEntityDetails": { // required; type: object; items: #/components/schemas/EuEntityDetails; description: Dane podmiotu unijnego, w kontekście którego nadawane są uprawnienia.
     "fullName": "", // required; type: string; description: Pełna nazwa podmiotu.
     "address": "" // required; type: string; description: Adres podmiotu.
   }
