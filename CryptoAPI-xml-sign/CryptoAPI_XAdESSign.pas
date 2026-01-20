@@ -7,6 +7,11 @@ uses
   Classes;
 
 type
+  TXAdESFileOrPEMType = (
+    xades_File,
+    xades_PEM
+  );
+
   TXAdESSign = class
   private
     FPublicKeyCertificate: TBytes;
@@ -29,6 +34,8 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+    //
+    class function FileOrPEM(const Value: String): TXAdESFileOrPEMType;
     //
     procedure LoadPublicKeyCertificate(const FileName: String; Encoding: TEncoding = Nil); overload;
     procedure LoadPublicKeyCertificate(const Stream: TStringStream); overload;
@@ -82,6 +89,25 @@ begin
   SetLength(FXMLToSign, 0);
   SetLength(FSignedXML, 0);
   inherited;
+end;
+
+class function TXAdESSign.FileOrPEM(const Value: String): TXAdESFileOrPEMType;
+var
+  i: Integer;
+begin
+  Result := xades_File;
+
+  i := Pos('-----BEGIN CERTIFICATE-----', Value);
+  if i = 1 then
+    Exit(xades_PEM);
+
+  i := Pos('-----BEGIN ENCRYPTED PRIVATE KEY-----', Value);
+  if i = 1 then
+    Exit(xades_PEM);
+  if i < 1 then
+    i := Pos('-----BEGIN PRIVATE KEY-----', Value);
+  if i = 1 then
+    Exit(xades_PEM);
 end;
 
 function TXAdESSign.GetPublicKeyCertificate: String;
@@ -191,6 +217,11 @@ begin
   if Encoding = Nil then
     Encoding := TEncoding.ASCII;
   //
+  if FileOrPEM(FileName) = xades_PEM then begin
+    SetPublicKeyCertificate(FileName);
+    Exit;
+  end;
+  //
   path := ExtractFilePath(FileName);
   if Length(path) = 0 then
     path := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0)));
@@ -217,6 +248,11 @@ var
 begin
   if Encoding = Nil then
     Encoding := TEncoding.ASCII;
+  //
+  if FileOrPEM(FileName) = xades_PEM then begin
+    SetPrivateKey(FileName);
+    Exit;
+  end;
   //
   path := ExtractFilePath(FileName);
   if Length(path) = 0 then
