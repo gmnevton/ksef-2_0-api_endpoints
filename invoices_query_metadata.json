@@ -293,7 +293,7 @@
             "$ref" : "#/components/schemas/InvoiceQueryDateRange"
           }
         ],
-        "description" : "Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące."
+        "description" : "Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące. Zakres uznawany jest za poprawny, jeśli mieści się w trzech miesiącach w UTC lub w czasie polskim."
       },
       "ksefNumber" : {
         "allOf" : [
@@ -421,12 +421,12 @@
       },
       "from" : {
         "type" : "string",
-        "description" : "Data początkowa zakresu(UTC).",
+        "description" : "Data początkowa zakresu w formacie ISO-8601 np. 2026-01-03T13:45:00+00:00.",
         "format" : "date-time"
       },
       "to" : {
         "type" : "string",
-        "description" : "Data końcowa zakresu(UTC). Jeśli nie zostanie podana, przyjmowana jest bieżąca data i czas w UTC.",
+        "description" : "Data końcowa zakresu w formacie ISO-8601. Jeśli nie zostanie podana, przyjmowana jest bieżąca data i czas w UTC.",
         "format" : "date-time",
         "nullable" : true
       },
@@ -1001,15 +1001,15 @@ Określa kontekst, w jakim przeszukiwane są dane.
 | Subject2 | Podmiot 2 - nabywca |
 | Subject3 | Podmiot 3 |
 | SubjectAuthorized | Podmiot upoważniony |
-  "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące.
+  "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące. Zakres uznawany jest za poprawny, jeśli mieści się w trzech miesiącach w UTC lub w czasie polskim.
     "dateType": "", // required; type: string; items: #/components/schemas/InvoiceQueryDateType; description: Typ daty, według której ma być zastosowany zakres.
 | Wartość | Opis |
 | --- | --- |
 | Issue | Data wystawienia faktury. |
 | Invoicing | Data przyjęcia faktury w systemie KSeF (do dalszego przetwarzania). |
 | PermanentStorage | Data trwałego zapisu faktury w repozytorium systemu KSeF. |
-    "from": "", // required; type: string; format: date-time; description: Data początkowa zakresu(UTC).
-    "to": "", // type: string; format: date-time; nullable: true; description: Data końcowa zakresu(UTC). Jeśli nie zostanie podana, przyjmowana jest bieżąca data i czas w UTC.
+    "from": "", // required; type: string; format: date-time; description: Data początkowa zakresu w formacie ISO-8601 np. 2026-01-03T13:45:00+00:00.
+    "to": "", // type: string; format: date-time; nullable: true; description: Data końcowa zakresu w formacie ISO-8601. Jeśli nie zostanie podana, przyjmowana jest bieżąca data i czas w UTC.
     "restrictToPermanentStorageHwmDate": true/false // type: boolean; nullable: true; description: Określa, czy system ma ograniczyć filtrowanie (zakres dateRange.to) do wartości `PermanentStorageHwmDate`.
 
 * Dotyczy wyłącznie zapytań z `dateType = PermanentStorage`,  

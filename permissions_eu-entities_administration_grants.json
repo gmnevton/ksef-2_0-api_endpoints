@@ -41,7 +41,22 @@
                 "value" : "7762811692-DE123456789012"
               },
               "description" : "Opis uprawnienia",
-              "euEntityName" : "Firma G.m.b.H."
+              "euEntityName" : "Firma G.m.b.H.",
+              "subjectDetails" : {
+                "subjectDetailsType" : "PersonByFingerprintWithIdentifier",
+                "personByFpWithId" : {
+                  "firstName" : "Adam",
+                  "lastName" : "Abacki",
+                  "identifier" : {
+                    "type" : "Pesel",
+                    "value" : "15062788702"
+                  }
+                }
+              },
+              "euEntityDetails" : {
+                "fullName" : "Firma G.m.b.H.",
+                "address" : "Warszawa ul. Świętokrzyska 4824 00-916 Warszawa"
+              }
             }
           }
         }

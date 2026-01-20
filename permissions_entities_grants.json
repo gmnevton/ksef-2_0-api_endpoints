@@ -44,7 +44,10 @@
                   "canDelegate" : true
                 }
               ],
-              "description" : "Opis uprawnienia"
+              "description" : "Opis uprawnienia",
+              "subjectDetails" : {
+                "fullName" : "Firma sp. z o.o."
+              }
             }
           }
         }

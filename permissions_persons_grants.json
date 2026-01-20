@@ -40,7 +40,14 @@
                 "Introspection",
                 "CredentialsRead"
               ],
-              "description" : "Opis uprawnienia"
+              "description" : "Opis uprawnienia",
+              "subjectDetails" : {
+                "subjectDetailsType" : "PersonByIdentifier",
+                "personById" : {
+                  "firstName" : "Adam",
+                  "lastName" : "Abacki"
+                }
+              }
             }
           }
         }

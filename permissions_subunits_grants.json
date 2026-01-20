@@ -39,7 +39,14 @@
                 "value" : "7762811692-12345"
               },
               "description" : "Opis uprawnienia",
-              "subunitName" : "Jednostka 014"
+              "subunitName" : "Jednostka 014",
+              "subjectDetails" : {
+                "subjectDetailsType" : "PersonByIdentifier",
+                "personById" : {
+                  "firstName" : "Adam",
+                  "lastName" : "Abacki"
+                }
+              }
             }
           }
         }

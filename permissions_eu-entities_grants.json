@@ -38,7 +38,18 @@
                 "InvoiceRead",
                 "InvoiceWrite"
               ],
-              "description" : "Opis uprawnienia"
+              "description" : "Opis uprawnienia",
+              "subjectDetails" : {
+                "subjectDetailsType" : "PersonByFingerprintWithIdentifier",
+                "personByFpWithId" : {
+                  "firstName" : "Adam",
+                  "lastName" : "Abacki",
+                  "identifier" : {
+                    "type" : "Pesel",
+                    "value" : "15062788702"
+                  }
+                }
+              }
             }
           }
         }
