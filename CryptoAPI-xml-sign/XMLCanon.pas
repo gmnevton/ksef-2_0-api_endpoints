@@ -45,6 +45,23 @@ begin
     Result := FalseValue;
 end;
 
+{$IF CompilerVersion < 33.0}
+type
+  TDictionary<TKey, TValue> = class(Generics.Collections.TDictionary<TKey, TValue>)
+  public
+    class function TryAdd(ADict: TDictionary<TKey, TValue>; const AKey: TKey; const AValue: TValue): Boolean;
+  end;
+
+class function TDictionary<TKey, TValue>.TryAdd(ADict: TDictionary<TKey, TValue>; const AKey: TKey; const AValue: TValue): Boolean;
+begin
+  if ADict.ContainsKey(AKey) then
+    Exit(False);
+
+  ADict.Add(AKey, AValue);
+  Result := True;
+end;
+{$ENDIF}
+
 function EscapeText(const S: String): String;
 begin
   Result := S;
@@ -156,11 +173,19 @@ begin
         pref := VarToStr(e.prefix);
         ns := VarToStr(e.namespaceURI);
         if pref <> '' then
+        {$IF CompilerVersion < 33.0}
+          TDictionary<String, Boolean>.TryAdd(UsedPrefixes, pref, True)
+        {$ELSE}
           UsedPrefixes.TryAdd(pref, True)
+        {$ENDIF}
         else begin
           // element with no prefix but with namespaceURI -> default-namespace usage
           if (ns <> '') then
+          {$IF CompilerVersion < 33.0}
+            TDictionary<String, Boolean>.TryAdd(UsedPrefixes, '', True);
+          {$ELSE}
             UsedPrefixes.TryAdd('', True);
+          {$ENDIF}
         end;
 
         // attributes
@@ -175,7 +200,11 @@ begin
               Continue;
             pref := VarToStr((attr as IXMLDOMAttribute).prefix);
             if pref <> '' then
+            {$IF CompilerVersion < 33.0}
+              TDictionary<String, Boolean>.TryAdd(UsedPrefixes, pref, True);
+            {$ELSE}
               UsedPrefixes.TryAdd(pref, True);
+            {$ENDIF}
           end;
         end;
       end;

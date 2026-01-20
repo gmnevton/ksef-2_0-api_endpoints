@@ -205,8 +205,8 @@ end;
 function TXAdESSign.DoSign: Boolean;
 begin
   Result := SignXml_XAdES_BES_Enveloped(FXMLToSign, FSignedXML, FPublicKeyCertificate, FPrivateKey, FPrivateKeyEncryptionPassword);
-  if Result then
-    TFile.WriteAllBytes('signed_xml.xml', FSignedXML);
+//  if Result then
+//    TFile.WriteAllBytes('signed_xml.xml', FSignedXML);
 end;
 
 procedure TXAdESSign.LoadPublicKeyCertificate(const FileName: String; Encoding: TEncoding = Nil);
