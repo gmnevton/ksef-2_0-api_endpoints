@@ -553,10 +553,14 @@ begin
     Result := SignXml(CertCtx, keyHandle, AlgOID, InBytes, OutBytes);
   finally
     AlgOID := '';
-    if CertCtx <> Nil then
+    if CertCtx <> Nil then try
       CertFreeCertificateContext(CertCtx);
-    if keyHandle <> 0 then
+    except
+    end;
+    if keyHandle <> 0 then try
       BCryptDestroyKey(keyHandle);
+    except
+    end;
     CoUninitialize;
   end;
 end;

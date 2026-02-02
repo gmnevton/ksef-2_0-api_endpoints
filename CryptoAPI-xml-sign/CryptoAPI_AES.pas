@@ -20,17 +20,27 @@ uses
   Crypt32_Compat,
   CryptoAPI_Common;
 
+const
+  CRYPT_NEWKEYSET      = $00000008;
+  CRYPT_MACHINE_KEYSET = $00000020;
+
+  CRYPT_CONTAINER: String = 'Container';
+
 type
   EAESEncryptionError = class(Exception);
 
-function WinError(const RetVal: BOOL; const FuncName: String): BOOL;
+function WinError(const RetVal: BOOL; const ExpectedError: HRESULT; const FuncName: String): BOOL;
 var
-  dwResult: Integer;
+  dwResult: DWORD;
 begin
   Result:=RetVal;
   if not RetVal then begin
     dwResult:=GetLastError();
-    raise EAESEncryptionError.CreateFmt('Error [x%x]: %s failed.'#13#10'%s', [dwResult, FuncName, SysErrorMessage(dwResult)]);
+    if (ExpectedError > 0) and (dwResult = ExpectedError) then begin // fail silently
+      Exit;
+    end
+    else
+      raise EAESEncryptionError.CreateFmt('Error [x%x]: %s failed.'#13#10'%s', [dwResult, FuncName, SysErrorMessage(dwResult)]);
   end;
 end;
 
@@ -59,7 +69,7 @@ begin
 
   BlobSize := SizeOf(Blob);
 
-  WinError(CryptImportKey(hProv, @Blob, BlobSize, 0, 0, hKey), 'CryptImportKey');
+  WinError(CryptImportKey(hProv, @Blob, BlobSize, 0, 0, hKey), ERROR_SUCCESS, 'CryptImportKey');
 
   Result := hKey;
 end;
@@ -74,29 +84,36 @@ begin
   hKey:=0;
 //  if not CryptAcquireContext(hProv, Nil, MS_ENH_RSA_AES_PROV, PROV_RSA_AES, 0) then
     //WinError(CryptAcquireContext(hProv, Nil, MS_ENH_RSA_AES_PROV_XP, PROV_RSA_AES, 0), 'CryptAcquireContext(XP)');
-  WinError(CryptAcquireContext(hProv, Nil, Nil{MS_ENH_RSA_AES_PROV_XP}, PROV_RSA_AES, 0), 'CryptAcquireContext');
+
+//  if not WinError(CryptAcquireContext(hProv, Nil, Nil, PROV_RSA_AES, 0), NTE_BAD_KEYSET, 'CryptAcquireContext') then // failed with NTE_BAD_KEYSET
+//    if not WinError(CryptAcquireContext(hProv, Nil, Nil, PROV_RSA_AES, CRYPT_NEWKEYSET), NTE_BAD_KEYSET, 'CryptAcquireContext') then
+//      if not WinError(CryptAcquireContext(hProv, PChar(CRYPT_CONTAINER), Nil, PROV_RSA_AES, CRYPT_NEWKEYSET), NTE_BAD_KEYSET, 'CryptAcquireContext') then
+//        if not WinError(CryptAcquireContext(hProv, PChar(CRYPT_CONTAINER), Nil, PROV_RSA_AES, CRYPT_MACHINE_KEYSET or CRYPT_NEWKEYSET), NTE_BAD_KEYSET, 'CryptAcquireContext') then
+//          if not WinError(CryptAcquireContext(hProv, PChar(CRYPT_CONTAINER), MS_ENH_RSA_AES_PROV, PROV_RSA_AES, CRYPT_MACHINE_KEYSET or CRYPT_NEWKEYSET), NTE_BAD_KEYSET, 'CryptAcquireContext') then
+            WinError(CryptAcquireContext(hProv, Nil, Nil, PROV_RSA_AES, CRYPT_VERIFYCONTEXT), ERROR_SUCCESS, 'CryptAcquireContext');
+
   //
   if PlainKey then
     hKey := ImportAES256Key(hProv, CipherKey)
   else begin
-    WinError(CryptCreateHash(hProv, CALG_SHA_512, 0, 0, hHash), 'CryptCreateHash');
+    WinError(CryptCreateHash(hProv, CALG_SHA_512, 0, 0, hHash), ERROR_SUCCESS, 'CryptCreateHash');
     try
       if Length(CipherKey) = 0 then
         raise EAESEncryptionError.Create('Error: CipherKey length must be greater then 0!');
-      WinError(CryptHashData(hHash, @CipherKey[0], Length(CipherKey), 0), 'CryptHashData');
-      WinError(CryptDeriveKey(hProv, CALG_AES_256, hHash, 0{CRYPT_EXPORTABLE}, hKey), 'CryptDeriveKey');
+      WinError(CryptHashData(hHash, @CipherKey[0], Length(CipherKey), 0), ERROR_SUCCESS, 'CryptHashData');
+      WinError(CryptDeriveKey(hProv, CALG_AES_256, hHash, 0{CRYPT_EXPORTABLE}, hKey), ERROR_SUCCESS, 'CryptDeriveKey');
     finally
       CryptDestroyHash(hHash);
     end;
   end;
   //
   if mode <> 0 then
-    WinError(CryptSetKeyParam(hKey, KP_MODE, @mode, 0), 'CryptSetKeyParam(KP_MODE)');
+    WinError(CryptSetKeyParam(hKey, KP_MODE, @mode, 0), ERROR_SUCCESS, 'CryptSetKeyParam(KP_MODE)');
   if padding <> 0 then
-    WinError(CryptSetKeyParam(hKey, KP_PADDING, @padding, 0), 'CryptSetKeyParam(KP_PADDING)');
+    WinError(CryptSetKeyParam(hKey, KP_PADDING, @padding, 0), ERROR_SUCCESS, 'CryptSetKeyParam(KP_PADDING)');
   if Length(CipherIV) = 0 then
     raise EAESEncryptionError.Create('Error: CipherIV length must be greater then 0!');
-  WinError(CryptSetKeyParam(hKey, KP_IV, @CipherIV[0], 0), 'CryptSetKeyParam(KP_IV)');
+  WinError(CryptSetKeyParam(hKey, KP_IV, @CipherIV[0], 0), ERROR_SUCCESS, 'CryptSetKeyParam(KP_IV)');
 //  dwDataLen:=SizeOf(dwBlockLen);
 //  WinError(CryptGetKeyParam(hKey, KP_BLOCKLEN, @dwBlockLen, dwDataLen, 0), 'CryptGetKeyParam(KP_BLOCKLEN)');
 //  dwBlockLen:=dwBlockLen div 8;
@@ -104,8 +121,8 @@ end;
 
 procedure Deinit(const hProv: HCRYPTPROV; const hKey: HCRYPTKEY);
 begin
-  WinError(CryptDestroyKey(hKey), 'CryptDestroyKey');
-  WinError(CryptReleaseContext(hProv, 0), 'CryptReleaseContext');
+  WinError(CryptDestroyKey(hKey), ERROR_SUCCESS, 'CryptDestroyKey');
+  WinError(CryptReleaseContext(hProv, 0), ERROR_SUCCESS, 'CryptReleaseContext');
 end;
 
 function Encrypt(const Input, CipherKey, CipherIV: TBytes; const PlainKey: Boolean; const mode: DWORD; padding: DWORD): TBytes;
@@ -129,7 +146,7 @@ begin
     try
       FillChar(rsa[0], cnt, 0);
       CopyMemory(@rsa[0], @Input[0], len);
-      WinError(CryptEncrypt(hKey, 0, True, CRYPT_OAEP, @rsa[0], len, cnt), 'CryptEncrypt');
+      WinError(CryptEncrypt(hKey, 0, True, CRYPT_OAEP, @rsa[0], len, cnt), ERROR_SUCCESS, 'CryptEncrypt');
       SetLength(Result, len);
       CopyMemory(@Result[0], @rsa[0], len);
     finally
@@ -188,7 +205,7 @@ begin
   Init(CipherKey, CipherIV, PlainKey, mode, padding, hProv, hKey);
   try
     Result := Copy(Input, 0);
-    WinError(CryptDecrypt(hKey, 0, True, 0, @Result[0], len), 'CryptDecrypt');
+    WinError(CryptDecrypt(hKey, 0, True, 0, @Result[0], len), ERROR_SUCCESS, 'CryptDecrypt');
     SetLength(Result, len);
   finally
     Deinit(hProv, hKey);
