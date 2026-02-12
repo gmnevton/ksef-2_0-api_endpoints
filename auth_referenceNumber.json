@@ -190,6 +190,7 @@
   "AuthenticationOperationStatusResponse" : {
     "required" : [
       "authenticationMethod",
+      "authenticationMethodInfo",
       "startDate",
       "status"
     ],
@@ -206,7 +207,17 @@
             "$ref" : "#/components/schemas/AuthenticationMethod"
           }
         ],
-        "description" : "Metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy usług Peppol. |\n"
+        "description" : "Metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy usług Peppol. |\n",
+        "deprecated" : true,
+        "x-removal-date" : "2026-11-16"
+      },
+      "authenticationMethodInfo" : {
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/AuthenticationMethodInfo"
+          }
+        ],
+        "description" : "Użyta metoda uwierzytelnienia."
       },
       "status" : {
         "allOf" : [
@@ -214,7 +225,7 @@
             "$ref" : "#/components/schemas/StatusInfo"
           }
         ],
-        "description" : "Informacje o aktualnym statusie.\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Uwierzytelnianie w toku | - |\n| 200 | Uwierzytelnianie zakończone sukcesem | - |\n| 415 | Uwierzytelnianie zakończone niepowodzeniem | Brak przypisanych uprawnień |\n| 425 | Uwierzytelnienie unieważnione  | Uwierzytelnienie i powiązane refresh tokeny zostały unieważnione przez użytkownika |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowe wyzwanie autoryzacyjne |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowy token |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowy czas tokena |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Token unieważniony |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Token nieaktywny |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Nieważny certyfikat |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Błąd weryfikacji łańcucha certyfikatów |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Niezaufany łańcuch certyfikatów |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Certyfikat odwołany |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Niepoprawny certyfikat |\n| 470 | Uwierzytelnianie zakończone niepowodzeniem | Próba wykorzystania metod autoryzacyjnych osoby zmarłej |\n| 480 | Uwierzytelnienie zablokowane | Podejrzenie incydentu bezpieczeństwa. Skontaktuj się z Ministerstwem Finansów przez formularz zgłoszeniowy. |\n| 500 | Nieznany błąd | - |\n| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |"
+        "description" : "Informacje o aktualnym statusie.\n| Code | Description | Details |\n| --- | --- | --- |\n| 100 | Uwierzytelnianie w toku | - |\n| 200 | Uwierzytelnianie zakończone sukcesem | - |\n| 415 | Uwierzytelnianie zakończone niepowodzeniem | Brak przypisanych uprawnień |\n| 425 | Uwierzytelnienie unieważnione  | Uwierzytelnienie i powiązane refresh tokeny zostały unieważnione przez użytkownika |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowe wyzwanie autoryzacyjne |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowy token |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowy czas tokena |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Token unieważniony |\n| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Token nieaktywny |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Nieważny certyfikat |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Błąd weryfikacji łańcucha certyfikatów |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Niezaufany łańcuch certyfikatów |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Certyfikat odwołany |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Certyfikat zawieszony |\n| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Niepoprawny certyfikat |\n| 470 | Uwierzytelnianie zakończone niepowodzeniem | Próba wykorzystania metod autoryzacyjnych osoby zmarłej |\n| 480 | Uwierzytelnienie zablokowane | Podejrzenie incydentu bezpieczeństwa. Skontaktuj się z Ministerstwem Finansów przez formularz zgłoszeniowy. |\n| 500 | Nieznany błąd | - |\n| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |"
       },
       "isTokenRedeemed" : {
         "type" : "boolean",
@@ -250,6 +261,45 @@
     ],
     "type" : "string",
     "description" : "Metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy usług Peppol. |\n"
+  }
+
+
+  "AuthenticationMethodInfo" : {
+    "type" : "object",
+    "properties" : {
+      "category" : {
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/AuthenticationMethodCategory"
+          }
+        ],
+        "description" : "Kategoria metody uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| XadesSignature | Uwierzytelnienie podpisem Xades. |\n| NationalNode | Uwierzytelnienie za pomocą Węzła Krajowego (login.gov.pl). |\n| Token | Uwierzytelnienie tokenem. |\n| Other | Uwierzytelnienie inną metodą. |\n"
+      },
+      "code" : {
+        "type" : "string",
+        "description" : "Kod metody uwierzytelnienia.",
+        "nullable" : true
+      },
+      "displayName" : {
+        "type" : "string",
+        "description" : "Nazwa metody uwierzytelnienia do wyświetlenia użytkownikowi.",
+        "nullable" : true,
+        "readOnly" : true
+      }
+    },
+    "additionalProperties" : false
+  }
+
+
+  "AuthenticationMethodCategory" : {
+    "enum" : [
+      "XadesSignature",
+      "NationalNode",
+      "Token",
+      "Other"
+    ],
+    "type" : "string",
+    "description" : "| Wartość | Opis |\n| --- | --- |\n| XadesSignature | Uwierzytelnienie podpisem Xades. |\n| NationalNode | Uwierzytelnienie za pomocą Węzła Krajowego (login.gov.pl). |\n| Token | Uwierzytelnienie tokenem. |\n| Other | Uwierzytelnienie inną metodą. |\n"
   }
 
 
@@ -306,6 +356,17 @@ response (200): application/json
 | QualifiedSeal | Pieczęć kwalifikowana. |
 | PersonalSignature | Podpis osobisty. |
 | PeppolSignature | Podpis dostawcy usług Peppol. |
+  "authenticationMethodInfo": { // required; type: object; items: #/components/schemas/AuthenticationMethodInfo; description: Użyta metoda uwierzytelnienia.
+    "category": "", // type: string; items: #/components/schemas/AuthenticationMethodCategory; description: Kategoria metody uwierzytelnienia.
+| Wartość | Opis |
+| --- | --- |
+| XadesSignature | Uwierzytelnienie podpisem Xades. |
+| NationalNode | Uwierzytelnienie za pomocą Węzła Krajowego (login.gov.pl). |
+| Token | Uwierzytelnienie tokenem. |
+| Other | Uwierzytelnienie inną metodą. |
+    "code": "", // type: string; nullable: true; description: Kod metody uwierzytelnienia.
+    "displayName": "" // type: string; nullable: true; description: Nazwa metody uwierzytelnienia do wyświetlenia użytkownikowi.
+  },
   "status": { // required; type: object; items: #/components/schemas/StatusInfo; description: Informacje o aktualnym statusie.
 | Code | Description | Details |
 | --- | --- | --- |
@@ -322,6 +383,7 @@ response (200): application/json
 | 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Błąd weryfikacji łańcucha certyfikatów |
 | 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Niezaufany łańcuch certyfikatów |
 | 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Certyfikat odwołany |
+| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Certyfikat zawieszony |
 | 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Niepoprawny certyfikat |
 | 470 | Uwierzytelnianie zakończone niepowodzeniem | Próba wykorzystania metod autoryzacyjnych osoby zmarłej |
 | 480 | Uwierzytelnienie zablokowane | Podejrzenie incydentu bezpieczeństwa. Skontaktuj się z Ministerstwem Finansów przez formularz zgłoszeniowy. |

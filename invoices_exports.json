@@ -208,7 +208,7 @@
             "$ref" : "#/components/schemas/InvoiceQueryDateRange"
           }
         ],
-        "description" : "Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące. Zakres uznawany jest za poprawny, jeśli mieści się w trzech miesiącach w UTC lub w czasie polskim."
+        "description" : "Typ i zakres dat, według którego filtrowane są faktury.\nMaksymalny dozwolony okres wynosi 3 miesiące w strefie UTC lub w strefie Europe/Warsaw (WAW).\n            \nFormat daty:\n * Daty muszą być przekazane w formacie ISO 8601, np. `yyyy-MM-ddTHH:mm:ss`.\n * Dopuszczalne są następujące warianty:\n   - z sufiksem `Z` (czas UTC),\n   - z jawnym offsetem, np. `+01:00`, `+03:00`,\n   - bez offsetu (interpretowane jako czas lokalny strefy Europe/Warsaw)."
       },
       "ksefNumber" : {
         "allOf" : [
@@ -737,7 +737,15 @@ Określa kontekst, w jakim przeszukiwane są dane.
 | Subject2 | Podmiot 2 - nabywca |
 | Subject3 | Podmiot 3 |
 | SubjectAuthorized | Podmiot upoważniony |
-    "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące. Zakres uznawany jest za poprawny, jeśli mieści się w trzech miesiącach w UTC lub w czasie polskim.
+    "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego filtrowane są faktury.
+Maksymalny dozwolony okres wynosi 3 miesiące w strefie UTC lub w strefie Europe/Warsaw (WAW).
+            
+Format daty:
+ * Daty muszą być przekazane w formacie ISO 8601, np. `yyyy-MM-ddTHH:mm:ss`.
+ * Dopuszczalne są następujące warianty:
+   - z sufiksem `Z` (czas UTC),
+   - z jawnym offsetem, np. `+01:00`, `+03:00`,
+   - bez offsetu (interpretowane jako czas lokalny strefy Europe/Warsaw).
       "dateType": "", // required; type: string; items: #/components/schemas/InvoiceQueryDateType; description: Typ daty, według której ma być zastosowany zakres.
 | Wartość | Opis |
 | --- | --- |

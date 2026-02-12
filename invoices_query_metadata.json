@@ -110,9 +110,9 @@
                     "ksefNumber" : "5555555555-20250828-010080615740-E4",
                     "invoiceNumber" : "FA/KUDYO1a7dddfe-610e-4843-84ba-6b887e35266e",
                     "issueDate" : "2025-08-27",
-                    "invoicingDate" : "2025-08-28T09:22:13.388+00:00",
-                    "acquisitionDate" : "2025-08-28T09:22:56.388+00:00",
-                    "permanentStorageDate" : "2025-08-28T09:23:01.388+00:00",
+                    "invoicingDate" : "2025-08-28T09:22:13.3881234+00:00",
+                    "acquisitionDate" : "2025-08-28T09:22:56.3881234+00:00",
+                    "permanentStorageDate" : "2025-08-28T09:23:01.388123+00:00",
                     "seller" : {
                       "nip" : "5555555555",
                       "name" : "Test Company 1"
@@ -146,9 +146,9 @@
                     "ksefNumber" : "5555555555-20250828-010080615740-E4",
                     "invoiceNumber" : "5265877635-20250925-010020A0A242-0A",
                     "issueDate" : "2025-08-28",
-                    "invoicingDate" : "2025-08-28T10:23:13.388+00:00",
-                    "acquisitionDate" : "2025-08-28T10:23:56.388+00:00",
-                    "permanentStorageDate" : "2025-08-28T10:24:01.388+00:00",
+                    "invoicingDate" : "2025-08-28T10:23:13.3881234+00:00",
+                    "acquisitionDate" : "2025-08-28T10:23:56.3881234+00:00",
+                    "permanentStorageDate" : "2025-08-28T10:24:01.388123+00:00",
                     "seller" : {
                       "nip" : "5555555555",
                       "name" : "Test Company 1"
@@ -293,7 +293,7 @@
             "$ref" : "#/components/schemas/InvoiceQueryDateRange"
           }
         ],
-        "description" : "Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące. Zakres uznawany jest za poprawny, jeśli mieści się w trzech miesiącach w UTC lub w czasie polskim."
+        "description" : "Typ i zakres dat, według którego filtrowane są faktury.\nMaksymalny dozwolony okres wynosi 3 miesiące w strefie UTC lub w strefie Europe/Warsaw (WAW).\n            \nFormat daty:\n * Daty muszą być przekazane w formacie ISO 8601, np. `yyyy-MM-ddTHH:mm:ss`.\n * Dopuszczalne są następujące warianty:\n   - z sufiksem `Z` (czas UTC),\n   - z jawnym offsetem, np. `+01:00`, `+03:00`,\n   - bez offsetu (interpretowane jako czas lokalny strefy Europe/Warsaw)."
       },
       "ksefNumber" : {
         "allOf" : [
@@ -1001,7 +1001,15 @@ Określa kontekst, w jakim przeszukiwane są dane.
 | Subject2 | Podmiot 2 - nabywca |
 | Subject3 | Podmiot 3 |
 | SubjectAuthorized | Podmiot upoważniony |
-  "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego mają być filtrowane faktury. Dozwolony maksymalny okres wynosi 3 miesiące. Zakres uznawany jest za poprawny, jeśli mieści się w trzech miesiącach w UTC lub w czasie polskim.
+  "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego filtrowane są faktury.
+Maksymalny dozwolony okres wynosi 3 miesiące w strefie UTC lub w strefie Europe/Warsaw (WAW).
+            
+Format daty:
+ * Daty muszą być przekazane w formacie ISO 8601, np. `yyyy-MM-ddTHH:mm:ss`.
+ * Dopuszczalne są następujące warianty:
+   - z sufiksem `Z` (czas UTC),
+   - z jawnym offsetem, np. `+01:00`, `+03:00`,
+   - bez offsetu (interpretowane jako czas lokalny strefy Europe/Warsaw).
     "dateType": "", // required; type: string; items: #/components/schemas/InvoiceQueryDateType; description: Typ daty, według której ma być zastosowany zakres.
 | Wartość | Opis |
 | --- | --- |
