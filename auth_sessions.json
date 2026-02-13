@@ -172,6 +172,11 @@
         "x-removal-date" : "2026-11-16"
       },
       "authenticationMethodInfo" : {
+        "required" : [
+          "category",
+          "code",
+          "displayName"
+        ],
         "allOf" : [
           {
             "$ref" : "#/components/schemas/AuthenticationMethodInfo"
@@ -238,6 +243,11 @@
 
 
   "AuthenticationMethodInfo" : {
+    "required" : [
+      "category",
+      "code",
+      "displayName"
+    ],
     "type" : "object",
     "properties" : {
       "category" : {
@@ -250,13 +260,11 @@
       },
       "code" : {
         "type" : "string",
-        "description" : "Kod metody uwierzytelnienia.",
-        "nullable" : true
+        "description" : "Kod metody uwierzytelnienia."
       },
       "displayName" : {
         "type" : "string",
         "description" : "Nazwa metody uwierzytelnienia do wyświetlenia użytkownikowi.",
-        "nullable" : true,
         "readOnly" : true
       }
     },
@@ -342,15 +350,15 @@ response (200): application/json
 | PersonalSignature | Podpis osobisty. |
 | PeppolSignature | Podpis dostawcy usług Peppol. |
       "authenticationMethodInfo": { // required; type: object; items: #/components/schemas/AuthenticationMethodInfo; description: Użyta metoda uwierzytelnienia.
-        "category": "", // type: string; items: #/components/schemas/AuthenticationMethodCategory; description: Kategoria metody uwierzytelnienia.
+        "category": "", // required; type: string; items: #/components/schemas/AuthenticationMethodCategory; description: Kategoria metody uwierzytelnienia.
 | Wartość | Opis |
 | --- | --- |
 | XadesSignature | Uwierzytelnienie podpisem Xades. |
 | NationalNode | Uwierzytelnienie za pomocą Węzła Krajowego (login.gov.pl). |
 | Token | Uwierzytelnienie tokenem. |
 | Other | Uwierzytelnienie inną metodą. |
-        "code": "", // type: string; nullable: true; description: Kod metody uwierzytelnienia.
-        "displayName": "" // type: string; nullable: true; description: Nazwa metody uwierzytelnienia do wyświetlenia użytkownikowi.
+        "code": "", // required; type: string; description: Kod metody uwierzytelnienia.
+        "displayName": "" // required; type: string; description: Nazwa metody uwierzytelnienia do wyświetlenia użytkownikowi.
       },
       "status": { // required; type: object; items: #/components/schemas/StatusInfo; description: Informacje o aktualnym statusie.
 | Code | Description | Details |
