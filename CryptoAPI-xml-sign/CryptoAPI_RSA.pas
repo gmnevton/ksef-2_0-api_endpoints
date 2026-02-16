@@ -96,15 +96,24 @@ end;
 function BytesToBase64(const Data: TBytes): String;
 var
   outLen: DWORD;
+  Buffer: PAnsiChar;
 begin
   // Uses original EncodeStream call placeholder: implement manual Base64 via Windows API
   // We'll use CryptBinaryToStringA for base64 conversion
+  if Length(Data) = 0 then
+    Exit('');
+  //
   outLen := 0;
   WinError(CryptBinaryToStringA(@Data[0], Length(Data), CRYPT_STRING_BASE64 or CRYPT_STRING_NOCRLF, nil, outLen), 'CryptBinaryToStringA');
-  SetLength(Result, outLen - 1); // outLen includes terminating null
-  WinError(CryptBinaryToStringA(@Data[0], Length(Data), CRYPT_STRING_BASE64 or CRYPT_STRING_NOCRLF, PAnsiChar(AnsiString(Result)), outLen), 'CryptBinaryToStringA');
-end;
 
+  GetMem(Buffer, outLen);
+  try
+    WinError(CryptBinaryToStringA(@Data[0], Length(Data), CRYPT_STRING_BASE64 or CRYPT_STRING_NOCRLF, Buffer, outLen), 'CryptBinaryToStringA');
+    SetString(Result, Buffer, outLen);
+  finally
+    FreeMem(Buffer);
+  end;
+end;
 
 function CryptoAPI_Encrypt_RSA(const Input: TBytes; const cert: TMemoryStream; const Base64Encoded: Boolean = True): String;
 var

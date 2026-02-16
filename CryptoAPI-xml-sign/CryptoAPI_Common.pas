@@ -16,9 +16,19 @@ function UnicodeStringToTBytes(const Value: String): TBytes;
 function DecodeBase64(const Input: AnsiString): TBytes;
 function EncodeBase64(const Input: Pointer; const Size: Integer; const WrapOutput: Boolean = False): AnsiString;
 
+function Base64UrlEncode(const Value: String): String; overload;
+function Base64UrlEncode(const Value: TBytes): String; overload;
+
+function ExtractPublicKeyCertificateFromPEM(const Value: String): TBytes;
+function ExtractPrivateKeyFromPEM(const Value: String; out PrivateKeyEncrypted: Boolean): TBytes;
+
+function SecureBytesEqual(const A, B: TBytes): Boolean;
+
 implementation
 
-uses RTLConsts;
+uses
+  StrUtils,
+  RTLConsts;
 
 const
   EncodeTable: Array[0..63] of AnsiChar =
@@ -340,6 +350,116 @@ begin
   finally
     InStr.Free;
   end;
+end;
+
+function Base64UrlEncode(const Value: String): String;
+//  Result := Value.Replace('+', '-').Replace('/', '_').Replace('=', '');
+var
+  sLen, sIndex: Integer;
+begin
+  sLen := Length(Value);
+  sIndex := 1;
+  Result := Value;
+  while sIndex <= sLen do begin
+    case Result[sIndex] of
+      '+': begin
+        Result[sIndex]:='-';
+      end;
+      '/': begin
+        Result[sIndex]:='_';
+      end;
+      '=': begin
+        Delete(Result, sIndex, 1);
+        Dec(sLen);
+        Continue;
+      end;
+    end;
+    Inc(sIndex);
+  end;
+end;
+
+function Base64UrlEncode(const Value: TBytes): String;
+var
+  Base64: String;
+begin
+  Base64 := TEncoding.UTF8.GetString(Value);
+  Result := Base64UrlEncode(Base64);
+  Base64 := '';
+end;
+
+function ExtractPublicKeyCertificateFromPEM(const Value: String): TBytes;
+var
+  Temp: String;
+  i: Integer;
+  base64: String;
+begin
+  Temp := Value;
+  i := Pos('-----BEGIN CERTIFICATE-----', Temp);
+  if i <> 1 then
+    raise Exception.Create('Valid PEM encoded certificate is required.');
+  Delete(Temp, 1, 27); // remove '-----BEGIN CERTIFICATE-----'
+  i := Pos('-----END CERTIFICATE-----', Temp);
+  if i <= 1 then
+    raise Exception.Create('Valid PEM encoded certificate is required.');
+  Delete(Temp, i, 25); // remove '-----END CERTIFICATE-----'
+  //
+  Temp := Trim(Temp);
+  base64 := ReplaceStr(ReplaceStr(Temp, #13, ''), #10, ''); // remove line ends
+  Result := DecodeBase64(base64);
+  Temp := '';
+  base64 := '';
+end;
+
+function ExtractPrivateKeyFromPEM(const Value: String; out PrivateKeyEncrypted: Boolean): TBytes;
+var
+  Temp: String;
+  i: Integer;
+  base64: String;
+begin
+  PrivateKeyEncrypted := False;
+  Temp := Value;
+  i := Pos('-----BEGIN ENCRYPTED PRIVATE KEY-----', Temp);
+  if i = 1 then
+    PrivateKeyEncrypted := True;
+  if i < 1 then
+    i := Pos('-----BEGIN PRIVATE KEY-----', Temp);
+  if i <> 1 then
+    raise Exception.Create('Valid PEM encoded private key is required.');
+  if PrivateKeyEncrypted then
+    Delete(Temp, 1, 37) // remove '-----BEGIN ENCRYPTED PRIVATE KEY-----'
+  else
+    Delete(Temp, 1, 27); // remove '-----BEGIN PRIVATE KEY-----'
+  if PrivateKeyEncrypted then
+    i := Pos('-----END ENCRYPTED PRIVATE KEY-----', Temp)
+  else
+    i := Pos('-----END PRIVATE KEY-----', Temp);
+  if i <= 1 then
+    raise Exception.Create('Valid PEM encoded private key is required.');
+  if PrivateKeyEncrypted then
+    Delete(Temp, i, 35) // remove '-----END ENCRYPTED PRIVATE KEY-----'
+  else
+    Delete(Temp, i, 25); // remove '-----END PRIVATE KEY-----'
+  //
+  Temp := Trim(Temp);
+  base64 := ReplaceStr(ReplaceStr(Temp, #13, ''), #10, ''); // remove line ends
+  Result := DecodeBase64(base64);
+  Temp := '';
+  base64 := '';
+end;
+
+function SecureBytesEqual(const A, B: TBytes): Boolean;
+var
+  I: Integer;
+  Diff: Byte;
+begin
+  if Length(A) <> Length(B) then
+    Exit(False);
+
+  Diff := 0;
+  for I := 0 to High(A) do
+    Diff := Diff or (A[I] xor B[I]);
+
+  Result := Diff = 0;
 end;
 
 end.
