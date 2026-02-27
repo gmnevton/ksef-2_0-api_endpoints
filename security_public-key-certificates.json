@@ -106,8 +106,7 @@
         },
         "description" : "Operacje do których może być używany certyfikat.\n| Wartość | Opis |\n| --- | --- |\n| KsefTokenEncryption | Szyfrowanie tokenów KSeF przesyłanych w trakcie procesu uwierzytelniania. |\n| SymmetricKeyEncryption | Szyfrowanie klucza symetrycznego wykorzystywanego do szyfrowania przesyłanych faktur. |\n"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

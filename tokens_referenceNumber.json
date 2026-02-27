@@ -264,8 +264,7 @@
         "description" : "Dodatkowe informacje na temat statusu, zwracane w przypadku błędów.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

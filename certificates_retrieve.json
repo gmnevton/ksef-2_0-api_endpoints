@@ -121,8 +121,7 @@
         },
         "description" : "Numery seryjne certyfikatów do pobrania."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -139,8 +138,7 @@
         },
         "description" : "Pobrane certyfikaty."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -174,8 +172,7 @@
         ],
         "description" : "Typ certyfikatu.\n| Wartość | Opis |\n| --- | --- |\n| Authentication | Certyfikat używany do uwierzytelnienia w systemie. |\n| Offline | Certyfikat używany wyłącznie do potwierdzania autentyczności wystawcy i integralności faktury w trybie offline |\n"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

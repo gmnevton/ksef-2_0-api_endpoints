@@ -112,8 +112,7 @@
         ],
         "description" : "Token umożliwiający odświeżenie tokenu dostępu.\n> Więcej informacji:\n> - [Odświeżanie tokena](https://github.com/CIRFMF/ksef-docs/blob/main/uwierzytelnianie.md#5-od%C5%9Bwie%C5%BCenie-tokena-dost%C4%99powego-accesstoken)"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -133,8 +132,7 @@
         "description" : "Data ważności tokena.",
         "format" : "date-time"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

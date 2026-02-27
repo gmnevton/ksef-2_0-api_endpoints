@@ -136,8 +136,7 @@
         "format" : "date-time",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -171,8 +170,7 @@
         "description" : "Data złożenia wniosku certyfikacyjnego.",
         "format" : "date-time"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

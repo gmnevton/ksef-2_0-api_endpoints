@@ -141,8 +141,7 @@
         },
         "description" : "Lista sesji uwierzytelniania."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -222,8 +221,7 @@
         "description" : "Czy sesja jest powiązana z aktualnie używanym tokenem.",
         "readOnly" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -267,8 +265,7 @@
         "description" : "Nazwa metody uwierzytelnienia do wyświetlenia użytkownikowi.",
         "readOnly" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -309,8 +306,7 @@
         "description" : "Dodatkowe szczegóły statusu",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

@@ -118,8 +118,7 @@
         ],
         "description" : "Limity dla sesji wsadowych."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -149,8 +148,7 @@
         "description" : "Maksymalna ilość faktur które można przesłać w pojedynczej sesji.",
         "format" : "int32"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -180,8 +178,7 @@
         "description" : "Maksymalna ilość faktur które można przesłać w pojedynczej sesji.",
         "format" : "int32"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

@@ -156,8 +156,7 @@
         ],
         "description" : "Zestaw filtrów do wyszukiwania faktur."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -178,8 +177,7 @@
         "description" : "Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64.",
         "format" : "byte"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -302,8 +300,7 @@
         "description" : "Czy faktura ma załącznik.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -350,8 +347,7 @@
         "description" : "Określa, czy system ma ograniczyć filtrowanie (zakres dateRange.to) do wartości `PermanentStorageHwmDate`.\n\n* Dotyczy wyłącznie zapytań z `dateType = PermanentStorage`,  \n* Gdy `true`, system ogranicza filtrowanie tak, aby wartość `dateRange.to` nie przekraczała wartości `PermanentStorageHwmDate`,  \n* Gdy `null` lub `false`, filtrowanie może wykraczać poza `PermanentStorageHwmDate`.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -398,8 +394,7 @@
         "format" : "double",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -442,8 +437,7 @@
         "description" : "Wartość identyfikatora nabywcy (exact match).",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -702,8 +696,7 @@
         ],
         "description" : "Numer referencyjny eksportu faktur."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

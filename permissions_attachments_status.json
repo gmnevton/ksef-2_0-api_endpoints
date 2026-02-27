@@ -93,8 +93,7 @@
         "format" : "date-time",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

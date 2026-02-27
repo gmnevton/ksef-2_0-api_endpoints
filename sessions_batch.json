@@ -153,7 +153,7 @@
             "$ref" : "#/components/schemas/FormCode"
           }
         ],
-        "description" : "Schemat faktur wysyłanych w ramach sesji.\n\nObsługiwane schematy:\n| SystemCode | SchemaVersion | Value |\n| --- | --- | --- |\n| [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |\n| [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |\n"
+        "description" : "Schemat faktur wysyłanych w ramach sesji.\n\nObsługiwane schematy:\n| SystemCode | SchemaVersion | Value |\n| --- | --- | --- |\n| [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |\n| [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |\n| FA_RR (1) | 1-0E | RR |\n"
       },
       "batchFile" : {
         "required" : [
@@ -185,8 +185,7 @@
         "description" : "Określa, czy podatnik deklaruje tryb fakturowania \"offline\" dla dokumentów przesyłanych w sesji wsadowej.",
         "default" : false
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -210,8 +209,7 @@
         "type" : "string",
         "description" : "Wartość"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -247,8 +245,7 @@
         },
         "description" : "Informacje o częściach pliku paczki. Maksymalna liczba części to 50. Maksymalny dozwolony rozmiar części przed zaszyfrowaniem to 100MB."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -289,8 +286,7 @@
         ],
         "description" : "Skrót SHA256 zaszyfrowanej części pliku paczki, zakodowany w formacie Base64."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -311,8 +307,7 @@
         "description" : "Wektor inicjalizujący (IV) o długości 16 bajtów, używany do szyfrowania symetrycznego, zakodowany w formacie Base64.",
         "format" : "byte"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -338,8 +333,7 @@
         },
         "description" : "Dane wymagane do poprawnego przesłania poszczególnych części pliku paczki faktur.\n\nKażdą część pliku paczki zadeklarowaną w <b>fileParts</b> należy przesłać zgodnie z odpowiadającym jej obiektem w <b>partUploadRequests</b>.\nŁącznikiem pomiędzy deklaracją a instrukcją wysyłki jest pole <b>ordinalNumber</b>.\n\nDla każdej części należy:\n* zastosować metodę HTTP wskazaną w <b>method</b>,\n* ustawić adres z <b>url</b>,\n* dołączyć nagłówki z <b>headers</b>,\n* dołączyć treść części pliku w korpusie żądania.\n\n`Uwaga: nie należy dodawać do nagłówków token dostępu (accessToken).`\n \nKażdą część przesyła się oddzielnym żądaniem HTTP.Zwracane kody odpowiedzi:\n * <b>201</b> – poprawne przyjęcie pliku,\n * <b>400</b> – błędne dane,\n * <b>401</b> – nieprawidłowe uwierzytelnienie,\n * <b>403</b> – brak uprawnień do zapisu (np.upłynął czas na zapis)."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -377,14 +371,9 @@
       },
       "headers" : {
         "type" : "object",
-        "additionalProperties" : {
-          "type" : "string",
-          "nullable" : true
-        },
         "description" : "Nagłówki, których należy użyć przy wysyłce części pliku paczki."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -402,6 +391,7 @@ Obsługiwane schematy:
 | --- | --- | --- |
 | [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |
 | [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |
+| FA_RR (1) | 1-0E | RR |
     "systemCode": "", // required; type: string; description: Kod systemowy
     "schemaVersion": "", // required; type: string; description: Wersja schematu
     "value": "" // required; type: string; description: Wartość
@@ -453,7 +443,7 @@ Każdą część przesyła się oddzielnym żądaniem HTTP.Zwracane kody odpowie
       "ordinalNumber": 0, // required; type: integer; format: int32; description: Numer sekwencyjny części pliku paczki.
       "method": "", // required; type: string; description: Metoda HTTP, której należy użyć przy wysyłce części pliku paczki.
       "url": "", // required; type: string; format: uri; description: Adres pod który należy wysłać część pliku paczki.
-      "headers": { // required; type: object; nullable: true; description: Nagłówki, których należy użyć przy wysyłce części pliku paczki.
+      "headers": { // required; type: object; description: Nagłówki, których należy użyć przy wysyłce części pliku paczki.
       }
     }
   ]

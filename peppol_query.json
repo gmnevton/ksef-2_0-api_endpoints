@@ -124,8 +124,7 @@
         "type" : "boolean",
         "description" : "Flaga informująca o dostępności kolejnej strony wyników."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -155,8 +154,7 @@
         "description" : "Data rejestracji dostawcy usług Peppol w systemie.",
         "format" : "date-time"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

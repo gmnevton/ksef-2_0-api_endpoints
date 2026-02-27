@@ -176,8 +176,7 @@
         "description" : "Dane paczki faktur przygotowanej do pobrania.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -206,8 +205,7 @@
         "description" : "Dodatkowe szczegóły statusu",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -268,8 +266,7 @@
         "format" : "date-time",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -340,8 +337,7 @@
         "description" : "Data i godzina wygaśnięcia linku umożliwiającego pobranie części paczki.\nPo upływie tego momentu link przestaje być aktywny.",
         "format" : "date-time"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

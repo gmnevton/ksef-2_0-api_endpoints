@@ -189,8 +189,7 @@
         "description" : "Skrót SHA256 korygowanej faktury, zakodowany w formacie Base64. Wymagany przy wysyłaniu korekty technicznej faktury.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -217,8 +216,7 @@
         ],
         "description" : "Numer referencyjny faktury."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

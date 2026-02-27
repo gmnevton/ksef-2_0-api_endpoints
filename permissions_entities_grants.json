@@ -166,8 +166,7 @@
         ],
         "description" : "Dane podmiotu, któremu nadawane są uprawnienia."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -193,7 +192,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator podmiotu.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |"
   }
 
@@ -224,8 +222,7 @@
         "type" : "boolean",
         "description" : "Flaga pozwalająca na pośrednie przekazywanie danego uprawnienia"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -250,8 +247,7 @@
         "type" : "string",
         "description" : "Pełna nazwa podmiotu."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -269,8 +265,7 @@
         ],
         "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

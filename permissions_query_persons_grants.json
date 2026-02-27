@@ -251,8 +251,7 @@
         ],
         "description" : "Typ zapytania.\n| Type | Value |\n| --- | --- |\n| PermissionsInCurrentContext | Lista uprawnień obowiązujących w bieżącym kontekście |\n| PermissionsGrantedInCurrentContext | Lista uprawnień nadanych w bieżącym kontekście |"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -278,7 +277,6 @@
         "nullable" : true
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator osoby lub podmiotu nadającego uprawnienie.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| Pesel | 11 cyfrowy numer PESEL |\n| Fingerprint | Odcisk palca certyfikatu |\n| System | Identyfikator systemowy KSeF |"
   }
 
@@ -316,7 +314,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator osoby lub podmiotu uprawnionego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| Pesel | 11 cyfrowy numer PESEL |\n| Fingerprint | Odcisk palca certyfikatu |"
   }
 
@@ -353,7 +350,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator kontekstu uprawnienia (dla uprawnień nadanych administratorom jednostek podrzędnych).\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |"
   }
 
@@ -389,7 +385,6 @@
         "nullable" : true
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator podmiotu docelowego dla uprawnień nadanych pośrednio.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| AllPartners | Identyfikator oznaczający, że uprawnienie nadane w sposób pośredni jest typu generalnego |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |"
   }
 
@@ -454,8 +449,7 @@
         "type" : "boolean",
         "description" : "Flaga informująca o dostępności kolejnej strony wyników."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -586,8 +580,7 @@
         "type" : "boolean",
         "description" : "Flaga określająca, czy uprawnienie ma być możliwe do dalszego przekazywania."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

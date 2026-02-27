@@ -84,8 +84,7 @@
         ],
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -106,8 +105,7 @@
           }
         ]
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

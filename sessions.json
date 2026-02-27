@@ -274,8 +274,7 @@
         },
         "description" : "Lista sesji."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -341,8 +340,7 @@
         "description" : "Liczba błędnie przetworzonych faktur.",
         "format" : "int32"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

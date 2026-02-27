@@ -197,8 +197,7 @@
         "description" : "Stan uprawnienia. \n| Type | Value |\n| --- | --- |\n| Active | Uprawnienia aktywne |\n| Inactive | Uprawnienia nieaktywne |",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -224,7 +223,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator kontekstu podmiotu, który nadał uprawnienia do obsługi faktur.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |"
   }
 
@@ -260,7 +258,6 @@
         "nullable" : true
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator podmiotu docelowego dla uprawnień selektywnych nadanych pośrednio.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| AllPartners | Identyfikator oznaczający, że wyszukiwanie dotyczy uprawnień generalnych nadanych w sposób pośredni |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |"
   }
 
@@ -317,8 +314,7 @@
         "type" : "boolean",
         "description" : "Flaga informująca o dostępności kolejnej strony wyników."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -437,8 +433,7 @@
         "type" : "boolean",
         "description" : "Flaga określająca, czy uprawnienie ma być możliwe do dalszego przekazywania."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

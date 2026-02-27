@@ -82,8 +82,7 @@
       "nip" : {
         "$ref" : "#/components/schemas/Nip"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

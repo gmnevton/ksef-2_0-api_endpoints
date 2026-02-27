@@ -200,8 +200,7 @@
         ],
         "description" : "Dane podmiotu unijnego, w kontekście którego nadawane są uprawnienia."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -227,7 +226,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator podmiotu uprawnionego.\n| Type | Value |\n| --- | --- |\n| Fingerprint | Odcisk palca certyfikatu |"
   }
 
@@ -262,7 +260,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator kontekstu złożonego.\n| Type | Value |\n| --- | --- |\n| NipVatUe | Dwuczłonowy identyfikator składający się z numeru NIP i numeru VAT-UE: `{nip}-{vat_ue}` |"
   }
 
@@ -331,8 +328,7 @@
         "description" : "Dane podmiotu.\n*Wymagane, gdy subjectDetailsType = EntityByFingerprint.*",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -379,8 +375,7 @@
         ],
         "description" : "Identyfikator osoby fizycznej."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -405,8 +400,7 @@
         "type" : "string",
         "description" : "Wartość identyfikatora."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -459,8 +453,7 @@
         ],
         "description" : "Dane dokumentu tożsamości osoby fizycznej."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -489,7 +482,6 @@
         "description" : "Kraj wydania dokumentu tożsamości. Musi być zgodny z ISO 3166-1 alpha-2 (np. PL, DE, US) oraz zawierać dokładnie 2 wielkie litery."
       }
     },
-    "additionalProperties" : false,
     "description" : "Dane dokumentu tożsamości osoby fizycznej."
   }
 
@@ -511,8 +503,7 @@
         "type" : "string",
         "description" : "Adres podmiotu."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -533,8 +524,7 @@
         "type" : "string",
         "description" : "Adres podmiotu."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -552,8 +542,7 @@
         ],
         "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

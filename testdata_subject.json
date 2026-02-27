@@ -114,8 +114,7 @@
         "format" : "date-time",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -153,8 +152,7 @@
         "minLength" : 5,
         "type" : "string"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

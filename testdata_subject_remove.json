@@ -82,8 +82,7 @@
       "subjectNip" : {
         "$ref" : "#/components/schemas/Nip"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

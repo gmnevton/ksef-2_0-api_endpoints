@@ -161,8 +161,7 @@
         ],
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -185,8 +184,7 @@
         "format" : "int32",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -199,8 +197,7 @@
         "format" : "int32",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

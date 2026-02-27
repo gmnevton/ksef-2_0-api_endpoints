@@ -215,8 +215,7 @@
         "description" : "Lista rodzajów wyszukiwanych uprawnień.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -242,7 +241,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator podmiotu uprawniającego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |"
   }
 
@@ -277,7 +275,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator podmiotu uprawnionego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| PeppolId | Identyfikator dostawcy usług Peppol |"
   }
 
@@ -329,8 +326,7 @@
         "type" : "boolean",
         "description" : "Flaga informująca o dostępności kolejnej strony wyników."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -422,8 +418,7 @@
         "description" : "Data rozpoczęcia obowiązywania uprawnienia.",
         "format" : "date-time"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -457,7 +452,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator osoby nadającej uprawnienie.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| Pesel | 11 cyfrowy numer PESEL |\n| Fingerprint | Odcisk palca certyfikatu |"
   }
 

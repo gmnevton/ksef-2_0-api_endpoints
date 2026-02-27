@@ -126,8 +126,7 @@
         "description" : "Identyfikator organizacji.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

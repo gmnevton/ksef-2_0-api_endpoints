@@ -165,8 +165,7 @@
         "description" : "Identyfikator podmiotu podrzędnego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -192,7 +191,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator podmiotu podrzędnego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |"
   }
 
@@ -223,8 +221,7 @@
         "type" : "boolean",
         "description" : "Flaga informująca o dostępności kolejnej strony wyników."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -268,8 +265,7 @@
         "description" : "Data rozpoczęcia obowiązywania powiązania.",
         "format" : "date-time"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -295,7 +291,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator podmiotu podrzędnego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |"
   }
 

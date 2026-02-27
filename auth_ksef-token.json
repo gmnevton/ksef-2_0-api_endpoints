@@ -136,8 +136,7 @@
         "description" : "Polityka autoryzacji żądań przy każdym użyciu tokena dostępu.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -168,8 +167,7 @@
         "type" : "string",
         "description" : "Wartość identyfikatora"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -196,8 +194,7 @@
         "description" : "Lista dozwolonych adresów IP.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -231,8 +228,7 @@
         "description" : "Lista adresów IPv4 w notacji CIDR, np. `172.16.0.0/16`.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -263,8 +259,7 @@
         ],
         "description" : "Token operacji uwierzytelnienia."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -292,8 +287,7 @@
         "description" : "Data ważności tokena.",
         "format" : "date-time"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

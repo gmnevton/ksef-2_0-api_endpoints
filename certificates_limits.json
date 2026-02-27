@@ -111,7 +111,6 @@
         "description" : "Informacje o limitach dotyczących liczby aktywnych certyfikatów wydanych dla danego podmiotu."
       }
     },
-    "additionalProperties" : false,
     "description" : "Informacje o limitach wniosków oraz certyfikatów dla uwierzytelnionego podmiotu."
   }
 
@@ -133,8 +132,7 @@
         "description" : "Maksymalna liczba zasobów dozwolona w ramach limitu.",
         "format" : "int32"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

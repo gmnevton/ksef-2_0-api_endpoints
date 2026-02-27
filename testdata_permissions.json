@@ -124,8 +124,7 @@
           "$ref" : "#/components/schemas/TestDataPermission"
         }
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -148,8 +147,7 @@
         "minLength" : 10,
         "type" : "string"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -180,8 +178,7 @@
         "minLength" : 10,
         "type" : "string"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -214,8 +211,7 @@
           }
         ]
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

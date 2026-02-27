@@ -174,8 +174,7 @@
         "description" : "Identyfikator jednostki lub podmiotu podrzędnego.\n| Type | Value |\n| --- | --- |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |\n| Nip | 10 cyfrowy numer NIP |",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -201,7 +200,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator jednostki lub podmiotu podrzędnego.\n| Type | Value |\n| --- | --- |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |\n| Nip | 10 cyfrowy numer NIP |"
   }
 
@@ -233,8 +231,7 @@
         "type" : "boolean",
         "description" : "Flaga informująca o dostępności kolejnej strony wyników."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -334,8 +331,7 @@
         "description" : "Data rozpoczęcia obowiązywania uprawnienia.",
         "format" : "date-time"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -369,7 +365,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator uprawnionego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| Pesel | 11 cyfrowy numer PESEL |\n| Fingerprint | Odcisk palca certyfikatu |"
   }
 

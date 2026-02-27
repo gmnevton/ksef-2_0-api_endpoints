@@ -124,8 +124,7 @@
         "description" : "Numer seryjny wygenerowanego certyfikatu (w formacie szesnastkowym). \nZwracany w przypadku prawidłowego przeprocesowania wniosku certyfikacyjnego.",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -154,8 +153,7 @@
         "description" : "Dodatkowe szczegóły statusu",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

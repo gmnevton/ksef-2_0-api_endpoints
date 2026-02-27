@@ -177,8 +177,7 @@
         ],
         "description" : "Dane podmiotu, któremu nadawane są uprawnienia."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -204,7 +203,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator podmiotu lub osoby fizycznej.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| Pesel | 11 cyfrowy numer PESEL |\n| Fingerprint | Odcisk palca certyfikatu |"
   }
 
@@ -241,7 +239,6 @@
         "description" : "Wartość identyfikatora."
       }
     },
-    "additionalProperties" : false,
     "description" : "Identyfikator podmiotu podrzędnego.\n| Type | Value |\n| --- | --- |\n| Nip | 10 cyfrowy numer NIP |\n| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |"
   }
 
@@ -311,8 +308,7 @@
         "description" : "Dane podmiotu.\n*Wymagane, gdy subjectDetailsType = PersonByFingerprintWithoutIdentifier.*",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -346,8 +342,7 @@
         "type" : "string",
         "description" : "Nazwisko osoby fizycznej."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -383,8 +378,7 @@
         ],
         "description" : "Identyfikator osoby fizycznej."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -409,8 +403,7 @@
         "type" : "string",
         "description" : "Wartość identyfikatora."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -463,8 +456,7 @@
         ],
         "description" : "Dane dokumentu tożsamości osoby fizycznej."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -493,7 +485,6 @@
         "description" : "Kraj wydania dokumentu tożsamości. Musi być zgodny z ISO 3166-1 alpha-2 (np. PL, DE, US) oraz zawierać dokładnie 2 wielkie litery."
       }
     },
-    "additionalProperties" : false,
     "description" : "Dane dokumentu tożsamości osoby fizycznej."
   }
 
@@ -512,8 +503,7 @@
         ],
         "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

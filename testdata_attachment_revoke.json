@@ -88,8 +88,7 @@
         "format" : "date",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

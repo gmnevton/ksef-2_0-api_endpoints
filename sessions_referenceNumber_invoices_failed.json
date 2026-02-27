@@ -162,8 +162,7 @@
         },
         "description" : "Lista pobranych faktur."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -266,8 +265,7 @@
         ],
         "description" : "Status faktury.\n\n| Code | Description | Details | Extensions |\n| --- | --- | --- | ---|\n| 100 | Faktura przyjęta do dalszego przetwarzania | - | - |\n| 150 | Trwa przetwarzanie | - | - |\n| 200 | Sukces | - | - |\n| 405 | Przetwarzanie anulowane z powodu błędu sesji | - | - |\n| 410 | Nieprawidłowy zakres uprawnień | - |  - |\n| 415 | Brak możliwości wysyłania faktury z załącznikiem | - | - |\n| 430 | Błąd weryfikacji pliku faktury | - | -  |\n| 435 | Błąd odszyfrowania pliku | - | - |\n| 440 | Duplikat faktury | - | 'originalSessionReferenceNumber', 'originalKsefNumber'|\n| 450 | Błąd weryfikacji semantyki dokumentu faktury | - | - |\n| 500 | Nieznany błąd ({statusCode}) | - | - |\n| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |- |"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

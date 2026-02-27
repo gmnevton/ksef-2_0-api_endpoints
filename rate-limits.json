@@ -308,8 +308,7 @@
         ],
         "description" : "Limity dla pozostałych operacji API."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -336,8 +335,7 @@
         "description" : "Limit na godzinę.",
         "format" : "int32"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

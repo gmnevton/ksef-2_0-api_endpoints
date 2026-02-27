@@ -187,8 +187,7 @@
         "format" : "int32",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -217,8 +216,7 @@
         "description" : "Dodatkowe szczegóły statusu",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -235,8 +233,7 @@
         },
         "description" : "Lista stron UPO."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -266,8 +263,7 @@
         "description" : "Data i godzina wygaśnięcia adresu. Po tej dacie link `DownloadUrl` nie będzie już aktywny.",
         "format" : "date-time"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

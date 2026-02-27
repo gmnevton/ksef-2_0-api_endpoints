@@ -95,8 +95,7 @@
         ],
         "description" : "Token dostępu, którego należy używać w wywołaniach chronionych zasobów API."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -116,8 +115,7 @@
         "description" : "Data ważności tokena.",
         "format" : "date-time"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

@@ -103,8 +103,7 @@
         "description" : "Powód unieważnienia certyfikatu.\n| Wartość | Opis |\n| --- | --- |\n| Unspecified | Nieokreślony. |\n| Superseded | Certyfikat został zastąpiony przez inny. |\n| KeyCompromise | Klucz prywatny powiązany z certyfikatem został skompromitowany. |\n",
         "nullable" : true
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

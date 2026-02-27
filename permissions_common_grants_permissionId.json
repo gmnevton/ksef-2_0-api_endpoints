@@ -117,8 +117,7 @@
         ],
         "description" : "Numer referencyjny operacji nadania lub odbierania uprawnień."
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 

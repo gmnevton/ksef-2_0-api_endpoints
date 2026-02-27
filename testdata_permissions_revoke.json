@@ -110,8 +110,7 @@
           }
         ]
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -134,8 +133,7 @@
         "minLength" : 10,
         "type" : "string"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
@@ -166,8 +164,7 @@
         "minLength" : 10,
         "type" : "string"
       }
-    },
-    "additionalProperties" : false
+    }
   }
 
 
