@@ -69,6 +69,7 @@
   "AuthenticationChallengeResponse" : {
     "required" : [
       "challenge",
+      "clientIp",
       "timestamp",
       "timestampMs"
     ],
@@ -86,6 +87,10 @@
         "type" : "integer",
         "description" : "Czas wygenerowania challenge-a w milisekundach od 1 stycznia 1970 roku (Unix timestamp).",
         "format" : "int64"
+      },
+      "clientIp" : {
+        "type" : "string",
+        "description" : "Adres IP klienta."
       }
     }
   }
@@ -110,5 +115,6 @@ response (200): application/json
 {
   "challenge": "", // required; type: string; items: #/components/schemas/Challenge;
   "timestamp": "", // required; type: string; format: date-time; description: Czas wygenerowania challenge-a.
-  "timestampMs": 0 // required; type: integer; format: int64; description: Czas wygenerowania challenge-a w milisekundach od 1 stycznia 1970 roku (Unix timestamp).
+  "timestampMs": 0, // required; type: integer; format: int64; description: Czas wygenerowania challenge-a w milisekundach od 1 stycznia 1970 roku (Unix timestamp).
+  "clientIp": "" // required; type: string; description: Adres IP klienta.
 }

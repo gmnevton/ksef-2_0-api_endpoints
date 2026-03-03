@@ -85,8 +85,25 @@
           },
           "x-summary" : "Too Many Requests"
         },
+        "403" : {
+          "description" : "Forbidden",
+          "content" : {
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ForbiddenProblemDetails"
+              }
+            }
+          }
+        },
         "401" : {
-          "description" : "Unauthorized"
+          "description" : "Unauthorized",
+          "content" : {
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UnauthorizedProblemDetails"
+              }
+            }
+          }
         }
       },
       "security" : [
@@ -152,8 +169,25 @@
           },
           "x-summary" : "Too Many Requests"
         },
+        "403" : {
+          "description" : "Forbidden",
+          "content" : {
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ForbiddenProblemDetails"
+              }
+            }
+          }
+        },
         "401" : {
-          "description" : "Unauthorized"
+          "description" : "Unauthorized",
+          "content" : {
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UnauthorizedProblemDetails"
+              }
+            }
+          }
         }
       },
       "security" : [

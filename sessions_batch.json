@@ -108,10 +108,24 @@
           "x-summary" : "Too Many Requests"
         },
         "403" : {
-          "description" : "Forbidden"
+          "description" : "Forbidden",
+          "content" : {
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ForbiddenProblemDetails"
+              }
+            }
+          }
         },
         "401" : {
-          "description" : "Unauthorized"
+          "description" : "Unauthorized",
+          "content" : {
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UnauthorizedProblemDetails"
+              }
+            }
+          }
         }
       },
       "security" : [
@@ -153,7 +167,7 @@
             "$ref" : "#/components/schemas/FormCode"
           }
         ],
-        "description" : "Schemat faktur wysyłanych w ramach sesji.\n\nObsługiwane schematy:\n| SystemCode | SchemaVersion | Value |\n| --- | --- | --- |\n| [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |\n| [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |\n| FA_RR (1) | 1-0E | RR |\n"
+        "description" : "Schemat faktur wysyłanych w ramach sesji.\n\nObsługiwane schematy:\n| SystemCode | SchemaVersion | Value |\n| --- | --- | --- |\n| [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |\n| [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |\n| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_RR(1)_v1-0E.xsd) | 1-0E | RR |\n"
       },
       "batchFile" : {
         "required" : [
@@ -371,6 +385,10 @@
       },
       "headers" : {
         "type" : "object",
+        "additionalProperties" : {
+          "type" : "string",
+          "nullable" : true
+        },
         "description" : "Nagłówki, których należy użyć przy wysyłce części pliku paczki."
       }
     }
@@ -391,7 +409,7 @@ Obsługiwane schematy:
 | --- | --- | --- |
 | [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |
 | [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |
-| FA_RR (1) | 1-0E | RR |
+| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_RR(1)_v1-0E.xsd) | 1-0E | RR |
     "systemCode": "", // required; type: string; description: Kod systemowy
     "schemaVersion": "", // required; type: string; description: Wersja schematu
     "value": "" // required; type: string; description: Wartość
@@ -443,7 +461,7 @@ Każdą część przesyła się oddzielnym żądaniem HTTP.Zwracane kody odpowie
       "ordinalNumber": 0, // required; type: integer; format: int32; description: Numer sekwencyjny części pliku paczki.
       "method": "", // required; type: string; description: Metoda HTTP, której należy użyć przy wysyłce części pliku paczki.
       "url": "", // required; type: string; format: uri; description: Adres pod który należy wysłać część pliku paczki.
-      "headers": { // required; type: object; description: Nagłówki, których należy użyć przy wysyłce części pliku paczki.
+      "headers": { // required; type: object; nullable: true; description: Nagłówki, których należy użyć przy wysyłce części pliku paczki.
       }
     }
   ]
