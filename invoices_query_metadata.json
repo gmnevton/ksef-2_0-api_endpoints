@@ -385,7 +385,7 @@
             "$ref" : "#/components/schemas/InvoiceQueryFormType"
           }
         ],
-        "description" : "Typ dokumentu.\n| Wartość | Opis |\n| --- | --- |\n| FA | Faktura VAT |\n| PEF | Faktura PEF |\n| RR | Faktura RR |\n",
+        "description" : "Typ dokumentu.\n| Wartość | Opis |\n| --- | --- |\n| FA | Faktura VAT |\n| PEF | Faktura PEF |\n| RR ![Deprecated](https://img.shields.io/badge/Deprecated-orange) | Faktura RR |\n| FA_RR | Faktura RR |\n",
         "nullable" : true
       },
       "invoiceTypes" : {
@@ -393,7 +393,7 @@
         "items" : {
           "$ref" : "#/components/schemas/InvoiceType"
         },
-        "description" : "Rodzaje faktur.\n| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n",
+        "description" : "Rodzaje faktur.\n| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (FA_RR) Podstawowa |\n| KorVatRr | (FA_RR) Korygująca |\n",
         "nullable" : true
       },
       "hasAttachment" : {
@@ -756,10 +756,11 @@
     "enum" : [
       "FA",
       "PEF",
-      "RR"
+      "RR",
+      "FA_RR"
     ],
     "type" : "string",
-    "description" : "| Wartość | Opis |\n| --- | --- |\n| FA | Faktura VAT |\n| PEF | Faktura PEF |\n| RR | Faktura RR |\n"
+    "description" : "| Wartość | Opis |\n| --- | --- |\n| FA | Faktura VAT |\n| PEF | Faktura PEF |\n| RR ![Deprecated](https://img.shields.io/badge/Deprecated-orange) | Faktura RR |\n| FA_RR | Faktura RR |\n"
   }
 
 
@@ -779,7 +780,7 @@
       "KorVatRr"
     ],
     "type" : "string",
-    "description" : "| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n"
+    "description" : "| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (FA_RR) Podstawowa |\n| KorVatRr | (FA_RR) Korygująca |\n"
   }
 
 
@@ -906,7 +907,7 @@
       },
       "vatAmount" : {
         "type" : "number",
-        "description" : "Łączna kwota VAT.",
+        "description" : "Łączna kwota VAT wyrażona w PLN.",
         "format" : "double"
       },
       "currency" : {
@@ -929,7 +930,7 @@
             "$ref" : "#/components/schemas/InvoiceType"
           }
         ],
-        "description" : "Rodzaj faktury.\n| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (RR) Podstawowa |\n| KorVatRr | (RR) Korygująca |\n"
+        "description" : "Rodzaj faktury.\n| Wartość | Opis |\n| --- | --- |\n| Vat | (FA) Podstawowa |\n| Zal | (FA) Zaliczkowa |\n| Kor | (FA) Korygująca |\n| Roz | (FA) Rozliczeniowa |\n| Upr | (FA) Uproszczona |\n| KorZal | (FA) Korygująca fakturę zaliczkową |\n| KorRoz | (FA) Korygująca fakturę rozliczeniową |\n| VatPef | (PEF) Podstawowa |\n| VatPefSp | (PEF) Specjalizowana |\n| KorPef | (PEF) Korygująca |\n| VatRr | (FA_RR) Podstawowa |\n| KorVatRr | (FA_RR) Korygująca |\n"
       },
       "formCode" : {
         "required" : [
@@ -942,7 +943,7 @@
             "$ref" : "#/components/schemas/FormCode"
           }
         ],
-        "description" : "Struktura dokumentu faktury.\n\nObsługiwane schematy:\n| SystemCode | SchemaVersion | Value | ValidFrom | ValidTo |\n| --- | --- | --- | --- | --- |\n| [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |  |  |\n| [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |  |  |\n| [PEF (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF(3)_v2-1.xsd) | 2-1 | PEF |  |  |\n| [PEF_KOR (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF_KOR(3)_v2-1.xsd) | 2-1 | PEF |  |  |\n| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_RR(1)_v1-0E.xsd) | 1-0E | RR |  | 23.03.2026 |\n| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_RR(1)_v1-1E.xsd) | 1-1E | RR |  |  |\n"
+        "description" : "Struktura dokumentu faktury.\n\nObsługiwane schematy:\n| SystemCode | SchemaVersion | Value | ValidFrom | ValidTo |\n| --- | --- | --- | --- | --- |\n| [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |  |  |\n| [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |  |  |\n| [PEF (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF(3)_v2-1.xsd) | 2-1 | PEF |  |  |\n| [PEF_KOR (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF_KOR(3)_v2-1.xsd) | 2-1 | PEF |  |  |\n| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_RR(1)_v1-0E.xsd) | 1-0E | RR |  | 23.03.2026 |\n| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_RR(1)_v1-1E.xsd) | 1-1E | RR |  | 30.03.2026 |\n| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_FA_RR(1)_v1-1E.xsd) | 1-1E | FA_RR |  |  |\n"
       },
       "isSelfInvoicing" : {
         "type" : "boolean",
@@ -1065,7 +1066,8 @@ Format daty:
 | --- | --- |
 | FA | Faktura VAT |
 | PEF | Faktura PEF |
-| RR | Faktura RR |
+| RR ![Deprecated](https://img.shields.io/badge/Deprecated-orange) | Faktura RR |
+| FA_RR | Faktura RR |
   "invoiceTypes": [ // type: array; nullable: true; description: Rodzaje faktur.
 | Wartość | Opis |
 | --- | --- |
@@ -1079,8 +1081,8 @@ Format daty:
 | VatPef | (PEF) Podstawowa |
 | VatPefSp | (PEF) Specjalizowana |
 | KorPef | (PEF) Korygująca |
-| VatRr | (RR) Podstawowa |
-| KorVatRr | (RR) Korygująca |
+| VatRr | (FA_RR) Podstawowa |
+| KorVatRr | (FA_RR) Korygująca |
   ],
   "hasAttachment": true/false // type: boolean; nullable: true; description: Czy faktura ma załącznik.
 }
@@ -1135,7 +1137,7 @@ Dla dateType = Issue lub Invoicing – null.
       },
       "netAmount": 0, // required; type: number; format: double; description: Łączna kwota netto.
       "grossAmount": 0, // required; type: number; format: double; description: Łączna kwota brutto.
-      "vatAmount": 0, // required; type: number; format: double; description: Łączna kwota VAT.
+      "vatAmount": 0, // required; type: number; format: double; description: Łączna kwota VAT wyrażona w PLN.
       "currency": "", // required; type: string; description: Kod waluty.
       "invoicingMode": "", // required; type: string; items: #/components/schemas/InvoicingMode; description: Tryb fakturowania (online/offline).
       "invoiceType": "", // required; type: string; items: #/components/schemas/InvoiceType; description: Rodzaj faktury.
@@ -1151,8 +1153,8 @@ Dla dateType = Issue lub Invoicing – null.
 | VatPef | (PEF) Podstawowa |
 | VatPefSp | (PEF) Specjalizowana |
 | KorPef | (PEF) Korygująca |
-| VatRr | (RR) Podstawowa |
-| KorVatRr | (RR) Korygująca |
+| VatRr | (FA_RR) Podstawowa |
+| KorVatRr | (FA_RR) Korygująca |
       "formCode": { // required; type: object; items: #/components/schemas/FormCode; description: Struktura dokumentu faktury.
 
 Obsługiwane schematy:
@@ -1163,7 +1165,8 @@ Obsługiwane schematy:
 | [PEF (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF(3)_v2-1.xsd) | 2-1 | PEF |  |  |
 | [PEF_KOR (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF_KOR(3)_v2-1.xsd) | 2-1 | PEF |  |  |
 | [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_RR(1)_v1-0E.xsd) | 1-0E | RR |  | 23.03.2026 |
-| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_RR(1)_v1-1E.xsd) | 1-1E | RR |  |  |
+| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_RR(1)_v1-1E.xsd) | 1-1E | RR |  | 30.03.2026 |
+| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_FA_RR(1)_v1-1E.xsd) | 1-1E | FA_RR |  |  |
         "systemCode": "", // required; type: string; description: Kod systemowy
         "schemaVersion": "", // required; type: string; description: Wersja schematu
         "value": "" // required; type: string; description: Wartość
