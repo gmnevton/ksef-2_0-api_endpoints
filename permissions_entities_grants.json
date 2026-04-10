@@ -13,6 +13,19 @@
       ],
       "summary" : "Nadanie podmiotom uprawnień do obsługi faktur",
       "description" : "Metoda pozwala na nadanie podmiotowi wskazanemu w żądaniu uprawnień do obsługi faktur podmiotu kontekstu.  \nW żądaniu określane są nadawane uprawnienia ze zbioru:  \n- **InvoiceWrite** – wystawianie faktur  \n- **InvoiceRead** – przeglądanie faktur  \n            \nMetoda pozwala na wybór dowolnej kombinacji powyższych uprawnień.  \nDla każdego uprawnienia może być ustawiona flaga **canDelegate**, mówiąca o możliwości jego dalszego przekazywania poprzez nadawanie w sposób pośredni.\n\n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-docs/blob/main/uprawnienia.md#nadanie-podmiotom-uprawnie%C5%84-do-obs%C5%82ugi-faktur)\n\n**Wymagane uprawnienia**: `CredentialsManage`.",
+      "parameters" : [
+        {
+          "name" : "X-Error-Format",
+          "in" : "header",
+          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
+          "schema" : {
+            "enum" : [
+              "problem-details"
+            ],
+            "type" : "string"
+          }
+        }
+      ],
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -73,6 +86,11 @@
               "schema" : {
                 "$ref" : "#/components/schemas/ExceptionResponse"
               }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BadRequestProblemDetails"
+              }
             }
           },
           "x-summary" : "Bad Request"
@@ -90,6 +108,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
               }
             }
           },
@@ -295,6 +318,7 @@
 //---------------------------------------------------------------------------------------------------
 request: "/permissions/entities/grants": post: application/json
 headers:
+X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 {

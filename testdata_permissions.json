@@ -13,6 +13,19 @@
       ],
       "summary" : "Nadanie uprawnień testowemu podmiotowi/osobie fizycznej",
       "description" : "Nadawanie uprawnień testowemu podmiotowi lub osobie fizycznej, a także w ich kontekście.",
+      "parameters" : [
+        {
+          "name" : "X-Error-Format",
+          "in" : "header",
+          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
+          "schema" : {
+            "enum" : [
+              "problem-details"
+            ],
+            "type" : "string"
+          }
+        }
+      ],
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -58,6 +71,11 @@
               "schema" : {
                 "$ref" : "#/components/schemas/ExceptionResponse"
               }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BadRequestProblemDetails"
+              }
             }
           },
           "x-summary" : "Bad Request"
@@ -75,6 +93,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
               }
             }
           },
@@ -232,6 +255,9 @@
 
 //---------------------------------------------------------------------------------------------------
 request: "/testdata/permissions": post: application/json
+headers:
+X-Error-Format: 
+body:
 {
   "contextIdentifier": { // required; type: object; items: #/components/schemas/TestDataContextIdentifier;
     "type": "", // required; type: string; items: #/components/schemas/TestDataContextIdentifierType;

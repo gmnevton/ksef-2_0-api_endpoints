@@ -13,6 +13,19 @@
       ],
       "summary" : "Unieważnienie aktualnej sesji uwierzytelnienia",
       "description" : "Unieważnia sesję powiązaną z tokenem użytym do wywołania tej operacji.\n\nUnieważnienie sesji sprawia, że powiązany z nią refresh token przestaje działać i nie można już za jego pomocą uzyskać kolejnych access tokenów.\n**Aktywne access tokeny działają do czasu minięcia ich termin ważności.**\n\nSposób uwierzytelnienia: `RefreshToken` lub `AccessToken`.",
+      "parameters" : [
+        {
+          "name" : "X-Error-Format",
+          "in" : "header",
+          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
+          "schema" : {
+            "enum" : [
+              "problem-details"
+            ],
+            "type" : "string"
+          }
+        }
+      ],
       "responses" : {
         "204" : {
           "description" : "No Content"
@@ -23,6 +36,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/ExceptionResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BadRequestProblemDetails"
               }
             }
           },
@@ -41,6 +59,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
               }
             }
           },
@@ -87,6 +110,7 @@
 //---------------------------------------------------------------------------------------------------
 request: "/auth/sessions/current": delete: text/plain
 headers:
+X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

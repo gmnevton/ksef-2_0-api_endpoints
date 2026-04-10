@@ -12,7 +12,7 @@
         "Operacje"
       ],
       "summary" : "Pobranie statusu operacji",
-      "description" : "Zwraca status operacji asynchronicznej związanej z nadaniem lub odebraniem uprawnień.",
+      "description" : "Zwraca status operacji asynchronicznej związanej z nadaniem lub odebraniem uprawnień.       \n\nStatus operacji jest dostępny przez 30 dni.",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -21,6 +21,17 @@
           "required" : true,
           "schema" : {
             "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        },
+        {
+          "name" : "X-Error-Format",
+          "in" : "header",
+          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
+          "schema" : {
+            "enum" : [
+              "problem-details"
+            ],
+            "type" : "string"
           }
         }
       ],
@@ -41,12 +52,35 @@
             }
           }
         },
+        "410" : {
+          "description" : "Gone",
+          "content" : {
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GoneProblemDetails"
+              },
+              "example" : {
+                "title" : "Gone",
+                "status" : 410,
+                "instance" : "{{uri_path}}",
+                "detail" : "Operacja wygasła i nie jest już dostępna.",
+                "timestamp" : "2025-07-11T12:23:56.0154302+00:00",
+                "traceId" : "673843e023c432286660bc0501a3af44"
+              }
+            }
+          }
+        },
         "400" : {
           "description" : "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/ExceptionResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BadRequestProblemDetails"
               }
             }
           },
@@ -65,6 +99,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
               }
             }
           },
@@ -166,6 +205,7 @@
 //---------------------------------------------------------------------------------------------------
 request: "/permissions/operations/{referenceNumber}": get: text/plain
 headers:
+X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

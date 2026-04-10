@@ -22,6 +22,17 @@
           "schema" : {
             "$ref" : "#/components/schemas/KsefNumber"
           }
+        },
+        {
+          "name" : "X-Error-Format",
+          "in" : "header",
+          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
+          "schema" : {
+            "enum" : [
+              "problem-details"
+            ],
+            "type" : "string"
+          }
         }
       ],
       "responses" : {
@@ -50,6 +61,11 @@
               "schema" : {
                 "$ref" : "#/components/schemas/ExceptionResponse"
               }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BadRequestProblemDetails"
+              }
             }
           },
           "x-summary" : "Bad Request"
@@ -67,6 +83,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
               }
             }
           },
@@ -134,6 +155,7 @@
 //---------------------------------------------------------------------------------------------------
 request: "/invoices/ksef/{ksefNumber}": get: text/plain
 headers:
+X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

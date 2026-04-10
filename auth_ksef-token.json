@@ -13,6 +13,19 @@
       ],
       "summary" : "Uwierzytelnienie z wykorzystaniem tokena KSeF",
       "description" : "Rozpoczyna operację uwierzytelniania z wykorzystaniem wcześniej wygenerowanego tokena KSeF.\n\nToken KSeF wraz z timestampem ze wcześniej wygenerowanego challenge'a (w formacie ```token|timestamp```) powinien zostać zaszyfrowany dedykowanym do tego celu kluczem publicznym.\n- Timestamp powinien zostać przekazany jako **liczba milisekund od 1 stycznia 1970 roku (Unix timestamp)**.\n- Algorytm szyfrowania: **RSA-OAEP (z użyciem SHA-256 jako funkcji skrótu)**.",
+      "parameters" : [
+        {
+          "name" : "X-Error-Format",
+          "in" : "header",
+          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
+          "schema" : {
+            "enum" : [
+              "problem-details"
+            ],
+            "type" : "string"
+          }
+        }
+      ],
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -64,6 +77,11 @@
               "schema" : {
                 "$ref" : "#/components/schemas/ExceptionResponse"
               }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BadRequestProblemDetails"
+              }
             }
           },
           "x-summary" : "Bad Request"
@@ -81,6 +99,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
               }
             }
           },
@@ -202,6 +225,8 @@
     "type" : "object",
     "properties" : {
       "ip4Addresses" : {
+        "maximum" : 10,
+        "minimum" : 0,
         "type" : "array",
         "items" : {
           "pattern" : "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$",
@@ -211,6 +236,8 @@
         "nullable" : true
       },
       "ip4Ranges" : {
+        "maximum" : 10,
+        "minimum" : 0,
         "type" : "array",
         "items" : {
           "pattern" : "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}-((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$",
@@ -220,6 +247,8 @@
         "nullable" : true
       },
       "ip4Masks" : {
+        "maximum" : 10,
+        "minimum" : 0,
         "type" : "array",
         "items" : {
           "pattern" : "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}\\/(0|[1-9]|1[0-9]|2[0-9]|3[0-2])$",
@@ -294,6 +323,9 @@
 
 //---------------------------------------------------------------------------------------------------
 request: "/auth/ksef-token": post: application/json
+headers:
+X-Error-Format: 
+body:
 {
   "challenge": "", // required; type: string; items: #/components/schemas/Challenge; description: Wygenerowany wcześniej challenge.
   "contextIdentifier": { // required; type: object; items: #/components/schemas/AuthenticationContextIdentifier; description: Identyfikator kontekstu do którego następuje uwierzytelnienie.

@@ -22,6 +22,17 @@
           "schema" : {
             "$ref" : "#/components/schemas/ReferenceNumber"
           }
+        },
+        {
+          "name" : "X-Error-Format",
+          "in" : "header",
+          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
+          "schema" : {
+            "enum" : [
+              "problem-details"
+            ],
+            "type" : "string"
+          }
         }
       ],
       "responses" : {
@@ -34,6 +45,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/ExceptionResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BadRequestProblemDetails"
               }
             }
           },
@@ -52,6 +68,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
               }
             }
           },
@@ -110,6 +131,7 @@
 //---------------------------------------------------------------------------------------------------
 request: "/sessions/batch/{referenceNumber}/close": post: text/plain
 headers:
+X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

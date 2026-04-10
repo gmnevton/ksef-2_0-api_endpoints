@@ -13,6 +13,19 @@
       ],
       "summary" : "Eksport paczki faktur",
       "description" : "Rozpoczyna asynchroniczny proces wyszukiwania faktur w systemie KSeF na podstawie przekazanych filtrów oraz przygotowania ich w formie zaszyfrowanej paczki.\nWymagane jest przekazanie informacji o szyfrowaniu w polu <b>Encryption</b>, które służą do zabezpieczenia przygotowanej paczki z fakturami.\nMaksymalnie można uruchomić 10 równoczesnych eksportów w zalogowanym kontekście.\n            \nSystem pobiera faktury rosnąco według daty określonej w filtrze (Invoicing, Issue, PermanentStorage) i dodaje faktury(nazwa pliku: <b>{ksefNumber}.xml</b>) do paczki aż do osiągnięcia jednego z poniższych limitów:\n* Limit liczby faktur: 10 000 sztuk\n* Limit rozmiaru danych(skompresowanych): 1GB\n\nPaczka eksportu zawiera dodatkowy plik z metadanymi faktur w formacie JSON (`_metadata.json`). Zawartość pliku to\nobiekt z tablicą <b>invoices</b>, gdzie każdy element jest obiektem typu <b>InvoiceMetadata</b>\n(taki jak zwracany przez endpoint `POST /invoices/query/metadata`).\n\n<b>Plik z metadanymi(_metadata.json) nie jest wliczany do limitów algorytmu budowania paczki</b>. \n\n`Do realizacji pobierania przyrostowego należy stosować filtrowanie po dacie PermanentStorage`.\n\n**Sortowanie:**\n\n- permanentStorageDate | invoicingDate | issueDate (Asc) - pole wybierane na podstawie filtrów\n\n\n\n**Wymagane uprawnienia**: `InvoiceRead`.",
+      "parameters" : [
+        {
+          "name" : "X-Error-Format",
+          "in" : "header",
+          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
+          "schema" : {
+            "enum" : [
+              "problem-details"
+            ],
+            "type" : "string"
+          }
+        }
+      ],
       "requestBody" : {
         "description" : "Dane wejściowe określające kryteria i format eksportu paczki faktur.",
         "content" : {
@@ -68,12 +81,17 @@
               "schema" : {
                 "$ref" : "#/components/schemas/ExceptionResponse"
               }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BadRequestProblemDetails"
+              }
             }
           },
           "x-summary" : "Bad Request"
         },
         "429" : {
-          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 40 | 80 | 200 | invoiceExport\n",
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 80 | 160 | 200 | invoiceExport\n",
           "headers" : {
             "Retry-After" : {
               "schema" : {
@@ -85,6 +103,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
               }
             }
           },
@@ -119,8 +142,8 @@
         }
       ],
       "x-rate-limits" : {
-        "perSecond" : 40,
-        "perMinute" : 80,
+        "perSecond" : 80,
+        "perMinute" : 160,
         "perHour" : 200
       },
       "x-sort" : [
@@ -733,6 +756,7 @@
 //---------------------------------------------------------------------------------------------------
 request: "/invoices/exports": post: application/json
 headers:
+X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 {

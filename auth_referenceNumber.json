@@ -12,7 +12,7 @@
         "Uzyskiwanie dostępu"
       ],
       "summary" : "Pobranie statusu uwierzytelniania",
-      "description" : "Sprawdza bieżący status operacji uwierzytelniania dla podanego tokena.\n\nSposób uwierzytelnienia: `AuthenticationToken` otrzymany przy rozpoczęciu operacji uwierzytelniania.",
+      "description" : "Sprawdza bieżący status operacji uwierzytelniania dla podanego tokena.\n\nSposób uwierzytelnienia: `AuthenticationToken` otrzymany przy rozpoczęciu operacji uwierzytelniania.\nOperacja jest dostępna przez 7 dni.",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -21,6 +21,17 @@
           "required" : true,
           "schema" : {
             "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        },
+        {
+          "name" : "X-Error-Format",
+          "in" : "header",
+          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
+          "schema" : {
+            "enum" : [
+              "problem-details"
+            ],
+            "type" : "string"
           }
         }
       ],
@@ -132,12 +143,35 @@
             }
           }
         },
+        "410" : {
+          "description" : "Gone",
+          "content" : {
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GoneProblemDetails"
+              },
+              "example" : {
+                "title" : "Gone",
+                "status" : 410,
+                "instance" : "{{uri_path}}",
+                "detail" : "Operacja wygasła i nie jest już dostępna.",
+                "timestamp" : "2025-07-11T12:23:56.0154302+00:00",
+                "traceId" : "673843e023c432286660bc0501a3af44"
+              }
+            }
+          }
+        },
         "400" : {
           "description" : "| ExceptionCode       | ExceptionDescription                           | Details                                                                     | \n|---------------------|------------------------------------------------|-----------------------------------------------------------------------------|\n| 21304               | Brak uwierzytelnienia.                         | Operacja uwierzytelniania o numerze referencyjnym {referenceNumber} nie została znaleziona. |",
           "content" : {
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/ExceptionResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BadRequestProblemDetails"
               }
             }
           },
@@ -156,6 +190,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
               }
             }
           },
@@ -225,8 +264,7 @@
           }
         ],
         "description" : "Metoda uwierzytelnienia.\n| Wartość | Opis |\n| --- | --- |\n| Token | Token KSeF. |\n| TrustedProfile | Profil Zaufany. |\n| InternalCertificate | Certyfikat KSeF. |\n| QualifiedSignature | Podpis kwalifikowany. |\n| QualifiedSeal | Pieczęć kwalifikowana. |\n| PersonalSignature | Podpis osobisty. |\n| PeppolSignature | Podpis dostawcy usług Peppol. |\n",
-        "deprecated" : true,
-        "x-removal-date" : "2026-11-16"
+        "deprecated" : true
       },
       "authenticationMethodInfo" : {
         "required" : [
@@ -359,6 +397,7 @@
 //---------------------------------------------------------------------------------------------------
 request: "/auth/{referenceNumber}": get: text/plain
 headers:
+X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

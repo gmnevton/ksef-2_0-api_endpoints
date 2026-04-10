@@ -12,7 +12,7 @@
         "Pobieranie faktur"
       ],
       "summary" : "Pobranie statusu eksportu paczki faktur",
-      "description" : "Paczka faktur jest dzielona na części o maksymalnym rozmiarze 50 MB. Każda część jest zaszyfrowana algorytmem AES-256-CBC z dopełnieniem PKCS#7, przy użyciu klucza symetrycznego przekazanego podczas inicjowania eksportu. \n\nW przypadku ucięcia wyniku eksportu z powodu przekroczenia limitów, zwracana jest flaga <b>IsTruncated = true</b> oraz odpowiednia data, którą należy wykorzystać do wykonania kolejnego eksportu, aż do momentu, gdy flaga <b>IsTruncated = false</b>.\n\n**Sortowanie:**\n\n- permanentStorageDate | invoicingDate | issueDate (Asc) - pole wybierane na podstawie filtrów\n\n\n\n**Wymagane uprawnienia**: `InvoiceRead`.",
+      "description" : "Paczka faktur jest dzielona na części o maksymalnym rozmiarze 50 MB. Każda część jest zaszyfrowana algorytmem AES-256-CBC z dopełnieniem PKCS#7, przy użyciu klucza symetrycznego przekazanego podczas inicjowania eksportu. \n\nW przypadku ucięcia wyniku eksportu z powodu przekroczenia limitów, zwracana jest flaga <b>IsTruncated = true</b> oraz odpowiednia data, którą należy wykorzystać do wykonania kolejnego eksportu, aż do momentu, gdy flaga <b>IsTruncated = false</b>.\n\nStatus eksportu paczki faktur jest dostępny przez 7 dni.\n\n**Sortowanie:**\n\n- permanentStorageDate | invoicingDate | issueDate (Asc) - pole wybierane na podstawie filtrów\n\n\n\n**Wymagane uprawnienia**: `InvoiceRead`.",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -21,6 +21,17 @@
           "required" : true,
           "schema" : {
             "$ref" : "#/components/schemas/ReferenceNumber"
+          }
+        },
+        {
+          "name" : "X-Error-Format",
+          "in" : "header",
+          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
+          "schema" : {
+            "enum" : [
+              "problem-details"
+            ],
+            "type" : "string"
           }
         }
       ],
@@ -62,12 +73,35 @@
             }
           }
         },
+        "410" : {
+          "description" : "Gone",
+          "content" : {
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/GoneProblemDetails"
+              },
+              "example" : {
+                "title" : "Gone",
+                "status" : 410,
+                "instance" : "{{uri_path}}",
+                "detail" : "Operacja wygasła i nie jest już dostępna.",
+                "timestamp" : "2025-07-11T12:23:56.0154302+00:00",
+                "traceId" : "673843e023c432286660bc0501a3af44"
+              }
+            }
+          }
+        },
         "400" : {
           "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                       | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------|\n| 21175               | Wynik zapytania o podanym identyfikatorze nie istnieje.     |                                  |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/ExceptionResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BadRequestProblemDetails"
               }
             }
           },
@@ -86,6 +120,11 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
               }
             }
           },
@@ -368,6 +407,7 @@
 //---------------------------------------------------------------------------------------------------
 request: "/invoices/exports/{referenceNumber}": get: text/plain
 headers:
+X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---
