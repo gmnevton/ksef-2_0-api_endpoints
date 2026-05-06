@@ -12,7 +12,7 @@
         "Status wysyłki i UPO"
       ],
       "summary" : "Pobranie listy sesji",
-      "description" : "Zwraca listę sesji spełniających podane kryteria wyszukiwania.\n\n\n\n**Sortowanie:**\n\n- dateCreated (Desc)\n\n\n**Wymagane uprawnienia**:\n- `Introspection`/`EnforcementOperations` – pozwala pobrać wszystkie sesje w bieżącym kontekście uwierzytelnienia `(ContextIdentifier)`.\n- `InvoiceWrite` – pozwala pobrać wyłącznie sesje utworzone przez podmiot uwierzytelniający, czyli podmiot inicjujący uwierzytelnienie.",
+      "description" : "Zwraca listę sesji spełniających podane kryteria wyszukiwania.\n\n\n\n**Sortowanie:**\n\n- dateCreated (Desc)\n\n\n**Wymagane uprawnienia**:\n- `Introspection`/`EnforcementOperations` – pozwala pobrać wszystkie sesje w bieżącym kontekście uwierzytelnienia `(ContextIdentifier)`.\n- `InvoiceWrite` – pozwala pobrać wyłącznie sesje utworzone przez podmiot uwierzytelniający, czyli podmiot inicjujący uwierzytelnienie.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).",
       "parameters" : [
         {
           "name" : "pageSize",
@@ -119,17 +119,6 @@
           "schema" : {
             "type" : "string"
           }
-        },
-        {
-          "name" : "X-Error-Format",
-          "in" : "header",
-          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
-          "schema" : {
-            "enum" : [
-              "problem-details"
-            ],
-            "type" : "string"
-          }
         }
       ],
       "responses" : {
@@ -191,7 +180,7 @@
           "x-summary" : "Bad Request"
         },
         "429" : {
-          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 50 | 100 | 600 | sessionList\n",
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 5 | 10 | 60 | sessionList\n",
           "headers" : {
             "Retry-After" : {
               "schema" : {
@@ -242,9 +231,9 @@
         }
       ],
       "x-rate-limits" : {
-        "perSecond" : 50,
-        "perMinute" : 100,
-        "perHour" : 600
+        "perSecond" : 5,
+        "perMinute" : 10,
+        "perHour" : 60
       },
       "x-sort" : [
         {
@@ -384,7 +373,6 @@
 request: "/sessions?pageSize={pageSize}&sessionType={sessionType}&referenceNumber={referenceNumber}&dateCreatedFrom={dateCreatedFrom}&dateCreatedTo={dateCreatedTo}&dateClosedFrom={dateClosedFrom}&dateClosedTo={dateClosedTo}&dateModifiedFrom={dateModifiedFrom}&dateModifiedTo={dateModifiedTo}&statuses={statuses}": get: text/plain
 headers:
 ??x-continuation-token: {continuationToken}
-X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

@@ -12,20 +12,7 @@
         "Operacje"
       ],
       "summary" : "Sprawdzenie statusu zgody na wystawianie faktur z załącznikiem",
-      "description" : "Sprawdzenie czy obecny kontekst posiada zgodę na wystawianie faktur z załącznikiem.\n\n**Wymagane uprawnienia**: `CredentialsManage`, `CredentialsRead`.",
-      "parameters" : [
-        {
-          "name" : "X-Error-Format",
-          "in" : "header",
-          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
-          "schema" : {
-            "enum" : [
-              "problem-details"
-            ],
-            "type" : "string"
-          }
-        }
-      ],
+      "description" : "Sprawdzenie czy obecny kontekst posiada zgodę na wystawianie faktur z załącznikiem.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Wymagane uprawnienia**: `CredentialsManage`, `CredentialsRead`.",
       "responses" : {
         "200" : {
           "description" : "OK",
@@ -54,7 +41,7 @@
           "x-summary" : "Bad Request"
         },
         "429" : {
-          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 10 | 30 | 120 | other\n",
           "headers" : {
             "Retry-After" : {
               "schema" : {
@@ -105,9 +92,9 @@
         }
       ],
       "x-rate-limits" : {
-        "perSecond" : 100,
-        "perMinute" : 300,
-        "perHour" : 1200
+        "perSecond" : 10,
+        "perMinute" : 30,
+        "perHour" : 120
       },
       "x-required-permissions" : [
         "CredentialsManage",
@@ -138,7 +125,6 @@
 //---------------------------------------------------------------------------------------------------
 request: "/permissions/attachments/status": get: text/plain
 headers:
-X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

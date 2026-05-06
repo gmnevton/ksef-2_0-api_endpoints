@@ -12,7 +12,7 @@
         "Uzyskiwanie dostępu"
       ],
       "summary" : "Pobranie statusu uwierzytelniania",
-      "description" : "Sprawdza bieżący status operacji uwierzytelniania dla podanego tokena.\n\nSposób uwierzytelnienia: `AuthenticationToken` otrzymany przy rozpoczęciu operacji uwierzytelniania.\nOperacja jest dostępna przez 7 dni.",
+      "description" : "Sprawdza bieżący status operacji uwierzytelniania dla podanego tokena.\n\nSposób uwierzytelnienia: `AuthenticationToken` otrzymany przy rozpoczęciu operacji uwierzytelniania.\nOperacja jest dostępna przez 7 dni.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -21,17 +21,6 @@
           "required" : true,
           "schema" : {
             "$ref" : "#/components/schemas/ReferenceNumber"
-          }
-        },
-        {
-          "name" : "X-Error-Format",
-          "in" : "header",
-          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
-          "schema" : {
-            "enum" : [
-              "problem-details"
-            ],
-            "type" : "string"
           }
         }
       ],
@@ -397,7 +386,6 @@
 //---------------------------------------------------------------------------------------------------
 request: "/auth/{referenceNumber}": get: text/plain
 headers:
-X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

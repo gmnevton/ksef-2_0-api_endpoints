@@ -12,20 +12,7 @@
         "Uzyskiwanie dostępu"
       ],
       "summary" : "Pobranie tokenów dostępowych",
-      "description" : "Pobiera parę tokenów (access token i refresh token) wygenerowanych w ramach pozytywnie zakończonego procesu uwierzytelniania.\n**Tokeny można pobrać tylko raz.**\n\nSposób uwierzytelnienia: `AuthenticationToken` otrzymany przy rozpoczęciu operacji uwierzytelniania.",
-      "parameters" : [
-        {
-          "name" : "X-Error-Format",
-          "in" : "header",
-          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
-          "schema" : {
-            "enum" : [
-              "problem-details"
-            ],
-            "type" : "string"
-          }
-        }
-      ],
+      "description" : "Pobiera parę tokenów (access token i refresh token) wygenerowanych w ramach pozytywnie zakończonego procesu uwierzytelniania.\n**Tokeny można pobrać tylko raz.**\n\nSposób uwierzytelnienia: `AuthenticationToken` otrzymany przy rozpoczęciu operacji uwierzytelniania.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).",
       "responses" : {
         "200" : {
           "description" : "OK",
@@ -180,7 +167,6 @@
 //---------------------------------------------------------------------------------------------------
 request: "/auth/token/redeem": post: text/plain
 headers:
-X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

@@ -12,20 +12,7 @@
         "Dane testowe"
       ],
       "summary" : "Utworzenie osoby fizycznej",
-      "description" : "Tworzenie nowej osoby fizycznej, której system nadaje uprawnienia właścicielskie. Można również określić, czy osoba ta jest komornikiem – wówczas otrzyma odpowiednie uprawnienie egzekucyjne.",
-      "parameters" : [
-        {
-          "name" : "X-Error-Format",
-          "in" : "header",
-          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
-          "schema" : {
-            "enum" : [
-              "problem-details"
-            ],
-            "type" : "string"
-          }
-        }
-      ],
+      "description" : "Tworzenie nowej osoby fizycznej, której system nadaje uprawnienia właścicielskie. Można również określić, czy osoba ta jest komornikiem – wówczas otrzyma odpowiednie uprawnienie egzekucyjne.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -161,9 +148,6 @@
 
 //---------------------------------------------------------------------------------------------------
 request: "/testdata/person": post: application/json
-headers:
-X-Error-Format: 
-body:
 {
   "nip": "", // required; type: string; items: #/components/schemas/Nip;
   "pesel": "", // required; type: string; items: #/components/schemas/Pesel;

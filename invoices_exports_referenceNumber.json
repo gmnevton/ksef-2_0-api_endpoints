@@ -12,7 +12,7 @@
         "Pobieranie faktur"
       ],
       "summary" : "Pobranie statusu eksportu paczki faktur",
-      "description" : "Paczka faktur jest dzielona na części o maksymalnym rozmiarze 50 MB. Każda część jest zaszyfrowana algorytmem AES-256-CBC z dopełnieniem PKCS#7, przy użyciu klucza symetrycznego przekazanego podczas inicjowania eksportu. \n\nW przypadku ucięcia wyniku eksportu z powodu przekroczenia limitów, zwracana jest flaga <b>IsTruncated = true</b> oraz odpowiednia data, którą należy wykorzystać do wykonania kolejnego eksportu, aż do momentu, gdy flaga <b>IsTruncated = false</b>.\n\nStatus eksportu paczki faktur jest dostępny przez 7 dni.\n\n**Sortowanie:**\n\n- permanentStorageDate | invoicingDate | issueDate (Asc) - pole wybierane na podstawie filtrów\n\n\n\n**Wymagane uprawnienia**: `InvoiceRead`.",
+      "description" : "Paczka faktur jest dzielona na części o maksymalnym rozmiarze 50 MB. Każda część jest zaszyfrowana algorytmem AES-256-CBC z dopełnieniem PKCS#7, przy użyciu klucza symetrycznego przekazanego podczas inicjowania eksportu. \n\nW przypadku ucięcia wyniku eksportu z powodu przekroczenia limitów, zwracana jest flaga <b>IsTruncated = true</b> oraz odpowiednia data, którą należy wykorzystać do wykonania kolejnego eksportu, aż do momentu, gdy flaga <b>IsTruncated = false</b>.\n\nStatus eksportu paczki faktur jest dostępny przez 7 dni.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Sortowanie:**\n\n- permanentStorageDate | invoicingDate | issueDate (Asc) - pole wybierane na podstawie filtrów\n\n\n\n**Wymagane uprawnienia**: `InvoiceRead`.",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -21,17 +21,6 @@
           "required" : true,
           "schema" : {
             "$ref" : "#/components/schemas/ReferenceNumber"
-          }
-        },
-        {
-          "name" : "X-Error-Format",
-          "in" : "header",
-          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
-          "schema" : {
-            "enum" : [
-              "problem-details"
-            ],
-            "type" : "string"
           }
         }
       ],
@@ -108,7 +97,7 @@
           "x-summary" : "Bad Request"
         },
         "429" : {
-          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 600 | 6000 | invoiceExportStatus\n",
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 10 | 60 | 600 | invoiceExportStatus\n",
           "headers" : {
             "Retry-After" : {
               "schema" : {
@@ -159,9 +148,9 @@
         }
       ],
       "x-rate-limits" : {
-        "perSecond" : 100,
-        "perMinute" : 600,
-        "perHour" : 6000
+        "perSecond" : 10,
+        "perMinute" : 60,
+        "perHour" : 600
       },
       "x-sort" : [
         {
@@ -407,7 +396,6 @@
 //---------------------------------------------------------------------------------------------------
 request: "/invoices/exports/{referenceNumber}": get: text/plain
 headers:
-X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

@@ -12,20 +12,7 @@
         "Certyfikaty klucza publicznego"
       ],
       "summary" : "Pobranie certyfikatów",
-      "description" : "Zwraca informacje o kluczach publicznych używanych do szyfrowania danych przesyłanych do systemu KSeF.",
-      "parameters" : [
-        {
-          "name" : "X-Error-Format",
-          "in" : "header",
-          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
-          "schema" : {
-            "enum" : [
-              "problem-details"
-            ],
-            "type" : "string"
-          }
-        }
-      ],
+      "description" : "Zwraca informacje o kluczach publicznych używanych do szyfrowania danych przesyłanych do systemu KSeF.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).",
       "responses" : {
         "200" : {
           "description" : "OK",
@@ -40,10 +27,21 @@
               "example" : [
                 {
                   "certificate" : "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwocTwdNgt2+PXJ2fcB7k1kn5eFUTXBeep9pH...",
+                  "certificateId" : "35k6IVMTxUPZKQdg4Fbx36T5/v3aoJK5hIY7sS7mt3U=",
+                  "publicKeyId" : "QIoAK/Yc3s27Z4t3SZY4Mhp8JNLH7Vl4N3lNlJAEig8=",
                   "validFrom" : "2024-07-11T12:23:56.0154302+00:00",
                   "validTo" : "2028-07-11T12:23:56.0154302+00:00",
                   "usage" : [
-                    "KsefTokenEncryption",
+                    "KsefTokenEncryption"
+                  ]
+                },
+                {
+                  "certificate" : "MIIGWDCCBECgAwIBAgIQe4NvS/i3yyDCcnaXiiC6BTANBgkqhkiG9w0BAQsFADBOMQswCQYDVQQGEwJa...",
+                  "certificateId" : "sivtxip78UcnFLzXVsAz2FE1XIpLpySOZsn/f99fDmI=",
+                  "publicKeyId" : "tmtCidSRzR4fvNpLU5hMOM6FzamxJf0BBR8IkXIAwsY=",
+                  "validFrom" : "2024-07-11T12:23:56.0154302+00:00",
+                  "validTo" : "2028-07-11T12:23:56.0154302+00:00",
+                  "usage" : [
                     "SymmetricKeyEncryption"
                   ]
                 }
@@ -101,6 +99,8 @@
   "PublicKeyCertificate" : {
     "required" : [
       "certificate",
+      "certificateId",
+      "publicKeyId",
       "usage",
       "validFrom",
       "validTo"
@@ -110,6 +110,16 @@
       "certificate" : {
         "type" : "string",
         "description" : "Certyfikat klucza publicznego w formacie DER, zakodowany w formacie Base64.",
+        "format" : "byte"
+      },
+      "certificateId" : {
+        "type" : "string",
+        "description" : "Identyfikator certyfikatu.",
+        "format" : "byte"
+      },
+      "publicKeyId" : {
+        "type" : "string",
+        "description" : "Identyfikator klucza, używany jako selektor w wywołaniach, w których klient wskazuje, jakiego klucza publicznego użył do szyfrowania.",
         "format" : "byte"
       },
       "validFrom" : {
@@ -146,9 +156,6 @@
 
 //---------------------------------------------------------------------------------------------------
 request: "/security/public-key-certificates": get: text/plain
-headers:
-X-Error-Format: 
-body:
 --- no body ---
 
 
@@ -157,6 +164,8 @@ response (200): application/json
 [
   {
     "certificate": "", // required; type: string; format: byte; description: Certyfikat klucza publicznego w formacie DER, zakodowany w formacie Base64.
+    "certificateId": "", // required; type: string; format: byte; description: Identyfikator certyfikatu.
+    "publicKeyId": "", // required; type: string; format: byte; description: Identyfikator klucza, używany jako selektor w wywołaniach, w których klient wskazuje, jakiego klucza publicznego użył do szyfrowania.
     "validFrom": "", // required; type: string; format: date-time; description: Data początku obowiązywania certyfikatu.
     "validTo": "", // required; type: string; format: date-time; description: Data końca obowiązywania certyfikatu.
     "usage": [ // required; type: array; description: Operacje do których może być używany certyfikat.

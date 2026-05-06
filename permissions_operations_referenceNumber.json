@@ -12,7 +12,7 @@
         "Operacje"
       ],
       "summary" : "Pobranie statusu operacji",
-      "description" : "Zwraca status operacji asynchronicznej związanej z nadaniem lub odebraniem uprawnień.       \n\nStatus operacji jest dostępny przez 30 dni.",
+      "description" : "Zwraca status operacji asynchronicznej związanej z nadaniem lub odebraniem uprawnień.       \n\nStatus operacji jest dostępny przez 30 dni.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -21,17 +21,6 @@
           "required" : true,
           "schema" : {
             "$ref" : "#/components/schemas/ReferenceNumber"
-          }
-        },
-        {
-          "name" : "X-Error-Format",
-          "in" : "header",
-          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
-          "schema" : {
-            "enum" : [
-              "problem-details"
-            ],
-            "type" : "string"
           }
         }
       ],
@@ -87,7 +76,7 @@
           "x-summary" : "Bad Request"
         },
         "429" : {
-          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 10 | 30 | 120 | other\n",
           "headers" : {
             "Retry-After" : {
               "schema" : {
@@ -138,9 +127,9 @@
         }
       ],
       "x-rate-limits" : {
-        "perSecond" : 100,
-        "perMinute" : 300,
-        "perHour" : 1200
+        "perSecond" : 10,
+        "perMinute" : 30,
+        "perHour" : 120
       }
     }
   }
@@ -205,7 +194,6 @@
 //---------------------------------------------------------------------------------------------------
 request: "/permissions/operations/{referenceNumber}": get: text/plain
 headers:
-X-Error-Format: 
 Authorization: Bearer {securityToken}
 body:
 --- no body ---

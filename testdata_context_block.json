@@ -12,20 +12,7 @@
         "Dane testowe"
       ],
       "summary" : "Zablokowanie kontekstu",
-      "description" : "Blokuje możliwość uwierzytelniania dla wskazanego kontekstu. Uwierzytelnianie zakończy się błędem 480.",
-      "parameters" : [
-        {
-          "name" : "X-Error-Format",
-          "in" : "header",
-          "description" : "Opcjonalny nagłówek przełączający format błędów na Problem Details",
-          "schema" : {
-            "enum" : [
-              "problem-details"
-            ],
-            "type" : "string"
-          }
-        }
-      ],
+      "description" : "Blokuje możliwość uwierzytelniania dla wskazanego kontekstu. Uwierzytelnianie zakończy się błędem 480.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -60,7 +47,7 @@
           "x-summary" : "Bad Request"
         },
         "429" : {
-          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 100 | 300 | 1200 | other\n",
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 10 | 30 | 120 | other\n",
           "headers" : {
             "Retry-After" : {
               "schema" : {
@@ -84,9 +71,9 @@
         }
       },
       "x-rate-limits" : {
-        "perSecond" : 100,
-        "perMinute" : 300,
-        "perHour" : 1200
+        "perSecond" : 10,
+        "perMinute" : 30,
+        "perHour" : 120
       }
     }
   }
@@ -146,9 +133,6 @@
 
 //---------------------------------------------------------------------------------------------------
 request: "/testdata/context/block": post: application/json
-headers:
-X-Error-Format: 
-body:
 {
   "contextIdentifier": { // type: object; items: #/components/schemas/TestDataAuthenticationContextIdentifier;
     "value": "", // required; type: string;
