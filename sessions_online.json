@@ -45,6 +45,13 @@
       "responses" : {
         "201" : {
           "description" : "Created",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -227,6 +234,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "OpenOnlineSessionResponse" : {
     "required" : [
       "referenceNumber",
@@ -292,7 +305,3 @@ Obsługiwane schematy:
 
 
 response (201): application/json
-{
-  "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny sesji.
-  "validUntil": "" // required; type: string; format: date-time; description: Termin ważności sesji. Po jego upływie sesja zostanie automatycznie zamknięta.
-}

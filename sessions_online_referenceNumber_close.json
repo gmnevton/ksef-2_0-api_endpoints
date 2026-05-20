@@ -26,7 +26,14 @@
       ],
       "responses" : {
         "204" : {
-          "description" : "No Content"
+          "description" : "No Content",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          }
         },
         "400" : {
           "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                                    | \n|---------------------|-----------------------------------------------------|----------------------------------------------------------------------------|\n| 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została odnaleziona.   |\n| 21180               | Status sesji nie pozwala na wykonanie operacji.     | Status sesji {code} uniemożliwia jej zamknięcie.                           |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
@@ -114,6 +121,12 @@
     "minLength" : 36,
     "type" : "string",
     "description" : "Numer referencyjny."
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 

@@ -16,6 +16,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -77,6 +84,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "AuthenticationChallengeResponse" : {
     "required" : [
       "challenge",
@@ -123,9 +136,3 @@ request: "/auth/challenge": post: text/plain
 
 
 response (200): application/json
-{
-  "challenge": "", // required; type: string; items: #/components/schemas/Challenge;
-  "timestamp": "", // required; type: string; format: date-time; description: Czas wygenerowania challenge-a.
-  "timestampMs": 0, // required; type: integer; format: int64; description: Czas wygenerowania challenge-a w milisekundach od 1 stycznia 1970 roku (Unix timestamp).
-  "clientIp": "" // required; type: string; description: Adres IP klienta.
-}

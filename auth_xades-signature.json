@@ -37,6 +37,13 @@
       "responses" : {
         "202" : {
           "description" : "Accepted",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -96,6 +103,12 @@
         "perSecond" : 60
       }
     }
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 
@@ -165,10 +178,3 @@ request: "/auth/xades-signature?verifyCertificateChain={verifyCertificateChain}"
 
 
 response (202): application/json
-{
-  "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny sesji uwierzytelnienia.
-  "authenticationToken": { // required; type: object; items: #/components/schemas/TokenInfo; description: Token operacji uwierzytelnienia.
-    "token": "", // required; type: string; description: Token w formacie JWT.
-    "validUntil": "" // required; type: string; format: date-time; description: Data ważności tokena.
-  }
-}

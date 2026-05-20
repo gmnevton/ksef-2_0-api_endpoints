@@ -37,6 +37,11 @@
         "200" : {
           "description" : "OK",
           "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            },
             "x-ms-meta-hash" : {
               "description" : "Skrót SHA-256 dokumentu UPO, zakodowany w formacie Base64",
               "schema" : {
@@ -148,6 +153,12 @@
     "pattern" : "^([1-9](\\d[1-9]|[1-9]\\d)\\d{7})-(20[2-9][0-9]|2[1-9]\\d{2}|[3-9]\\d{3})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-([0-9A-F]{6})-?([0-9A-F]{6})-([0-9A-F]{2})$",
     "type" : "string",
     "description" : "Numer KSeF o długości 36 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 35-znakowym."
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 

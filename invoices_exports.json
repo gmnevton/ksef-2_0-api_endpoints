@@ -51,6 +51,13 @@
       "responses" : {
         "201" : {
           "description" : "Created",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -186,6 +193,15 @@
           }
         ],
         "description" : "Zestaw filtrów do wyszukiwania faktur."
+      },
+      "compressionType" : {
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/CompressionType"
+          }
+        ],
+        "description" : "Typ kompresji. Obsługiwane typy: Zip oraz TarGz. Domyślna kompresja to Zip.",
+        "nullable" : true
       }
     }
   }
@@ -721,6 +737,21 @@
   }
 
 
+  "CompressionType" : {
+    "enum" : [
+      "Zip",
+      "TarGz"
+    ],
+    "type" : "string"
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "ExportInvoicesResponse" : {
     "required" : [
       "referenceNumber"
@@ -845,12 +876,10 @@ Format daty:
 | KorVatRr | (FA_RR) Korygująca |
     ],
     "hasAttachment": true/false // type: boolean; nullable: true; description: Czy faktura ma załącznik.
-  }
+  },
+  "compressionType": "" // type: string; items: #/components/schemas/CompressionType; description: Typ kompresji. Obsługiwane typy: Zip oraz TarGz. Domyślna kompresja to Zip.
 }
 
 
 
 response (201): application/json
-{
-  "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny eksportu faktur.
-}

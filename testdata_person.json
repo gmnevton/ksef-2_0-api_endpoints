@@ -42,7 +42,14 @@
       },
       "responses" : {
         "200" : {
-          "description" : "OK"
+          "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          }
         },
         "400" : {
           "description" : "| ExceptionCode       | ExceptionDescription                                       | Details |\n|---------------------|------------------------------------------------------------|---------|\n| 30001               | Podmiot lub uprawnienie już istnieje.  |  |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
@@ -142,6 +149,12 @@
     "pattern" : "^\\d{2}(?:0[1-9]|1[0-2]|2[1-9]|3[0-2]|4[1-9]|5[0-2]|6[1-9]|7[0-2]|8[1-9]|9[0-2])\\d{7}$",
     "type" : "string",
     "description" : "11 cyfrowy numer PESEL."
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 

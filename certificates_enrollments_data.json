@@ -16,6 +16,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -108,6 +115,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "CertificateEnrollmentDataResponse" : {
     "required" : [
       "commonName",
@@ -168,13 +181,3 @@ body:
 
 
 response (200): application/json
-{
-  "commonName": "", // required; type: string; description: Nazwa powszechna.
-  "countryName": "", // required; type: string; description: Kraj, kod ISO 3166.
-  "givenName": "", // type: string; nullable: true; description: Imię.
-  "surname": "", // type: string; nullable: true; description: Nazwisko.
-  "serialNumber": "", // type: string; nullable: true; description: Numer seryjny podmiotu.
-  "uniqueIdentifier": "", // type: string; nullable: true; description: Unikalny identyfikator.
-  "organizationName": "", // type: string; nullable: true; description: Nazwa organizacji.
-  "organizationIdentifier": "" // type: string; nullable: true; description: Identyfikator organizacji.
-}

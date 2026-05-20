@@ -16,6 +16,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -100,6 +107,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "CertificateLimitsResponse" : {
     "required" : [
       "canRequest",
@@ -174,14 +187,3 @@ body:
 
 
 response (200): application/json
-{
-  "canRequest": true/false, // required; type: boolean; description: Flaga informująca czy uwierzytelniony podmiot może złożyć nowy wniosek o certyfikat.
-  "enrollment": { // required; type: object; items: #/components/schemas/CertificateLimit; description: Informacje o limitach związanych z liczbą możliwych do złożenia wniosków certyfikacyjnych.
-    "remaining": 0, // required; type: integer; format: int32; description: Pozostała wartość limitu.
-    "limit": 0 // required; type: integer; format: int32; description: Maksymalna liczba zasobów dozwolona w ramach limitu.
-  },
-  "certificate": { // required; type: object; items: #/components/schemas/CertificateLimit; description: Informacje o limitach dotyczących liczby aktywnych certyfikatów wydanych dla danego podmiotu.
-    "remaining": 0, // required; type: integer; format: int32; description: Pozostała wartość limitu.
-    "limit": 0 // required; type: integer; format: int32; description: Maksymalna liczba zasobów dozwolona w ramach limitu.
-  }
-}

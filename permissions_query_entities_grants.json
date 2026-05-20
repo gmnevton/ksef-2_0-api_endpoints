@@ -60,6 +60,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -229,6 +236,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "QueryEntityPermissionsResponse" : {
     "required" : [
       "hasMore",
@@ -337,23 +350,3 @@ body:
 
 
 response (200): application/json
-{
-  "permissions": [ // required; type: array; description: Lista odczytanych uprawnień.
-    {
-      "id": "", // required; type: string; items: #/components/schemas/PermissionId; description: Identyfikator uprawnienia.
-      "contextIdentifier": { // required; type: object; items: #/components/schemas/EntityPermissionsContextIdentifier; description: Identyfikator kontekstu podmiotu, który nadał uprawnienia do obsługi faktur.
-| Type | Value |
-| --- | --- |
-| Nip | 10 cyfrowy numer NIP |
-| InternalId | Dwuczłonowy identyfikator składający się z numeru NIP i 5 cyfr: `{nip}-{5_cyfr}` |
-        "type": "", // required; type: string; items: #/components/schemas/EntityPermissionsContextIdentifierType; description: Typ identyfikatora.
-        "value": "" // required; type: string; description: Wartość identyfikatora.
-      },
-      "permissionScope": "", // required; type: string; items: #/components/schemas/EntityPermissionItemScope; description: Rodzaj uprawnienia.
-      "description": "", // required; type: string; description: Opis uprawnienia.
-      "startDate": "", // required; type: string; format: date-time; description: Data rozpoczęcia obowiązywania uprawnienia.
-      "canDelegate": true/false // required; type: boolean; description: Flaga określająca, czy uprawnienie ma być możliwe do dalszego przekazywania.
-    }
-  ],
-  "hasMore": true/false // required; type: boolean; description: Flaga informująca o dostępności kolejnej strony wyników.
-}

@@ -27,6 +27,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -142,6 +149,12 @@
     "minLength" : 36,
     "type" : "string",
     "description" : "Numer referencyjny."
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 
@@ -302,58 +315,3 @@ body:
 
 
 response (200): application/json
-{
-  "status": { // required; type: object; items: #/components/schemas/StatusInfo; description: Informacje o aktualnym statusie.
-            
-Sesja wsadowa:
-| Code | Description | Details |
-| --- | --- | --- |
-| 100 | Sesja wsadowa rozpoczęta | - |
-| 150 | Trwa przetwarzanie | - |
-| 200 | Sesja wsadowa przetworzona pomyślnie | - |
-| 405 | Błąd weryfikacji poprawności dostarczonych elementów paczki | - |
-| 415 | Błąd odszyfrowania dostarczonego klucza | - |
-| 420 | Przekroczony limit faktur w sesji | - |
-| 430 | Błąd dekompresji pierwotnego archiwum | - |
-| 435 | Błąd odszyfrowania zaszyfrowanych części archiwum | - |
-| 440 | Sesja anulowana | Przekroczono czas wysyłki |
-| 440 | Sesja anulowana | Nie przesłano faktur |
-| 445 | Błąd weryfikacji, brak poprawnych faktur | - |
-| 500 | Nieznany błąd ({statusCode}) | - |
-
-Sesja interaktywna:
-| Code | Description | Details |
-| --- | --- | --- |
-| 100 | Sesja interaktywna otwarta | - |
-| 170 | Sesja interaktywna zamknięta | - |
-| 200 | Sesja interaktywna przetworzona pomyślnie | - |
-| 415 | Błąd odszyfrowania dostarczonego klucza | - |
-| 440 | Sesja anulowana | Nie przesłano faktur |
-| 445 | Błąd weryfikacji, brak poprawnych faktur | - |
-| * | description missing | - |
-    "code": 0, // required; type: integer; format: int32; description: Kod statusu
-    "description": "", // required; type: string; description: Opis statusu
-    "details": [ // type: array; nullable: true; description: Dodatkowe szczegóły statusu
-    ]
-  },
-  "dateCreated": "", // required; type: string; format: date-time; description: Data utworzenia sesji.
-  "dateUpdated": "", // required; type: string; format: date-time; description: Data ostatniej aktywności w ramach sesji.
-  "validUntil": "", // type: string; format: date-time; nullable: true; description: Termin ważności sesji. Po jego upływie sesja zostanie automatycznie zamknięta.
-  "upo": { // type: object; items: #/components/schemas/UpoResponse; description: Informacja o UPO sesyjnym, zwracana gdy sesja została zamknięta i UPO zostało wygenerowane.
-    "pages": [ // required; type: array; description: Lista stron UPO.
-      {
-        "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny strony UPO.
-        "downloadUrl": "", // required; type: string; format: uri; description: Adres do pobrania strony UPO. Link generowany jest przy każdym odpytaniu o status. 
-Dostęp odbywa się metodą `HTTP GET` i <b>nie należy</b> wysyłać tokenu dostępowego. 
-Link nie podlega limitom API i wygasa po określonym czasie w `DownloadUrlExpirationDate`.
-
-Odpowiedź HTTP zawiera dodatkowe nagłówki:
-- `x-ms-meta-hash` – skrót SHA-256 dokumentu UPO, zakodowany w formacie Base64.
-        "downloadUrlExpirationDate": "" // required; type: string; format: date-time; description: Data i godzina wygaśnięcia adresu. Po tej dacie link `DownloadUrl` nie będzie już aktywny.
-      }
-    ]
-  },
-  "invoiceCount": 0, // type: integer; format: int32; nullable: true; description: Liczba przyjętych faktur w ramach sesji.
-  "successfulInvoiceCount": 0, // type: integer; format: int32; nullable: true; description: Liczba faktur przeprocesowanych w ramach sesji z sukcesem .
-  "failedInvoiceCount": 0 // type: integer; format: int32; nullable: true; description: Liczba faktur przeprocesowanych w ramach sesji z błędem.
-}

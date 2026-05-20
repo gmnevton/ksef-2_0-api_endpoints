@@ -58,6 +58,13 @@
       "responses" : {
         "201" : {
           "description" : "Created",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -261,6 +268,15 @@
         ],
         "description" : "Skrót SHA256 pliku paczki, zakodowany w formacie Base64."
       },
+      "compressionType" : {
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/CompressionType"
+          }
+        ],
+        "description" : "Typ kompresji pliku paczki. Obsługiwane typy: Zip oraz TarGz. Domyślna kompresja to Zip.",
+        "nullable" : true
+      },
       "fileParts" : {
         "maxItems" : 50,
         "minItems" : 1,
@@ -280,6 +296,15 @@
     "type" : "string",
     "description" : "SHA-256 w Base64.",
     "format" : "byte"
+  }
+
+
+  "CompressionType" : {
+    "enum" : [
+      "Zip",
+      "TarGz"
+    ],
+    "type" : "string"
   }
 
 
@@ -341,6 +366,12 @@
         "nullable" : true
       }
     }
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 
@@ -436,6 +467,7 @@ Obsługiwane schematy:
   "batchFile": { // required; type: object; items: #/components/schemas/BatchFileInfo; description: Informacje o przesyłanej paczce faktur.
     "fileSize": 0, // required; type: integer; format: int64; description: Rozmiar pliku paczki w bajtach. Maksymalny rozmiar paczki to 5GB.
     "fileHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 pliku paczki, zakodowany w formacie Base64.
+    "compressionType": "", // type: string; items: #/components/schemas/CompressionType; description: Typ kompresji pliku paczki. Obsługiwane typy: Zip oraz TarGz. Domyślna kompresja to Zip.
     "fileParts": [ // required; type: array; description: Informacje o częściach pliku paczki. Maksymalna liczba części to 50. Maksymalny dozwolony rozmiar części przed zaszyfrowaniem to 100MB.
       {
         "ordinalNumber": 0, // required; type: integer; format: int32; description: Numer sekwencyjny części pliku paczki.
@@ -457,32 +489,3 @@ Obsługiwane schematy:
 
 
 response (201): application/json
-{
-  "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny sesji.
-  "partUploadRequests": [ // required; type: array; description: Dane wymagane do poprawnego przesłania poszczególnych części pliku paczki faktur.
-
-Każdą część pliku paczki zadeklarowaną w <b>fileParts</b> należy przesłać zgodnie z odpowiadającym jej obiektem w <b>partUploadRequests</b>.
-Łącznikiem pomiędzy deklaracją a instrukcją wysyłki jest pole <b>ordinalNumber</b>.
-
-Dla każdej części należy:
-* zastosować metodę HTTP wskazaną w <b>method</b>,
-* ustawić adres z <b>url</b>,
-* dołączyć nagłówki z <b>headers</b>,
-* dołączyć treść części pliku w korpusie żądania.
-
-`Uwaga: nie należy dodawać do nagłówków token dostępu (accessToken).`
- 
-Każdą część przesyła się oddzielnym żądaniem HTTP.Zwracane kody odpowiedzi:
- * <b>201</b> – poprawne przyjęcie pliku,
- * <b>400</b> – błędne dane,
- * <b>401</b> – nieprawidłowe uwierzytelnienie,
- * <b>403</b> – brak uprawnień do zapisu (np.upłynął czas na zapis).
-    {
-      "ordinalNumber": 0, // required; type: integer; format: int32; description: Numer sekwencyjny części pliku paczki.
-      "method": "", // required; type: string; description: Metoda HTTP, której należy użyć przy wysyłce części pliku paczki.
-      "url": "", // required; type: string; format: uri; description: Adres pod który należy wysłać część pliku paczki.
-      "headers": { // required; type: object; nullable: true; description: Nagłówki, których należy użyć przy wysyłce części pliku paczki.
-      }
-    }
-  ]
-}

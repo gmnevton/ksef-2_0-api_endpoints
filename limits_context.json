@@ -16,6 +16,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -109,6 +116,12 @@
         "perHour" : 120
       }
     }
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 
@@ -220,15 +233,3 @@ body:
 
 
 response (200): application/json
-{
-  "onlineSession": { // required; type: object; items: #/components/schemas/OnlineSessionEffectiveContextLimits; description: Limity dla sesji interaktywnych.
-    "maxInvoiceSizeInMB": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury w MB.
-    "maxInvoiceWithAttachmentSizeInMB": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury z załącznikiem w MB.
-    "maxInvoices": 0 // required; type: integer; format: int32; description: Maksymalna ilość faktur które można przesłać w pojedynczej sesji.
-  },
-  "batchSession": { // required; type: object; items: #/components/schemas/BatchSessionEffectiveContextLimits; description: Limity dla sesji wsadowych.
-    "maxInvoiceSizeInMB": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury w MB.
-    "maxInvoiceWithAttachmentSizeInMB": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury z załącznikiem w MB.
-    "maxInvoices": 0 // required; type: integer; format: int32; description: Maksymalna ilość faktur które można przesłać w pojedynczej sesji.
-  }
-}

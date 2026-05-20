@@ -41,6 +41,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -146,6 +153,12 @@
         "CredentialsRead"
       ]
     }
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 
@@ -273,20 +286,3 @@ body:
 
 
 response (200): application/json
-{
-  "roles": [ // required; type: array; description: Lista odczytanych ról podmiotu.
-    {
-      "parentEntityIdentifier": { // type: object; items: #/components/schemas/EntityRolesParentEntityIdentifier; description: Identyfikator podmiotu nadrzędnego.
-| Type | Value |
-| --- | --- |
-| Nip | 10 cyfrowy numer NIP |
-        "type": "", // required; type: string; items: #/components/schemas/EntityRolesParentEntityIdentifierType; description: Typ identyfikatora.
-        "value": "" // required; type: string; description: Wartość identyfikatora.
-      },
-      "role": "", // required; type: string; items: #/components/schemas/EntityRoleType; description: Typ roli - powiązania z podmiotem nadrzędnym.
-      "description": "", // required; type: string; description: Opis roli.
-      "startDate": "" // required; type: string; format: date-time; description: Data rozpoczęcia obowiązywania roli.
-    }
-  ],
-  "hasMore": true/false // required; type: boolean; description: Flaga informująca o dostępności kolejnej strony wyników.
-}

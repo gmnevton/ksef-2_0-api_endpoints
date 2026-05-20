@@ -27,6 +27,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -144,6 +151,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "CertificateEnrollmentStatusResponse" : {
     "required" : [
       "requestDate",
@@ -216,22 +229,3 @@ body:
 
 
 response (200): application/json
-{
-  "requestDate": "", // required; type: string; format: date-time; description: Data złożenia wniosku certyfikacyjnego.
-  "status": { // required; type: object; items: #/components/schemas/StatusInfo; description: Informacje o aktualnym statusie.
-| Code | Description | Details |
-| --- | --- | --- |
-| 100 | Wniosek przyjęty do realizacji | - |
-| 200 | Wniosek obsłużony (certyfikat wygenerowany) | - |
-| 400 | Wniosek odrzucony | Klucz publiczny został już certyfikowany przez inny podmiot. |
-| 400 | Wniosek odrzucony | Osiągnięto dopuszczalny limit posiadanych certyfikatów. |
-| 500 | Nieznany błąd | - |
-| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |
-    "code": 0, // required; type: integer; format: int32; description: Kod statusu
-    "description": "", // required; type: string; description: Opis statusu
-    "details": [ // type: array; nullable: true; description: Dodatkowe szczegóły statusu
-    ]
-  },
-  "certificateSerialNumber": "" // type: string; nullable: true; description: Numer seryjny wygenerowanego certyfikatu (w formacie szesnastkowym). 
-Zwracany w przypadku prawidłowego przeprocesowania wniosku certyfikacyjnego.
-}

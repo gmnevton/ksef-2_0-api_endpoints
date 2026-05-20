@@ -43,7 +43,14 @@
       },
       "responses" : {
         "204" : {
-          "description" : "No Content"
+          "description" : "No Content",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          }
         },
         "400" : {
           "description" : "| ExceptionCode       | ExceptionDescription                                                                           | Details |\n|---------------------|------------------------------------------------------------------------------------------------|---------|\n| 25008               | Certyfikat o podanym numerze seryjnym nie istnieje.                                            |         |\n| 25009               | Nie można odwołać wskazanego certyfikatu, ponieważ jest już odwołany, zablokowany lub nieważny.|         |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
@@ -145,6 +152,12 @@
     ],
     "type" : "string",
     "description" : "| Wartość | Opis |\n| --- | --- |\n| Unspecified | Nieokreślony. |\n| Superseded | Certyfikat został zastąpiony przez inny. |\n| KeyCompromise | Klucz prywatny powiązany z certyfikatem został skompromitowany. |\n"
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 

@@ -41,6 +41,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -116,6 +123,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "QueryPeppolProvidersResponse" : {
     "required" : [
       "hasMore",
@@ -185,13 +198,3 @@ request: "/peppol/query?pageOffset={pageOffset}&pageSize={pageSize}": get: text/
 
 
 response (200): application/json
-{
-  "peppolProviders": [ // required; type: array; description: Lista dostawców usług Peppol.
-    {
-      "id": "", // required; type: string; items: #/components/schemas/PeppolId; description: Identyfikator dostawcy usług Peppol.
-      "name": "", // required; type: string; description: Nazwa dostawcy usług Peppol.
-      "dateCreated": "" // required; type: string; format: date-time; description: Data rejestracji dostawcy usług Peppol w systemie.
-    }
-  ],
-  "hasMore": true/false // required; type: boolean; description: Flaga informująca o dostępności kolejnej strony wyników.
-}

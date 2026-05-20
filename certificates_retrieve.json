@@ -39,6 +39,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -155,6 +162,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "RetrieveCertificatesResponse" : {
     "required" : [
       "certificates"
@@ -233,17 +246,3 @@ body:
 
 
 response (200): application/json
-{
-  "certificates": [ // required; type: array; description: Pobrane certyfikaty.
-    {
-      "certificate": "", // required; type: string; format: byte; description: Certyfikat w formacie DER, zakodowany w formacie Base64.
-      "certificateName": "", // required; type: string; description: Nazwa własna certyfikatu.
-      "certificateSerialNumber": "", // required; type: string; description: Numer seryjny certyfikatu.
-      "certificateType": "" // required; type: string; items: #/components/schemas/KsefCertificateType; description: Typ certyfikatu.
-| Wartość | Opis |
-| --- | --- |
-| Authentication | Certyfikat używany do uwierzytelnienia w systemie. |
-| Offline | Certyfikat używany wyłącznie do potwierdzania autentyczności wystawcy i integralności faktury w trybie offline |
-    }
-  ]
-}

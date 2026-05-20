@@ -124,6 +124,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -280,6 +287,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "SessionsQueryResponse" : {
     "required" : [
       "sessions"
@@ -380,23 +393,3 @@ body:
 
 
 response (200): application/json
-{
-  "continuationToken": "", // type: string; nullable: true; description: Token służący do pobrania kolejnej strony wyników. Jeśli jest pusty, to nie ma kolejnych stron.
-  "sessions": [ // required; type: array; description: Lista sesji.
-    {
-      "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny sesji.
-      "status": { // required; type: object; items: #/components/schemas/StatusInfo; description: Status sesji.
-        "code": 0, // required; type: integer; format: int32; description: Kod statusu
-        "description": "", // required; type: string; description: Opis statusu
-        "details": [ // type: array; nullable: true; description: Dodatkowe szczegóły statusu
-        ]
-      },
-      "dateCreated": "", // required; type: string; format: date-time; description: Data utworzenia sesji.
-      "dateUpdated": "", // required; type: string; format: date-time; description: Data ostatniej aktywności w ramach sesji.
-      "validUntil": "", // type: string; format: date-time; nullable: true; description: Termin ważności sesji. Po jego upływie sesja interaktywna zostanie automatycznie zamknięta.
-      "totalInvoiceCount": 0, // required; type: integer; format: int32; description: Łączna liczba faktur (uwzględnia również te w trakcie przetwarzania).
-      "successfulInvoiceCount": 0, // required; type: integer; format: int32; description: Liczba poprawnie przetworzonych faktur.
-      "failedInvoiceCount": 0 // required; type: integer; format: int32; description: Liczba błędnie przetworzonych faktur.
-    }
-  ]
-}

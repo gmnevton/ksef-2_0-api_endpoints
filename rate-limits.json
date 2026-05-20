@@ -16,6 +16,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -159,6 +166,12 @@
         "perHour" : 120
       }
     }
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 
@@ -377,65 +390,3 @@ body:
 
 
 response (200): application/json
-{
-  "onlineSession": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla otwierania/zamykania sesji interaktywnych.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "batchSession": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla otwierania/zamykania sesji wsadowych.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "invoiceSend": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla wysyłki faktur.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "invoiceStatus": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla pobierania statusu faktury z sesji.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "sessionList": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla pobierania listy sesji.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "sessionInvoiceList": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla pobierania listy faktur w sesji.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "sessionMisc": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla pozostałych operacji w ramach sesji.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "invoiceMetadata": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla pobierania metadanych faktur.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "invoiceExport": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla eksportu paczki faktur.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "invoiceExportStatus": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla pobierana statusu eksportu paczki faktur.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "invoiceDownload": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla pobierania faktur po numerze KSeF.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  },
-  "other": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla pozostałych operacji API.
-    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
-    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
-    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
-  }
-}

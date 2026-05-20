@@ -41,6 +41,13 @@
       "responses" : {
         "202" : {
           "description" : "Accepted",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -177,6 +184,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "EnrollCertificateResponse" : {
     "required" : [
       "referenceNumber",
@@ -230,7 +243,3 @@ Jeśli nie zostanie podana, certyfikat będzie ważny od momentu jego wystawieni
 
 
 response (202): application/json
-{
-  "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny wniosku certyfikacyjnego.
-  "timestamp": "" // required; type: string; format: date-time; description: Data złożenia wniosku certyfikacyjnego.
-}

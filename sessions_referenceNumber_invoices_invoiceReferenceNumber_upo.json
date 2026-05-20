@@ -37,6 +37,11 @@
         "200" : {
           "description" : "OK",
           "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            },
             "x-ms-meta-hash" : {
               "description" : "Skrót SHA-256 dokumentu UPO, zakodowany w formacie Base64",
               "schema" : {
@@ -139,6 +144,12 @@
     "minLength" : 36,
     "type" : "string",
     "description" : "Numer referencyjny."
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 

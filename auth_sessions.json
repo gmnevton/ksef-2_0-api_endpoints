@@ -38,6 +38,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -147,6 +154,12 @@
         }
       ]
     }
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 
@@ -356,64 +369,3 @@ body:
 
 
 response (200): application/json
-{
-  "continuationToken": "", // type: string; nullable: true; description: Token służący do pobrania kolejnej strony wyników. Jeśli jest pusty, to nie ma kolejnych stron.
-  "items": [ // required; type: array; description: Lista sesji uwierzytelniania.
-    {
-      "startDate": "", // required; type: string; format: date-time; description: Data rozpoczęcia operacji uwierzytelnienia.
-      "authenticationMethod": "", // required; type: string; items: #/components/schemas/AuthenticationMethod; description: Metoda uwierzytelnienia.
-| Wartość | Opis |
-| --- | --- |
-| Token | Token KSeF. |
-| TrustedProfile | Profil Zaufany. |
-| InternalCertificate | Certyfikat KSeF. |
-| QualifiedSignature | Podpis kwalifikowany. |
-| QualifiedSeal | Pieczęć kwalifikowana. |
-| PersonalSignature | Podpis osobisty. |
-| PeppolSignature | Podpis dostawcy usług Peppol. |
-      "authenticationMethodInfo": { // required; type: object; items: #/components/schemas/AuthenticationMethodInfo; description: Użyta metoda uwierzytelnienia.
-        "category": "", // required; type: string; items: #/components/schemas/AuthenticationMethodCategory; description: Kategoria metody uwierzytelnienia.
-| Wartość | Opis |
-| --- | --- |
-| XadesSignature | Uwierzytelnienie podpisem Xades. |
-| NationalNode | Uwierzytelnienie za pomocą Węzła Krajowego (login.gov.pl). |
-| Token | Uwierzytelnienie tokenem. |
-| Other | Uwierzytelnienie inną metodą. |
-        "code": "", // required; type: string; description: Kod metody uwierzytelnienia.
-        "displayName": "" // required; type: string; description: Nazwa metody uwierzytelnienia do wyświetlenia użytkownikowi.
-      },
-      "status": { // required; type: object; items: #/components/schemas/StatusInfo; description: Informacje o aktualnym statusie.
-| Code | Description | Details |
-| --- | --- | --- |
-| 100 | Uwierzytelnianie w toku | - |
-| 200 | Uwierzytelnianie zakończone sukcesem | - |
-| 415 | Uwierzytelnianie zakończone niepowodzeniem | Brak przypisanych uprawnień |
-| 425 | Uwierzytelnienie unieważnione  | Uwierzytelnienie i powiązane refresh tokeny zostały unieważnione przez użytkownika |
-| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowe wyzwanie autoryzacyjne |
-| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowy token |
-| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Nieprawidłowy czas tokena |
-| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Token unieważniony |
-| 450 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędnego tokenu | Token nieaktywny |
-| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Nieważny certyfikat |
-| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Błąd weryfikacji łańcucha certyfikatów |
-| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Niezaufany łańcuch certyfikatów |
-| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Certyfikat odwołany |
-| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Certyfikat zawieszony |
-| 460 | Uwierzytelnianie zakończone niepowodzeniem z powodu błędu certyfikatu | Niepoprawny certyfikat |
-| 470 | Uwierzytelnianie zakończone niepowodzeniem | Próba wykorzystania metod autoryzacyjnych osoby zmarłej |
-| 480 | Uwierzytelnienie zablokowane | Podejrzenie incydentu bezpieczeństwa. Skontaktuj się z Ministerstwem Finansów przez formularz zgłoszeniowy. |
-| 500 | Nieznany błąd | - |
-| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |
-        "code": 0, // required; type: integer; format: int32; description: Kod statusu
-        "description": "", // required; type: string; description: Opis statusu
-        "details": [ // type: array; nullable: true; description: Dodatkowe szczegóły statusu
-        ]
-      },
-      "isTokenRedeemed": true/false, // type: boolean; nullable: true; description: Czy został już wydany refresh token powiązany z danym uwierzytelnieniem.
-      "lastTokenRefreshDate": "", // type: string; format: date-time; nullable: true; description: Data ostatniego odświeżenia tokena.
-      "refreshTokenValidUntil": "", // type: string; format: date-time; nullable: true; description: Termin ważności refresh tokena (o ile nie zostanie wcześniej unieważniony).
-      "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny sesji uwierzytelnienia.
-      "isCurrent": true/false // type: boolean; description: Czy sesja jest powiązana z aktualnie używanym tokenem.
-    }
-  ]
-}

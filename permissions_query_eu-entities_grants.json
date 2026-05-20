@@ -61,6 +61,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -212,6 +219,12 @@
       "Introspection"
     ],
     "type" : "string"
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 
@@ -409,57 +422,3 @@ body:
 
 
 response (200): application/json
-{
-  "permissions": [ // required; type: array; description: Lista odczytanych uprawnień.
-    {
-      "id": "", // required; type: string; items: #/components/schemas/PermissionId; description: Identyfikator uprawnienia.
-      "authorIdentifier": { // required; type: object; items: #/components/schemas/EuEntityPermissionsAuthorIdentifier; description: Identyfikator uprawniającego.
-| Type | Value |
-| --- | --- |
-| Nip | 10 cyfrowy numer NIP |
-| Pesel | 11 cyfrowy numer PESEL |
-| Fingerprint | Odcisk palca certyfikatu |
-        "type": "", // required; type: string; items: #/components/schemas/EuEntityPermissionsAuthorIdentifierType; description: Typ identyfikatora.
-        "value": "" // required; type: string; description: Wartość identyfikatora.
-      },
-      "vatUeIdentifier": "", // required; type: string; description: Identyfikator podmiotu unijnego.
-      "euEntityName": "", // required; type: string; description: Nazwa podmiotu unijnego.
-      "authorizedFingerprintIdentifier": "", // required; type: string; description: Uprawniony odcisk palca certyfikatu.
-      "permissionScope": "", // required; type: string; items: #/components/schemas/EuEntityPermissionsQueryPermissionType; description: Uprawnienie.
-      "description": "", // required; type: string; description: Opis uprawnienia.
-      "subjectPersonDetails": { // type: object; items: #/components/schemas/PermissionsSubjectPersonByFingerprintDetails; nullable: true; description: Dane osoby uprawnionej.
-        "subjectDetailsType": "", // required; type: string; items: #/components/schemas/PersonSubjectByFingerprintDetailsType; description: Typ danych uprawnionej osoby fizycznej.
-| Wartość | Opis |
-| --- | --- |
-| PersonByFingerprintWithIdentifier | Osoba fizyczna posługująca się certyfikatem niezawierającym identyfikatora NIP ani PESEL, ale mająca NIP lub PESEL. |
-| PersonByFingerprintWithoutIdentifier | Osoba fizyczna posługująca się certyfikatem niezawierającym identyfikatora NIP ani PESEL i niemająca NIP ani PESEL. |
-        "firstName": "", // required; type: string; description: Imię osoby fizycznej.
-        "lastName": "", // required; type: string; description: Nazwisko osoby fizycznej.
-        "personIdentifier": { // type: object; items: #/components/schemas/PersonIdentifier; description: Identyfikator osoby fizycznej.
-          "type": "", // required; type: string; items: #/components/schemas/PersonIdentifierType; description: Typ identyfikatora.
-          "value": "" // required; type: string; description: Wartość identyfikatora.
-        },
-        "birthDate": "", // type: string; format: date; nullable: true; description: Data urodzenia osoby fizycznej.
-        "idDocument": { // type: object; items: #/components/schemas/IdDocument; description: Dane dokumentu tożsamości osoby fizycznej.
-          "type": "", // required; type: string; description: Rodzaj dokumentu tożsamości.
-          "number": "", // required; type: string; description: Seria i numer dokumentu tożsamości.
-          "country": "" // required; type: string; description: Kraj wydania dokumentu tożsamości. Musi być zgodny z ISO 3166-1 alpha-2 (np. PL, DE, US) oraz zawierać dokładnie 2 wielkie litery.
-        }
-      },
-      "subjectEntityDetails": { // type: object; items: #/components/schemas/PermissionsSubjectEntityByFingerprintDetails; nullable: true; description: Dane podmiotu uprawnionego.
-        "subjectDetailsType": "", // required; type: string; items: #/components/schemas/EntitySubjectByFingerprintDetailsType; description: Typ danych podmiotu uprawnionego.
-| Wartość | Opis |
-| --- | --- |
-| EntityByFingerprint | Podmiot identyfikowany odciskiem palca pieczęci kwalifikowanej. |
-        "fullName": "", // required; type: string; description: Pełna nazwa podmiotu.
-        "address": "" // type: string; nullable: true; description: Adres podmiotu.
-      },
-      "euEntityDetails": { // type: object; items: #/components/schemas/PermissionsEuEntityDetails; description: Dane podmiotu unijnego, w kontekście którego nadane jest uprawnienie.
-        "fullName": "", // required; type: string; description: Pełna nazwa podmiotu unijnego.
-        "address": "" // required; type: string; description: Adres podmiotu unijnego.
-      },
-      "startDate": "" // required; type: string; format: date-time; description: Data rozpoczęcia obowiązywania uprawnienia.
-    }
-  ],
-  "hasMore": true/false // required; type: boolean; description: Flaga informująca o dostępności kolejnej strony wyników.
-}

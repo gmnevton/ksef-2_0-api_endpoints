@@ -96,6 +96,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -793,6 +800,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "QueryInvoicesMetadataResponse" : {
     "required" : [
       "hasMore",
@@ -1098,130 +1111,3 @@ Format daty:
 
 
 response (200): application/json
-{
-  "hasMore": true/false, // required; type: boolean; description: Określa, czy istnieją kolejne wyniki zapytania.
-  "isTruncated": true/false, // required; type: boolean; description: Określa, czy osiągnięto maksymalny dopuszczalny zakres wyników zapytania (10 000).
-  "permanentStorageHwmDate": "", // type: string; format: date-time; nullable: true; description: Dotyczy wyłącznie zapytań filtrowanych po typie daty <b>PermanentStorage</b>.
-Jeśli zapytanie dotyczyło najnowszego okresu, wartość ta może być wartością nieznacznie skorygowaną względem górnej granicy podanej w warunkach zapytania.
-Dla okresów starszych, będzie to zgodne z warunkami zapytania. 
-
-Wartość jest stała dla wszystkich stron tego samego zapytania
-i nie zależy od paginacji ani sortowania.
-
-System gwarantuje, że dane poniżej tej wartości są spójne i kompletne.
-Ponowne zapytania obejmujące zakresem dane poniżej tego kroczącego znacznika czasu nie zwrócą w przyszłości innych wyników (np.dodatkowych faktur). 
-
-Dla dateType = Issue lub Invoicing – null.
-  "invoices": [ // required; type: array; description: Lista faktur spełniających kryteria.
-    {
-      "ksefNumber": "", // required; type: string; items: #/components/schemas/KsefNumber; description: Numer KSeF faktury.
-      "invoiceNumber": "", // required; type: string; description: Numer faktury nadany przez wystawcę.
-      "issueDate": "", // required; type: string; format: date; description: Data wystawienia faktury.
-      "invoicingDate": "", // required; type: string; format: date-time; description: Data przyjęcia faktury w systemie KSeF (do dalszego przetwarzania).
-      "acquisitionDate": "", // required; type: string; format: date-time; description: Data nadania numeru KSeF.
-      "permanentStorageDate": "", // required; type: string; format: date-time; description: Data trwałego zapisu faktury w repozytorium systemu KSeF.
-      "seller": { // required; type: object; items: #/components/schemas/InvoiceMetadataSeller; description: Dane identyfikujące sprzedawcę.
-        "nip": "", // required; type: string; items: #/components/schemas/Nip; description: Nip sprzedawcy.
-        "name": "" // type: string; nullable: true; description: Nazwa sprzedawcy.
-      },
-      "buyer": { // required; type: object; items: #/components/schemas/InvoiceMetadataBuyer; description: Dane identyfikujące nabywcę.
-        "identifier": { // required; type: object; items: #/components/schemas/InvoiceMetadataBuyerIdentifier; description: Identyfikator nabywcy.
-| Type | Value |
-| --- | --- |
-| Nip | 10 cyfrowy numer NIP |
-| VatUe | Identyfikator VAT UE podmiotu unijnego |
-| Other | Inny identyfikator|
-| None  | Brak identyfikatora nabywcy |
-          "type": "", // required; type: string; items: #/components/schemas/BuyerIdentifierType; description: Typ identyfikatora nabywcy.
-| Wartość | Opis |
-| --- | --- |
-| Nip | 10 cyfrowy numer NIP |
-| VatUe | Identyfikator VAT UE podmiotu unijnego |
-| Other | Inny identyfikator |
-| None | Brak identyfikatora nabywcy |
-          "value": "" // type: string; nullable: true; description: Wartość identyfikatora nabywcy.
-        },
-        "name": "" // type: string; nullable: true; description: Nazwa nabywcy.
-      },
-      "netAmount": 0, // required; type: number; format: double; description: Łączna kwota netto.
-      "grossAmount": 0, // required; type: number; format: double; description: Łączna kwota brutto.
-      "vatAmount": 0, // required; type: number; format: double; description: Łączna kwota VAT wyrażona w PLN.
-      "currency": "", // required; type: string; description: Kod waluty.
-      "invoicingMode": "", // required; type: string; items: #/components/schemas/InvoicingMode; description: Tryb fakturowania (online/offline).
-      "invoiceType": "", // required; type: string; items: #/components/schemas/InvoiceType; description: Rodzaj faktury.
-| Wartość | Opis |
-| --- | --- |
-| Vat | (FA) Podstawowa |
-| Zal | (FA) Zaliczkowa |
-| Kor | (FA) Korygująca |
-| Roz | (FA) Rozliczeniowa |
-| Upr | (FA) Uproszczona |
-| KorZal | (FA) Korygująca fakturę zaliczkową |
-| KorRoz | (FA) Korygująca fakturę rozliczeniową |
-| VatPef | (PEF) Podstawowa |
-| VatPefSp | (PEF) Specjalizowana |
-| KorPef | (PEF) Korygująca |
-| VatRr | (FA_RR) Podstawowa |
-| KorVatRr | (FA_RR) Korygująca |
-      "formCode": { // required; type: object; items: #/components/schemas/FormCode; description: Struktura dokumentu faktury.
-
-Obsługiwane schematy:
-| SystemCode | SchemaVersion | Value |
-| --- | --- | --- |
-| [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |
-| [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |
-| [PEF (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF(3)_v2-1.xsd) | 2-1 | PEF |
-| [PEF_KOR (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF_KOR(3)_v2-1.xsd) | 2-1 | PEF |
-| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_FA_RR(1)_v1-1E.xsd) | 1-1E | FA_RR |
-        "systemCode": "", // required; type: string; description: Kod systemowy
-        "schemaVersion": "", // required; type: string; description: Wersja schematu
-        "value": "" // required; type: string; description: Wartość
-      },
-      "isSelfInvoicing": true/false, // required; type: boolean; description: Czy faktura została wystawiona w trybie samofakturowania.
-      "hasAttachment": true/false, // required; type: boolean; description: Określa, czy faktura posiada załącznik.
-      "invoiceHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 faktury, zakodowany w formacie Base64.
-      "hashOfCorrectedInvoice": "", // type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 korygowanej faktury, zakodowany w formacie Base64.
-      "thirdSubjects": [ // type: array; nullable: true; description: Lista podmiotów trzecich.
-        {
-          "identifier": { // required; type: object; items: #/components/schemas/InvoiceMetadataThirdSubjectIdentifier;
-            "type": "", // required; type: string; items: #/components/schemas/ThirdSubjectIdentifierType; description: Typ identyfikatora podmiotu trzeciego.
-| Wartość | Opis |
-| --- | --- |
-| Nip | 10 cyfrowy numer NIP |
-| InternalId | Identyfikator wewnętrzny, składający się z numeru NIP i 5 cyfr. |
-| VatUe | Identyfikator VAT UE podmiotu unijnego |
-| Other | Inny identyfikator |
-| None | Brak identyfikatora podmiotu trzeciego |
-            "value": "" // type: string; nullable: true; description: Wartość identyfikatora podmiotu trzeciego.
-          },
-          "name": "", // type: string; nullable: true; description: Nazwa podmiotu trzeciego.
-          "role": 0 // required; type: integer; format: int32; description: Rola podmiotu trzeciego.
-| Wartość | Opis |
-| ---- | --- |
-| 0 | Inna rola |
-| 1 | Faktor - w przypadku gdy na fakturze występują dane faktora |
-| 2 | Odbiorca - w przypadku gdy na fakturze występują dane jednostek wewnętrznych, oddziałów, wyodrębnionych w ramach nabywcy, które same nie stanowią nabywcy w rozumieniu ustawy |
-| 3 | Podmiot pierwotny - w przypadku gdy na fakturze występują dane podmiotu będącego w stosunku do podatnika podmiotem przejętym lub przekształconym, który dokonywał dostawy lub świadczył usługę. Z wyłączeniem przypadków, o których mowa w art. 106j ust.2 pkt 3 ustawy, gdy dane te wykazywane są w części Podmiot1K |
-| 4 | Dodatkowy nabywca - w przypadku gdy na fakturze występują dane kolejnych (innych niż wymieniony w części Podmiot2) nabywców |
-| 5 | Wystawca faktury - w przypadku gdy na fakturze występują dane podmiotu wystawiającego fakturę w imieniu podatnika. Nie dotyczy przypadku, gdy wystawcą faktury jest nabywca |
-| 6 | Dokonujący płatności - w przypadku gdy na fakturze występują dane podmiotu regulującego zobowiązanie w miejsce nabywcy |
-| 7 | Jednostka samorządu terytorialnego - wystawca |
-| 8 | Jednostka samorządu terytorialnego - odbiorca |
-| 9 | Członek grupy VAT - wystawca |
-| 10 | Członek grupy VAT - odbiorca |
-| 11 | Pracownik |
-        }
-      ],
-      "authorizedSubject": { // type: object; items: #/components/schemas/InvoiceMetadataAuthorizedSubject; nullable: true; description: Podmiot upoważniony.
-        "nip": "", // required; type: string; items: #/components/schemas/Nip; description: Nip podmiotu upoważnionego
-        "name": "", // type: string; nullable: true; description: Nazwa podmiotu upoważnionego.
-        "role": 0 // required; type: integer; format: int32; description: Rola podmiotu upoważnionego.
-| Wartość | Opis |
-| ---- | --- |
-| 1 | Organ egzekucyjny - w przypadku, o którym mowa w art. 106c pkt 1 ustawy |
-| 2 | Komornik sądowy - w przypadku, o którym mowa w art. 106c pkt 2 ustawy |
-| 3 | Przedstawiciel podatkowy - w przypadku gdy na fakturze występują dane przedstawiciela podatkowego, o którym mowa w art. 18a - 18d ustawy |
-      }
-    }
-  ]
-}

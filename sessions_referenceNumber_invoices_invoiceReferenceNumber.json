@@ -36,6 +36,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -147,6 +154,12 @@
     "minLength" : 36,
     "type" : "string",
     "description" : "Numer referencyjny."
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 
@@ -273,46 +286,3 @@ body:
 
 
 response (200): application/json
-{
-  "ordinalNumber": 0, // required; type: integer; format: int32; description: Numer sekwencyjny faktury w ramach sesji.
-  "invoiceNumber": "", // type: string; nullable: true; description: Numer faktury.
-  "ksefNumber": "", // type: string; items: #/components/schemas/KsefNumber; description: Numer KSeF.
-  "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny faktury.
-  "invoiceHash": "", // required; type: string; items: #/components/schemas/Sha256HashBase64; description: Skrót SHA256 faktury, zakodowany w formacie Base64.
-  "invoiceFileName": "", // type: string; nullable: true; description: Nazwa pliku faktury (zwracana dla faktur wysyłanych wsadowo).
-  "acquisitionDate": "", // type: string; format: date-time; nullable: true; description: Data nadania numeru KSeF.
-  "invoicingDate": "", // required; type: string; format: date-time; description: Data przyjęcia faktury w systemie KSeF (do dalszego przetwarzania).
-  "permanentStorageDate": "", // type: string; format: date-time; nullable: true; description: Data trwałego zapisu faktury w repozytorium KSeF. Wartość uzupełniana asynchronicznie w momencie trwałego zapisu; zawsze późniejsza niż <b>acquisitionDate</b>. Podczas sprawdzania statusu może być jeszcze niedostępna.
-  "upoDownloadUrl": "", // type: string; format: uri; nullable: true; description: Adres do pobrania UPO. Link generowany jest przy każdym odpytaniu o status. 
-Dostęp odbywa się metodą `HTTP GET` i <b>nie należy</b> wysyłać tokenu dostępowego. 
-Link nie podlega limitom API i wygasa po określonym czasie w `UpoDownloadUrlExpirationDate`.
-
-Odpowiedź HTTP zawiera dodatkowe nagłówki:
-- `x-ms-meta-hash` – skrót SHA-256 dokumentu UPO, zakodowany w formacie Base64.
-  "upoDownloadUrlExpirationDate": "", // type: string; format: date-time; nullable: true; description: Data i godzina wygaśnięcia adresu. Po tej dacie link `UpoDownloadUrl` nie będzie już aktywny.
-  "invoicingMode": "", // type: string; items: #/components/schemas/InvoicingMode; description: Tryb fakturowania (online/offline).
-  "status": { // required; type: object; items: #/components/schemas/InvoiceStatusInfo; description: Status faktury.
-
-| Code | Description | Details | Extensions |
-| --- | --- | --- | ---|
-| 100 | Faktura przyjęta do dalszego przetwarzania | - | - |
-| 150 | Trwa przetwarzanie | - | - |
-| 200 | Sukces | - | - |
-| 405 | Przetwarzanie anulowane z powodu błędu sesji | - | - |
-| 410 | Nieprawidłowy zakres uprawnień | - |  - |
-| 415 | Brak możliwości wysyłania faktury z załącznikiem | - | - |
-| 430 | Błąd weryfikacji pliku faktury | - | -  |
-| 435 | Błąd odszyfrowania pliku | - | - |
-| 440 | Duplikat faktury | - | 'originalSessionReferenceNumber', 'originalKsefNumber'|
-| 450 | Błąd weryfikacji semantyki dokumentu faktury | - | - |
-| 500 | Nieznany błąd ({statusCode}) | - | - |
-| 550 | Operacja została anulowana przez system | Przetwarzanie zostało przerwane z przyczyn wewnętrznych systemu. Spróbuj ponownie |- |
-    "code": 0, // required; type: integer; format: int32; description: Kod statusu faktury
-    "description": "", // required; type: string; description: Opis statusu
-    "details": [ // type: array; nullable: true; description: Dodatkowe szczegóły statusu
-    ],
-    "extensions": { // type: object; nullable: true; description: Zbiór dodatkowych informacji związanych ze statusem faktury, zapisanych jako pary klucz–wartość.
-Umożliwia rozszerzenie modelu o dane specyficzne dla danego przypadku.
-    }
-  }
-}

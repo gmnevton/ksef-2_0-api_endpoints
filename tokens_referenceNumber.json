@@ -27,6 +27,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -149,7 +156,14 @@
       ],
       "responses" : {
         "204" : {
-          "description" : "No Content"
+          "description" : "No Content",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          }
         },
         "400" : {
           "description" : "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
@@ -232,6 +246,12 @@
     "minLength" : 36,
     "type" : "string",
     "description" : "Numer referencyjny."
+  }
+
+
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
   }
 
 
@@ -334,43 +354,6 @@ body:
 
 
 response (200): application/json
-{
-  "referenceNumber": "", // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny tokena KSeF.
-  "authorIdentifier": { // required; type: object; items: #/components/schemas/TokenAuthorIdentifierTypeIdentifier; description: Identyfikator osoby która wygenerowała token.
-    "type": "", // required; type: string; items: #/components/schemas/TokenAuthorIdentifierType; description: Typ identyfikatora.
-| Wartość | Opis |
-| --- | --- |
-| Nip | NIP. |
-| Pesel | PESEL. |
-| Fingerprint | Odcisk palca certyfikatu. |
-    "value": "" // required; type: string; description: Wartość identyfikatora.
-  },
-  "contextIdentifier": { // required; type: object; items: #/components/schemas/TokenContextIdentifierTypeIdentifier; description: Identyfikator kontekstu, w którym został wygenerowany token i do którego daje dostęp.
-    "type": "", // required; type: string; items: #/components/schemas/TokenContextIdentifierType; description: Typ identyfikatora.
-| Wartość | Opis |
-| --- | --- |
-| Nip | NIP. |
-| InternalId | Identyfikator wewnętrzny. |
-| NipVatUe | Dwuczłonowy identyfikator składający się z numeru NIP i numeru VAT-UE: `{nip}-{vat_ue}`. |
-| PeppolId | Identyfikator dostawcy usług Peppol. |
-    "value": "" // required; type: string; description: Wartość identyfikatora.
-  },
-  "description": "", // required; type: string; description: Opis tokena.
-  "requestedPermissions": [ // required; type: array; description: Uprawnienia przypisane tokenowi.
-  ],
-  "dateCreated": "", // required; type: string; format: date-time; description: Data i czas utworzenia tokena.
-  "lastUseDate": "", // type: string; format: date-time; nullable: true; description: Data ostatniego użycia tokena.
-  "status": "", // required; type: string; items: #/components/schemas/AuthenticationTokenStatus; description: Status tokena.
-| Wartość | Opis |
-| --- | --- |
-| Pending | Token został utworzony ale jest jeszcze w trakcie aktywacji i nadawania uprawnień. Nie może być jeszcze wykorzystywany do uwierzytelniania. |
-| Active | Token jest aktywny i może być wykorzystywany do uwierzytelniania. |
-| Revoking | Token jest w trakcie unieważniania. Nie może już być wykorzystywany do uwierzytelniania. |
-| Revoked | Token został unieważniony i nie może być wykorzystywany do uwierzytelniania. |
-| Failed | Nie udało się aktywować tokena. Należy wygenerować nowy token, obecny nie może być wykorzystywany do uwierzytelniania. |
-  "statusDetails": [ // type: array; nullable: true; description: Dodatkowe informacje na temat statusu, zwracane w przypadku błędów.
-  ]
-}
 
 
 

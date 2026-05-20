@@ -59,6 +59,13 @@
       "responses" : {
         "200" : {
           "description" : "OK",
+          "headers" : {
+            "X-System-Warning" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SystemWarning"
+              }
+            }
+          },
           "content" : {
             "application/json" : {
               "schema" : {
@@ -235,6 +242,12 @@
   }
 
 
+  "SystemWarning" : {
+    "type" : "string",
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+  }
+
+
   "QueryCertificatesResponse" : {
     "required" : [
       "certificates",
@@ -367,33 +380,3 @@ body:
 
 
 response (200): application/json
-{
-  "certificates": [ // required; type: array; description: Lista certyfikatów spełniających kryteria wyszukiwania.
-    {
-      "certificateSerialNumber": "", // required; type: string; description: Numer seryjny certyfikatu (w formacie szesnastkowym).
-      "name": "", // required; type: string; description: Nazwa własna certyfikatu.
-      "type": "", // required; type: string; items: #/components/schemas/KsefCertificateType; description: Typ certyfikatu.
-| Wartość | Opis |
-| --- | --- |
-| Authentication | Certyfikat używany do uwierzytelnienia w systemie. |
-| Offline | Certyfikat używany wyłącznie do potwierdzania autentyczności wystawcy i integralności faktury w trybie offline |
-      "commonName": "", // required; type: string; description: Nazwa powszechna (CN) podmiotu, dla którego wystawiono certyfikat.
-      "status": "", // required; type: string; items: #/components/schemas/CertificateListItemStatus; description: Status certyfikatu.
-| Wartość | Opis |
-| --- | --- |
-| Active | Certyfikat jest aktywny i może zostać użyty do uwierzytelnienia lub realizacji operacji w trybie offline (w zależności od typu certyfikatu). |
-| Blocked | Certyfikat został zablokowany i nie może zostać użyty do uwierzytelnienia i realizacji operacji w trybie offline.            Status przejściowy do czasu zakończenia procesu unieważniania. |
-| Revoked | Certyfikat został unieważniony i nie może zostać użyty do uwierzytelnienia i realizacji operacji w trybie offline. |
-| Expired | Certyfikat wygasł i nie może zostać użyty do uwierzytelnienia i realizacji operacji w trybie offline. |
-      "subjectIdentifier": { // required; type: object; items: #/components/schemas/CertificateSubjectIdentifier; description: Identyfikator podmiotu, dla którego wystawiono certyfikat.
-        "type": "", // required; type: string; items: #/components/schemas/CertificateSubjectIdentifierType; description: Typ identyfikatora.
-        "value": "" // required; type: string; description: Wartość identyfikatora.
-      },
-      "validFrom": "", // required; type: string; format: date-time; description: Data rozpoczęcia ważności certyfikatu.
-      "validTo": "", // required; type: string; format: date-time; description: Data wygaśnięcia certyfikatu.
-      "lastUseDate": "", // type: string; format: date-time; nullable: true; description: Data ostatniego użycia certyfikatu.
-      "requestDate": "" // required; type: string; format: date-time; description: Data złożenia wniosku certyfikacyjnego.
-    }
-  ],
-  "hasMore": true/false // required; type: boolean; description: Flaga informująca o dostępności kolejnej strony wyników.
-}
