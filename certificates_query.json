@@ -907,7 +907,7 @@ description: | | req / s | req / min | req / h | grupa
 | **Limity liczby żądań** | 10 | 30 | 120 | other
 
 headers:
-Retry-After: 
+Retry-After: type: integer; format: int32; description: Liczba sekund po których można ponowić żądanie.
 body:
 {
   "status": { // required; type: object; description: Informacje o błędzie związanym z przekroczeniem limitu żądań.
@@ -920,7 +920,7 @@ description: | | req / s | req / min | req / h | grupa
 | **Limity liczby żądań** | 10 | 30 | 120 | other
 
 headers:
-Retry-After: 
+Retry-After: type: integer; format: int32; description: Liczba sekund po których można ponowić żądanie.
 body:
 {
   "title": "", // required; type: string; description: Too Many Requests
