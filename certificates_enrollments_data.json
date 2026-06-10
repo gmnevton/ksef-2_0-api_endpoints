@@ -12,7 +12,7 @@
         "Certyfikaty"
       ],
       "summary" : "Pobranie danych do wniosku certyfikacyjnego",
-      "description" : "Zwraca dane wymagane do przygotowania wniosku certyfikacyjnego PKCS#10.\n\nDane te są zwracane na podstawie certyfikatu użytego w procesie uwierzytelnienia i identyfikują podmiot, który składa wniosek o certyfikat.\n\n\n> Więcej informacji:\n> - [Pobranie danych do wniosku certyfikacyjnego](https://github.com/CIRFMF/ksef-docs/blob/main/certyfikaty-KSeF.md#2-pobranie-danych-do-wniosku-certyfikacyjnego)\n> - [Przygotowanie wniosku](https://github.com/CIRFMF/ksef-docs/blob/main/certyfikaty-KSeF.md#3-przygotowanie-csr-certificate-signing-request)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).",
+      "description" : "Zwraca dane wymagane do przygotowania wniosku certyfikacyjnego PKCS#10.\n\nDane te są zwracane na podstawie certyfikatu użytego w procesie uwierzytelnienia i identyfikują podmiot, który składa wniosek o certyfikat.\n\n\n> Więcej informacji:\n> - [Pobranie danych do wniosku certyfikacyjnego](https://github.com/CIRFMF/ksef-api/blob/main/certyfikaty-KSeF.md#2-pobranie-danych-do-wniosku-certyfikacyjnego)\n> - [Przygotowanie wniosku](https://github.com/CIRFMF/ksef-api/blob/main/certyfikaty-KSeF.md#3-przygotowanie-csr-certificate-signing-request)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).",
       "responses" : {
         "200" : {
           "description" : "OK",

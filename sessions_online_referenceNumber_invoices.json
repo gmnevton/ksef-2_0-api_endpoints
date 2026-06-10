@@ -12,7 +12,7 @@
         "Wysyłka interaktywna"
       ],
       "summary" : "Wysłanie faktury",
-      "description" : "Przyjmuje zaszyfrowaną fakturę oraz jej metadane i rozpoczyna jej przetwarzanie.\n\n> Więcej informacji:\n> - [Wysłanie faktury](https://github.com/CIRFMF/ksef-docs/blob/main/sesja-interaktywna.md#2-wys%C5%82anie-faktury)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Wymagane uprawnienia**: `InvoiceWrite`, `PefInvoiceWrite`, `EnforcementOperations`.",
+      "description" : "Przyjmuje zaszyfrowaną fakturę oraz jej metadane i rozpoczyna jej przetwarzanie.\n\n> Więcej informacji:\n> - [Wysłanie faktury](https://github.com/CIRFMF/ksef-api/blob/main/sesja-interaktywna.md#2-wys%C5%82anie-faktury)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Wymagane uprawnienia**: `InvoiceWrite`, `PefInvoiceWrite`, `EnforcementOperations`.",
       "parameters" : [
         {
           "name" : "referenceNumber",

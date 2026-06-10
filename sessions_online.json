@@ -12,7 +12,7 @@
         "Wysyłka interaktywna"
       ],
       "summary" : "Otwarcie sesji interaktywnej",
-      "description" : "Otwiera sesję do wysyłki pojedynczych faktur. Należy przekazać schemat wysyłanych faktur oraz informacje o kluczu używanym do szyfrowania.\n\n> Więcej informacji:\n> - [Otwarcie sesji interaktywnej](https://github.com/CIRFMF/ksef-docs/blob/main/sesja-interaktywna.md#1-otwarcie-sesji)\n> - [Klucz publiczny Ministerstwa Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Wymagane uprawnienia**: `InvoiceWrite`, `PefInvoiceWrite`, `EnforcementOperations`.",
+      "description" : "Otwiera sesję do wysyłki pojedynczych faktur. Należy przekazać schemat wysyłanych faktur oraz informacje o kluczu używanym do szyfrowania.\n\n> Więcej informacji:\n> - [Otwarcie sesji interaktywnej](https://github.com/CIRFMF/ksef-api/blob/main/sesja-interaktywna.md#1-otwarcie-sesji)\n> - [Klucz publiczny Ministerstwa Finansów](/docs/v2/index.html#tag/Certyfikaty-klucza-publicznego)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Wymagane uprawnienia**: `InvoiceWrite`, `PefInvoiceWrite`, `EnforcementOperations`.",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -163,7 +163,7 @@
             "$ref" : "#/components/schemas/FormCode"
           }
         ],
-        "description" : "Schemat faktur wysyłanych w ramach sesji.\n\nObsługiwane schematy:\n| SystemCode | SchemaVersion | Value |\n| --- | --- | --- |\n| [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |\n| [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |\n| [PEF (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF(3)_v2-1.xsd) | 2-1 | PEF |\n| [PEF_KOR (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF_KOR(3)_v2-1.xsd) | 2-1 | PEF |\n| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_FA_RR(1)_v1-1E.xsd) | 1-1E | FA_RR |\n"
+        "description" : "Schemat faktur wysyłanych w ramach sesji.\n\nObsługiwane schematy:\n| SystemCode | SchemaVersion | Value |\n| --- | --- | --- |\n| [FA (2)](https://github.com/CIRFMF/ksef-api/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |\n| [FA (3)](https://github.com/CIRFMF/ksef-api/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |\n| [PEF (3)](https://github.com/CIRFMF/ksef-api/blob/main/faktury/schemy/PEF/Schemat_PEF(3)_v2-1.xsd) | 2-1 | PEF |\n| [PEF_KOR (3)](https://github.com/CIRFMF/ksef-api/blob/main/faktury/schemy/PEF/Schemat_PEF_KOR(3)_v2-1.xsd) | 2-1 | PEF |\n| [FA_RR (1)](https://github.com/CIRFMF/ksef-api/blob/main/faktury/schemy/RR/schemat_FA_RR(1)_v1-1E.xsd) | 1-1E | FA_RR |\n"
       },
       "encryption" : {
         "required" : [
@@ -703,11 +703,11 @@ body:
 Obsługiwane schematy:
 | SystemCode | SchemaVersion | Value |
 | --- | --- | --- |
-| [FA (2)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |
-| [FA (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |
-| [PEF (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF(3)_v2-1.xsd) | 2-1 | PEF |
-| [PEF_KOR (3)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/PEF/Schemat_PEF_KOR(3)_v2-1.xsd) | 2-1 | PEF |
-| [FA_RR (1)](https://github.com/CIRFMF/ksef-docs/blob/main/faktury/schemy/RR/schemat_FA_RR(1)_v1-1E.xsd) | 1-1E | FA_RR |
+| [FA (2)](https://github.com/CIRFMF/ksef-api/blob/main/faktury/schemy/FA/schemat_FA(2)_v1-0E.xsd) | 1-0E | FA |
+| [FA (3)](https://github.com/CIRFMF/ksef-api/blob/main/faktury/schemy/FA/schemat_FA(3)_v1-0E.xsd) | 1-0E | FA |
+| [PEF (3)](https://github.com/CIRFMF/ksef-api/blob/main/faktury/schemy/PEF/Schemat_PEF(3)_v2-1.xsd) | 2-1 | PEF |
+| [PEF_KOR (3)](https://github.com/CIRFMF/ksef-api/blob/main/faktury/schemy/PEF/Schemat_PEF_KOR(3)_v2-1.xsd) | 2-1 | PEF |
+| [FA_RR (1)](https://github.com/CIRFMF/ksef-api/blob/main/faktury/schemy/RR/schemat_FA_RR(1)_v1-1E.xsd) | 1-1E | FA_RR |
     "systemCode": "", // required; type: string; description: Kod systemowy
     "schemaVersion": "", // required; type: string; description: Wersja schematu
     "value": "" // required; type: string; description: Wartość
