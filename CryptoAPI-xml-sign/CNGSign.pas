@@ -585,23 +585,21 @@ function ASN1ToP1363(const DerSig: TBytes; CurveBits: Integer): TBytes;
     if Offset >= Length(Data) then
       raise Exception.Create('ASN1 length: offset past end');
 
-    if Data[Offset] < $80 then
-    begin
+    if Data[Offset] < $80 then begin
       // Short form
       Result := Data[Offset];
       Inc(Offset);
     end
-    else
-    begin
+    else begin
       // Long form
       NumBytes := Data[Offset] and $7F;
       Inc(Offset);
 
       if (NumBytes = 0) or (NumBytes > 4) then
-        raise Exception.Create('ASN1 length: invalid long-form length');
+        raise Exception.Create('ASN1 length: invalid long-form length, expected: 1..4, got: ' + IntToStr(NumBytes));
 
       if Offset + NumBytes > Length(Data) then
-        raise Exception.Create('ASN1 length: truncated long-form');
+        raise Exception.Create('ASN1 length: truncated long-form, Offset(value: ' + IntToStr(Offset) + ') + NumBytes(value: ' + IntToStr(NumBytes) + ') = ' + IntToStr(Offset + NumBytes) + ', greater than length of Data(len: ' + IntToStr(Length(Data)) + ')');
 
       Len := 0;
       for I := 0 to NumBytes - 1 do
@@ -669,7 +667,7 @@ begin
   SeqLen := ReadASN1Length(DerSig, Offset);
 
   if Offset + SeqLen <> Length(DerSig) then
-    raise Exception.Create('ASN1 SEQUENCE length mismatch');
+    raise Exception.Create('ASN1 SEQUENCE length mismatch, Offset(value: ' + IntToStr(Offset) + ') + SeqLen(value: ' + IntToStr(Offset) + ') not equal to length of DerSig(len: ' + IntToStr(Length(DerSig)) + ')');
 
   // Read r and s
   R := ReadASN1Integer(DerSig, Offset);
@@ -686,6 +684,11 @@ begin
   SetLength(Result, B * 2);
   Move(R[0], Result[0], B);
   Move(S[0], Result[B], B);
+end;
+
+function expected_length(const Value: Integer; const vlen: Integer): Boolean; inline;
+begin
+  Result := (Value = vlen);
 end;
 
 //Output format
@@ -726,7 +729,11 @@ begin
 //  TFile.WriteAllText('SignHashWithECDSA.txt', 'b64: ' + BytesToBase64(rawSig) + #13#10 + 'hex: ' + BytesToHex(rawSig));
 
 //  ReverseBytes(rawSig);
-  if (outSize > 0) and (rawSig[0] = $30) then begin // it’s DER: convert DER -> P1363 then base64
+  if (outSize > 0) and // check if it is not raw r|s bytes known lengths
+     (not expected_length(outSize, 64) and // raw P-256 =  64 bytes
+      not expected_length(outSize, 96) and // raw P-384 =  96 bytes
+      not expected_length(outSize, 132))   // raw P-521 = 132 bytes
+     and (rawSig[0] = $30) then begin // it’s DER: convert DER -> P1363 then base64
     Result := ASN1ToP1363(rawSig, (outSize div 2) * 8);
   end
   else begin
