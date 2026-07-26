@@ -153,7 +153,7 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
   }
 
 
@@ -698,9 +698,7 @@ X-System-Warning: type: string; description: Ostrzeżenie techniczne dla systemu
 Format:
 `[code]: message | [code]: message`
 
-Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><br/>
-Generowanie ostrzeżeń można wymusić przekazując nagłówek:
-    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi.
+Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`
 body:
 {
   "requestDate": "", // required; type: string; format: date-time; description: Data złożenia wniosku certyfikacyjnego.

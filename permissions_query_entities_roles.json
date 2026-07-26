@@ -12,7 +12,7 @@
         "Wyszukiwanie nadanych uprawnień"
       ],
       "summary" : "Pobranie listy ról podmiotu",
-      "description" : " Metoda pozwala na **odczytanie listy ról podmiotu bieżącego kontekstu logowania**.\n\n#### Role podmiotów zwracane przez operację:\n- **CourtBailiff** – komornik sądowy  \n- **EnforcementAuthority** – organ egzekucyjny  \n- **LocalGovernmentUnit** – nadrzędna JST  \n- **LocalGovernmentSubUnit** – podrzędne JST  \n- **VatGroupUnit** – grupa VAT  \n- **VatGroupSubUnit** – członek grupy VAT\n\n#### Stronicowanie wyników\nZapytanie zwraca **jedną stronę wyników** o numerze i rozmiarze podanym w ścieżce.\n- Przy pierwszym wywołaniu należy ustawić parametr `pageOffset = 0`.  \n- Jeżeli dostępna jest kolejna strona wyników, w odpowiedzi pojawi się flaga **`hasMore`**.  \n- W takim przypadku można wywołać zapytanie ponownie z kolejnym numerem strony.\n \n > Więcej informacji:\n > - [Pobieranie listy ról](https://github.com/CIRFMF/ksef-api/blob/main/uprawnienia.md#pobranie-listy-r%C3%B3l-podmiotu)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Sortowanie:**\n\n- startDate (Desc)\n- id (Asc)\n\n\n\n**Wymagane uprawnienia**: `CredentialsManage`, `CredentialsRead`.",
+      "description" : " Metoda pozwala na **odczytanie listy ról podmiotu bieżącego kontekstu logowania**.\n\n#### Role podmiotów zwracane przez operację:\n- **CourtBailiff** – komornik sądowy  \n- **EnforcementAuthority** – organ egzekucyjny  \n- **LocalGovernmentUnit** – nadrzędna JST  \n- **LocalGovernmentSubUnit** – podrzędne JST  \n- **VatGroupUnit** – grupa VAT  \n- **VatGroupSubUnit** – członek grupy VAT\n\n#### Stronicowanie wyników\nZapytanie zwraca **jedną stronę wyników** o numerze i rozmiarze podanym w ścieżce.\n- Przy pierwszym wywołaniu należy ustawić parametr `pageOffset = 0`.  \n- Jeżeli dostępna jest kolejna strona wyników, w odpowiedzi pojawi się flaga **`hasMore`**.  \n- W takim przypadku można wywołać zapytanie ponownie z kolejnym numerem strony.\n \n > Więcej informacji:\n > - [Pobieranie listy ról](https://github.com/CIRFMF/ksef-api/blob/main/uprawnienia.md#pobranie-listy-r%C3%B3l-podmiotu)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Sortowanie:**\n\n- startDate (Desc)\n- id (Asc)\n\n\n\n**Wymagane jedno z uprawnień**: `CredentialsManage`, `CredentialsRead`.",
       "parameters" : [
         {
           "name" : "pageOffset",
@@ -158,7 +158,7 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
   }
 
 
@@ -722,9 +722,7 @@ X-System-Warning: type: string; description: Ostrzeżenie techniczne dla systemu
 Format:
 `[code]: message | [code]: message`
 
-Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><br/>
-Generowanie ostrzeżeń można wymusić przekazując nagłówek:
-    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi.
+Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`
 body:
 {
   "roles": [ // required; type: array; description: Lista odczytanych ról podmiotu.

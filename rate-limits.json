@@ -84,6 +84,11 @@
                   "perMinute" : 16,
                   "perHour" : 64
                 },
+                "collectiveIdentifier" : {
+                  "perSecond" : 10,
+                  "perMinute" : 60,
+                  "perHour" : 120
+                },
                 "other" : {
                   "perSecond" : 10,
                   "perMinute" : 30,
@@ -171,13 +176,14 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
   }
 
 
   "EffectiveApiRateLimits" : {
     "required" : [
       "batchSession",
+      "collectiveIdentifier",
       "invoiceDownload",
       "invoiceExport",
       "invoiceExportStatus",
@@ -334,6 +340,19 @@
           }
         ],
         "description" : "Limity dla pobierania faktur po numerze KSeF."
+      },
+      "collectiveIdentifier" : {
+        "required" : [
+          "perSecond",
+          "perMinute",
+          "perHour"
+        ],
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/EffectiveApiRateLimitValues"
+          }
+        ],
+        "description" : "Limity dla identyfikatorów zbiorczych"
       },
       "other" : {
         "required" : [
@@ -826,9 +845,7 @@ X-System-Warning: type: string; description: Ostrzeżenie techniczne dla systemu
 Format:
 `[code]: message | [code]: message`
 
-Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><br/>
-Generowanie ostrzeżeń można wymusić przekazując nagłówek:
-    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi.
+Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`
 body:
 {
   "onlineSession": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla otwierania/zamykania sesji interaktywnych.
@@ -882,6 +899,11 @@ body:
     "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
   },
   "invoiceDownload": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla pobierania faktur po numerze KSeF.
+    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
+    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
+    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
+  },
+  "collectiveIdentifier": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla identyfikatorów zbiorczych
     "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
     "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
     "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.

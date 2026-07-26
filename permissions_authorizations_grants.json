@@ -12,7 +12,7 @@
         "Nadawanie uprawnień"
       ],
       "summary" : "Nadanie uprawnień podmiotowych",
-      "description" : "Metoda pozwala na nadanie jednego z uprawnień podmiotowych do obsługi podmiotu kontekstu  podmiotowi wskazanemu w żądaniu.\n\n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-api/blob/main/uprawnienia.md#nadanie-uprawnie%C5%84-podmiotowych)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Wymagane uprawnienia**: `CredentialsManage`.",
+      "description" : "Metoda pozwala na nadanie jednego z uprawnień podmiotowych do obsługi podmiotu kontekstu  podmiotowi wskazanemu w żądaniu.\n\n> Więcej informacji:\n> - [Nadawanie uprawnień](https://github.com/CIRFMF/ksef-api/blob/main/uprawnienia.md#nadanie-uprawnie%C5%84-podmiotowych)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Wymagane uprawnienie**: `CredentialsManage`.",
       "requestBody" : {
         "content" : {
           "application/json" : {
@@ -257,7 +257,7 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
   }
 
 
@@ -740,9 +740,7 @@ X-System-Warning: type: string; description: Ostrzeżenie techniczne dla systemu
 Format:
 `[code]: message | [code]: message`
 
-Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><br/>
-Generowanie ostrzeżeń można wymusić przekazując nagłówek:
-    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi.
+Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`
 body:
 {
   "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny operacji nadania lub odbierania uprawnień.

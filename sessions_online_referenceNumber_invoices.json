@@ -12,7 +12,7 @@
         "Wysyłka interaktywna"
       ],
       "summary" : "Wysłanie faktury",
-      "description" : "Przyjmuje zaszyfrowaną fakturę oraz jej metadane i rozpoczyna jej przetwarzanie.\n\n> Więcej informacji:\n> - [Wysłanie faktury](https://github.com/CIRFMF/ksef-api/blob/main/sesja-interaktywna.md#2-wys%C5%82anie-faktury)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Wymagane uprawnienia**: `InvoiceWrite`, `PefInvoiceWrite`, `EnforcementOperations`.",
+      "description" : "Przyjmuje zaszyfrowaną fakturę oraz jej metadane i rozpoczyna jej przetwarzanie.\n\n> Więcej informacji:\n> - [Wysłanie faktury](https://github.com/CIRFMF/ksef-api/blob/main/sesja-interaktywna.md#2-wys%C5%82anie-faktury)\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Wymagane jedno z uprawnień**: `InvoiceWrite`, `PefInvoiceWrite`, `EnforcementOperations`.",
       "parameters" : [
         {
           "name" : "referenceNumber",
@@ -235,7 +235,7 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
   }
 
 
@@ -704,9 +704,7 @@ X-System-Warning: type: string; description: Ostrzeżenie techniczne dla systemu
 Format:
 `[code]: message | [code]: message`
 
-Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><br/>
-Generowanie ostrzeżeń można wymusić przekazując nagłówek:
-    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi.
+Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`
 body:
 {
   "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny faktury.

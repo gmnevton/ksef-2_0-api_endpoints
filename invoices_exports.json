@@ -12,7 +12,7 @@
         "Pobieranie faktur"
       ],
       "summary" : "Eksport paczki faktur",
-      "description" : "Rozpoczyna asynchroniczny proces wyszukiwania faktur w systemie KSeF na podstawie przekazanych filtrów oraz przygotowania ich w formie zaszyfrowanej paczki.\nWymagane jest przekazanie informacji o szyfrowaniu w polu <b>Encryption</b>, które służą do zabezpieczenia przygotowanej paczki z fakturami.\nMaksymalnie można uruchomić 10 równoczesnych eksportów w zalogowanym kontekście.\n            \nSystem pobiera faktury rosnąco według daty określonej w filtrze (Invoicing, Issue, PermanentStorage) i dodaje faktury(nazwa pliku: <b>{ksefNumber}.xml</b>) do paczki aż do osiągnięcia jednego z poniższych limitów:\n* Limit liczby faktur: 10 000 sztuk\n* Limit rozmiaru danych(skompresowanych): 1GB\n\nPaczka eksportu zawiera dodatkowy plik z metadanymi faktur w formacie JSON (`_metadata.json`). Zawartość pliku to\nobiekt z tablicą <b>invoices</b>, gdzie każdy element jest obiektem typu <b>InvoiceMetadata</b>\n(taki jak zwracany przez endpoint `POST /invoices/query/metadata`).\n\n<b>Plik z metadanymi(_metadata.json) nie jest wliczany do limitów algorytmu budowania paczki</b>. \n\n`Do realizacji pobierania przyrostowego należy stosować filtrowanie po dacie PermanentStorage`.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Sortowanie:**\n\n- permanentStorageDate | invoicingDate | issueDate (Asc) - pole wybierane na podstawie filtrów\n\n\n\n**Wymagane uprawnienia**: `InvoiceRead`.",
+      "description" : "Rozpoczyna asynchroniczny proces wyszukiwania faktur w systemie KSeF na podstawie przekazanych filtrów oraz przygotowania ich w formie zaszyfrowanej paczki.\nWymagane jest przekazanie informacji o szyfrowaniu w polu <b>Encryption</b>, które służą do zabezpieczenia przygotowanej paczki z fakturami.\nMaksymalnie można uruchomić 10 równoczesnych eksportów w zalogowanym kontekście.\n            \nSystem pobiera faktury rosnąco według daty określonej w filtrze (Invoicing, Issue, PermanentStorage) i dodaje faktury(nazwa pliku: <b>{ksefNumber}.xml</b>) do paczki aż do osiągnięcia jednego z poniższych limitów:\n* Limit liczby faktur: 10 000 sztuk\n* Limit rozmiaru danych(skompresowanych): 1GB\n\nPaczka eksportu zawiera dodatkowy plik z metadanymi faktur w formacie JSON (`_metadata.json`). Zawartość pliku to\nobiekt z tablicą <b>invoices</b>, gdzie każdy element jest obiektem typu <b>InvoiceMetadata</b>\n(taki jak zwracany przez endpoint `POST /invoices/query/metadata`).\n\n<b>Plik z metadanymi(_metadata.json) nie jest wliczany do limitów algorytmu budowania paczki</b>. \n\n`Do realizacji pobierania przyrostowego należy stosować filtrowanie po dacie PermanentStorage`.\n\n**Headers:**\n\n`X-Error-Format: problem-details` - ustawienie tego nagłówka powoduje zwracanie błędów w formacie **Problem Details** (`application/problem+json`).\n\n**Sortowanie:**\n\n- permanentStorageDate | invoicingDate | issueDate (Asc) - pole wybierane na podstawie filtrów\n\n\n\n**Wymagane uprawnienie**: `InvoiceRead`.",
       "requestBody" : {
         "description" : "Dane wejściowe określające kryteria i format eksportu paczki faktur.",
         "content" : {
@@ -422,7 +422,7 @@
     "minLength" : 35,
     "pattern" : "^([1-9](\\d[1-9]|[1-9]\\d)\\d{7})-(20[2-9][0-9]|2[1-9]\\d{2}|[3-9]\\d{3})(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-([0-9A-F]{6})-?([0-9A-F]{6})-([0-9A-F]{2})$",
     "type" : "string",
-    "description" : "Numer KSeF o długości 36 znaków jest akceptowany, by zachować kompatybilność wsteczna z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 35-znakowym."
+    "description" : "Numer KSeF o długości 36 znaków jest akceptowany, by zachować kompatybilność wsteczną z KSeF 1.0. W KSeF 2.0 numery są generowane wyłącznie w formacie 35-znakowym."
   }
 
 
@@ -748,7 +748,7 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
   }
 
 
@@ -1324,9 +1324,7 @@ X-System-Warning: type: string; description: Ostrzeżenie techniczne dla systemu
 Format:
 `[code]: message | [code]: message`
 
-Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><br/>
-Generowanie ostrzeżeń można wymusić przekazując nagłówek:
-    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi.
+Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`
 body:
 {
   "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny eksportu faktur.

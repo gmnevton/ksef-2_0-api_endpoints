@@ -225,6 +225,7 @@
           "invoiceExport",
           "invoiceExportStatus",
           "invoiceDownload",
+          "collectiveIdentifier",
           "other"
         ],
         "allOf" : [
@@ -241,6 +242,7 @@
   "ApiRateLimitsOverride" : {
     "required" : [
       "batchSession",
+      "collectiveIdentifier",
       "invoiceDownload",
       "invoiceExport",
       "invoiceExportStatus",
@@ -398,6 +400,19 @@
         ],
         "description" : "Limity dla pobierania faktur po numerze KSeF."
       },
+      "collectiveIdentifier" : {
+        "required" : [
+          "perSecond",
+          "perMinute",
+          "perHour"
+        ],
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/ApiRateLimitValuesOverride"
+          }
+        ],
+        "description" : "Limity dla identyfikatorów zbiorczych."
+      },
       "other" : {
         "required" : [
           "perSecond",
@@ -444,7 +459,7 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nGenerowanie ostrzeżeń można wymusić przekazując nagłówek:\n    `X-Test-System-Warning`, którego treść zostanie zwrócona w odpowiedzi."
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
   }
 
 
@@ -934,6 +949,11 @@ body:
       "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
     },
     "invoiceDownload": { // required; type: object; items: #/components/schemas/ApiRateLimitValuesOverride; description: Limity dla pobierania faktur po numerze KSeF.
+      "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
+      "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
+      "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
+    },
+    "collectiveIdentifier": { // required; type: object; items: #/components/schemas/ApiRateLimitValuesOverride; description: Limity dla identyfikatorów zbiorczych.
       "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
       "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
       "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
