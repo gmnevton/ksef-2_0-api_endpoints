@@ -261,7 +261,7 @@
             "$ref" : "#/components/schemas/InvoiceQueryDateRange"
           }
         ],
-        "description" : "Typ i zakres dat, według którego filtrowane są faktury.\nMaksymalny dozwolony okres wynosi 3 miesiące w strefie UTC lub w strefie Europe/Warsaw (WAW).\n            \nFormat daty:\n * Daty muszą być przekazane w formacie ISO 8601, np. `yyyy-MM-ddTHH:mm:ss`.\n * Dopuszczalne są następujące warianty:\n   - z sufiksem `Z` (czas UTC),\n   - z jawnym offsetem, np. `+01:00`, `+03:00`,\n   - bez offsetu (interpretowane jako czas lokalny strefy Europe/Warsaw)."
+        "description" : "Typ i zakres dat, według którego filtrowane są faktury.\nMaksymalny dozwolony okres wynosi 100 dni w strefie UTC\n            \nFormat daty:\n * Daty muszą być przekazane w formacie ISO 8601, np. `yyyy-MM-ddTHH:mm:ss`.\n * Dopuszczalne są następujące warianty:\n   - z sufiksem `Z` (czas UTC),\n   - z jawnym offsetem, np. `+01:00`, `+03:00`"
       },
       "ksefNumber" : {
         "allOf" : [
@@ -748,7 +748,7 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nW celu przetestowania obsługi ostrzeżeń można przekazać nagłówek `X-Test-System-Warning`. Jego treść zostanie zwrócona w odpowiedzi jako `X-System-Warning`."
   }
 
 
@@ -1222,14 +1222,13 @@ Określa kontekst, w jakim przeszukiwane są dane.
 | Subject3 | Podmiot 3 |
 | SubjectAuthorized | Podmiot upoważniony |
     "dateRange": { // required; type: object; items: #/components/schemas/InvoiceQueryDateRange; description: Typ i zakres dat, według którego filtrowane są faktury.
-Maksymalny dozwolony okres wynosi 3 miesiące w strefie UTC lub w strefie Europe/Warsaw (WAW).
+Maksymalny dozwolony okres wynosi 100 dni w strefie UTC
             
 Format daty:
  * Daty muszą być przekazane w formacie ISO 8601, np. `yyyy-MM-ddTHH:mm:ss`.
  * Dopuszczalne są następujące warianty:
    - z sufiksem `Z` (czas UTC),
-   - z jawnym offsetem, np. `+01:00`, `+03:00`,
-   - bez offsetu (interpretowane jako czas lokalny strefy Europe/Warsaw).
+   - z jawnym offsetem, np. `+01:00`, `+03:00`
       "dateType": "", // required; type: string; items: #/components/schemas/InvoiceQueryDateType; description: Typ daty, według której ma być zastosowany zakres.
 | Wartość | Opis |
 | --- | --- |
@@ -1324,7 +1323,8 @@ X-System-Warning: type: string; description: Ostrzeżenie techniczne dla systemu
 Format:
 `[code]: message | [code]: message`
 
-Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`
+Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><br/>
+W celu przetestowania obsługi ostrzeżeń można przekazać nagłówek `X-Test-System-Warning`. Jego treść zostanie zwrócona w odpowiedzi jako `X-System-Warning`.
 body:
 {
   "referenceNumber": "" // required; type: string; items: #/components/schemas/ReferenceNumber; description: Numer referencyjny eksportu faktur.

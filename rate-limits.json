@@ -85,9 +85,9 @@
                   "perHour" : 64
                 },
                 "collectiveIdentifier" : {
-                  "perSecond" : 10,
-                  "perMinute" : 60,
-                  "perHour" : 120
+                  "perSecond" : 20,
+                  "perMinute" : 120,
+                  "perHour" : 240
                 },
                 "other" : {
                   "perSecond" : 10,
@@ -176,7 +176,7 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nW celu przetestowania obsługi ostrzeżeń można przekazać nagłówek `X-Test-System-Warning`. Jego treść zostanie zwrócona w odpowiedzi jako `X-System-Warning`."
   }
 
 
@@ -845,7 +845,8 @@ X-System-Warning: type: string; description: Ostrzeżenie techniczne dla systemu
 Format:
 `[code]: message | [code]: message`
 
-Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`
+Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><br/>
+W celu przetestowania obsługi ostrzeżeń można przekazać nagłówek `X-Test-System-Warning`. Jego treść zostanie zwrócona w odpowiedzi jako `X-System-Warning`.
 body:
 {
   "onlineSession": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla otwierania/zamykania sesji interaktywnych.

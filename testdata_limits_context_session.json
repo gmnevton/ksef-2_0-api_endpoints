@@ -19,7 +19,8 @@
             "schema" : {
               "required" : [
                 "onlineSession",
-                "batchSession"
+                "batchSession",
+                "collectiveIdentifier"
               ],
               "allOf" : [
                 {
@@ -210,6 +211,7 @@
   "SetSessionLimitsRequest" : {
     "required" : [
       "batchSession",
+      "collectiveIdentifier",
       "onlineSession"
     ],
     "type" : "object",
@@ -239,6 +241,17 @@
           }
         ],
         "description" : "Limity dla sesji wsadowych."
+      },
+      "collectiveIdentifier" : {
+        "required" : [
+          "maxInvoices"
+        ],
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/CollectiveIdentifierContextLimitsOverride"
+          }
+        ],
+        "description" : "Limity dla identyfikatorów zbiorczych."
       }
     }
   }
@@ -310,9 +323,26 @@
   }
 
 
+  "CollectiveIdentifierContextLimitsOverride" : {
+    "required" : [
+      "maxInvoices"
+    ],
+    "type" : "object",
+    "properties" : {
+      "maxInvoices" : {
+        "maximum" : 5000,
+        "minimum" : 2,
+        "type" : "integer",
+        "description" : "Maksymalna ilość faktur które można przesłać w pojedynczym identyfikatorze zbiorczym.",
+        "format" : "int32"
+      }
+    }
+  }
+
+
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nW celu przetestowania obsługi ostrzeżeń można przekazać nagłówek `X-Test-System-Warning`. Jego treść zostanie zwrócona w odpowiedzi jako `X-System-Warning`."
   }
 
 
@@ -759,6 +789,9 @@ body:
     "maxInvoiceSizeInMB": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury w MB.
     "maxInvoiceWithAttachmentSizeInMB": 0, // required; type: integer; format: int32; description: Maksymalny rozmiar faktury z załącznikiem w MB.
     "maxInvoices": 0 // required; type: integer; format: int32; description: Maksymalna ilość faktur które można przesłać w pojedynczej sesji.
+  },
+  "collectiveIdentifier": { // required; type: object; items: #/components/schemas/CollectiveIdentifierContextLimitsOverride; description: Limity dla identyfikatorów zbiorczych.
+    "maxInvoices": 0 // required; type: integer; format: int32; description: Maksymalna ilość faktur które można przesłać w pojedynczym identyfikatorze zbiorczym.
   }
 }
 

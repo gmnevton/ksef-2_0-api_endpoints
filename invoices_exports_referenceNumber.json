@@ -63,7 +63,8 @@
                   ],
                   "isTruncated" : true,
                   "lastPermanentStorageDate" : "2025-09-11T11:40:40.266578+00:00",
-                  "permanentStorageHwmDate" : "2025-09-11T12:00:40.266578+00:00"
+                  "permanentStorageHwmDate" : "2025-09-11T12:00:40.266578+00:00",
+                  "compressionType" : "Zip"
                 }
               }
             }
@@ -186,7 +187,7 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nW celu przetestowania obsługi ostrzeżeń można przekazać nagłówek `X-Test-System-Warning`. Jego treść zostanie zwrócona w odpowiedzi jako `X-System-Warning`."
   }
 
 
@@ -221,7 +222,8 @@
           "invoiceCount",
           "size",
           "parts",
-          "isTruncated"
+          "isTruncated",
+          "compressionType"
         ],
         "allOf" : [
           {
@@ -266,6 +268,7 @@
 
   "InvoicePackage" : {
     "required" : [
+      "compressionType",
       "invoiceCount",
       "isTruncated",
       "parts",
@@ -320,6 +323,13 @@
         "description" : "Dotyczy wyłącznie zapytań filtrowanych po typie daty <b>PermanentStorage</b>.\nJeśli zapytanie dotyczyło najnowszego okresu, wartość ta może być wartością nieznacznie skorygowaną względem górnej granicy podanej w warunkach zapytania.\nDla okresów starszych, będzie to zgodne z warunkami zapytania. \n\nSystem gwarantuje, że dane poniżej tej wartości są spójne i kompletne.\nPonowne zapytania obejmujące zakresem dane poniżej tego kroczącego znacznika czasu nie zwrócą w przyszłości innych wyników (np.dodatkowych faktur). \n\nDla dateType = Issue lub Invoicing – null.",
         "format" : "date-time",
         "nullable" : true
+      },
+      "compressionType" : {
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/CompressionType"
+          }
+        ]
       }
     }
   }
@@ -402,6 +412,15 @@
     "type" : "string",
     "description" : "SHA-256 w Base64.",
     "format" : "byte"
+  }
+
+
+  "CompressionType" : {
+    "enum" : [
+      "Zip",
+      "TarGz"
+    ],
+    "type" : "string"
   }
 
 
@@ -885,7 +904,8 @@ X-System-Warning: type: string; description: Ostrzeżenie techniczne dla systemu
 Format:
 `[code]: message | [code]: message`
 
-Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`
+Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><br/>
+W celu przetestowania obsługi ostrzeżeń można przekazać nagłówek `X-Test-System-Warning`. Jego treść zostanie zwrócona w odpowiedzi jako `X-System-Warning`.
 body:
 {
   "status": { // required; type: object; items: #/components/schemas/StatusInfo; description: Status eksportu.
@@ -936,7 +956,7 @@ Pole występuje wyłącznie wtedy, gdy paczka została ucięta i eksport był fi
 Pole występuje wyłącznie wtedy, gdy paczka została ucięta i eksport był filtrowany po typie daty `Invoicing`.
     "lastPermanentStorageDate": "", // type: string; format: date-time; nullable: true; description: Data trwałego zapisu ostatniej faktury ujętej w paczce.
 Pole występuje wyłącznie wtedy, gdy paczka została ucięta i eksport był filtrowany po typie daty `PermanentStorage`.
-    "permanentStorageHwmDate": "" // type: string; format: date-time; nullable: true; description: Dotyczy wyłącznie zapytań filtrowanych po typie daty <b>PermanentStorage</b>.
+    "permanentStorageHwmDate": "", // type: string; format: date-time; nullable: true; description: Dotyczy wyłącznie zapytań filtrowanych po typie daty <b>PermanentStorage</b>.
 Jeśli zapytanie dotyczyło najnowszego okresu, wartość ta może być wartością nieznacznie skorygowaną względem górnej granicy podanej w warunkach zapytania.
 Dla okresów starszych, będzie to zgodne z warunkami zapytania. 
 
@@ -944,6 +964,7 @@ System gwarantuje, że dane poniżej tej wartości są spójne i kompletne.
 Ponowne zapytania obejmujące zakresem dane poniżej tego kroczącego znacznika czasu nie zwrócą w przyszłości innych wyników (np.dodatkowych faktur). 
 
 Dla dateType = Issue lub Invoicing – null.
+    "compressionType": "" // required; type: string; items: #/components/schemas/CompressionType;
   }
 }
 

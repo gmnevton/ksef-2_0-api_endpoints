@@ -47,6 +47,13 @@
                   "$ref" : "#/components/schemas/CollectiveIdentifiersQueryRequest"
                 }
               ]
+            },
+            "example" : {
+              "collectiveIdentifierNumber" : "1111111111-IZ202607-65ED02180000-E7",
+              "dateCreatedFrom" : "2026-07-10T12:00:00+02:00",
+              "dateCreatedTo" : "2026-08-10T12:00:00+02:00",
+              "invoiceCountFrom" : 10,
+              "invoiceCountTo" : 100
             }
           }
         }
@@ -65,6 +72,17 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/CollectiveIdentifiersQueryResponse"
+              },
+              "example" : {
+                "continuationToken" : "eyJEYXRlQ3JlYXRlZCI6IjIwMjYtMDctMjBUMDE6MTM6MTMuMTYzOTQ3KzAwOjAwIiwiQ29sbGVjdGl2ZUlkZW50aWZpZXJOdW1iZXIiOiI4NjMxOTQxNTc4LUlaMjAyNjA3LTMyM0I1MjE4NDAwMC1DRCJ9",
+                "collectiveIdentifiers" : [
+                  {
+                    "collectiveIdentifierNumber" : "1111111111-IZ202607-65ED02180000-E7",
+                    "dateCreated" : "2026-07-10T12:00:00+02:00",
+                    "invoiceCount" : 16,
+                    "createdInCurrentContext" : true
+                  }
+                ]
               }
             }
           }
@@ -84,6 +102,29 @@
             }
           },
           "x-summary" : "Bad Request"
+        },
+        "429" : {
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 20 | 120 | 240 | collectiveIdentifier\n",
+          "headers" : {
+            "Retry-After" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RetryAfter"
+              }
+            }
+          },
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsResponse"
+              }
+            },
+            "application/problem+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TooManyRequestsProblemDetails"
+              }
+            }
+          },
+          "x-summary" : "Too Many Requests"
         },
         "403" : {
           "description" : "Forbidden",
@@ -113,6 +154,11 @@
           ]
         }
       ],
+      "x-rate-limits" : {
+        "perSecond" : 20,
+        "perMinute" : 120,
+        "perHour" : 240
+      },
       "x-sort" : [
         {
           "field" : "dateCreated",
@@ -177,7 +223,7 @@
 
   "SystemWarning" : {
     "type" : "string",
-    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`"
+    "description" : "Ostrzeżenie techniczne dla systemu integratora. Ostrzeżenie nie wpływa na bieżący wynik operacji. Wartość nagłówka jest normalizowana z użyciem ASCII folding.\n\nFormat:\n`[code]: message | [code]: message`\n\nRegex pojedynczego ostrzeżenia: `\\[(?<code>[^\\]]+)\\]: (?<message>[^|]+)`<br/><br/>\nW celu przetestowania obsługi ostrzeżeń można przekazać nagłówek `X-Test-System-Warning`. Jego treść zostanie zwrócona w odpowiedzi jako `X-System-Warning`."
   }
 
 
@@ -441,6 +487,109 @@
   }
 
 
+  "RetryAfter" : {
+    "type" : "integer",
+    "description" : "Liczba sekund po których można ponowić żądanie.",
+    "format" : "int32",
+    "example" : 30
+  }
+
+
+  "TooManyRequestsResponse" : {
+    "required" : [
+      "status"
+    ],
+    "type" : "object",
+    "properties" : {
+      "status" : {
+        "required" : [
+          "code",
+          "description",
+          "details"
+        ],
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "integer",
+            "description" : "Kod statusu HTTP odpowiadający błędowi. Zawsze ma wartość 429."
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "Opis błędu zgodny z nazwą statusu HTTP."
+          },
+          "details" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            },
+            "description" : "Lista szczegółowych informacji opisujących przyczynę przekroczenia limitu żądań oraz wskazówki dotyczące ponowienia żądania."
+          }
+        },
+        "description" : "Informacje o błędzie związanym z przekroczeniem limitu żądań."
+      }
+    },
+    "example" : {
+      "status" : {
+        "code" : 429,
+        "description" : "Too Many Requests",
+        "details" : [
+          "Przekroczono limit 20 żądań na minutę. Spróbuj ponownie po 30 sekundach."
+        ]
+      }
+    },
+    "deprecated" : true
+  }
+
+
+  "TooManyRequestsProblemDetails" : {
+    "required" : [
+      "detail",
+      "instance",
+      "status",
+      "timestamp",
+      "title",
+      "traceId"
+    ],
+    "type" : "object",
+    "properties" : {
+      "title" : {
+        "type" : "string",
+        "description" : "Too Many Requests"
+      },
+      "status" : {
+        "type" : "integer",
+        "description" : "429",
+        "format" : "int32"
+      },
+      "instance" : {
+        "type" : "string",
+        "description" : "URI identyfikujące konkretne wystąpienie błędu."
+      },
+      "detail" : {
+        "type" : "string",
+        "description" : "Informacja o przyczynie przekroczenia limitu żądań oraz wskazówki dotyczące ponowienia żądania."
+      },
+      "timestamp" : {
+        "type" : "string",
+        "description" : "Data i czas wystąpienia błędu w UTC.",
+        "format" : "date-time"
+      },
+      "traceId" : {
+        "type" : "string",
+        "description" : "Identyfikator śledzenia błędu."
+      }
+    },
+    "example" : {
+      "title" : "Too Many Requests",
+      "status" : 429,
+      "instance" : "{{uri_path}}",
+      "detail" : "Przekroczono limit 20 żądań na minutę. Spróbuj ponownie po 30 sekundach.",
+      "timestamp" : "2025-07-11T12:23:56.0154302+00:00",
+      "traceId" : "673843e023c432286660bc0501a3af44"
+    }
+  }
+
+
   "ForbiddenProblemDetails" : {
     "required" : [
       "detail",
@@ -590,7 +739,8 @@ X-System-Warning: type: string; description: Ostrzeżenie techniczne dla systemu
 Format:
 `[code]: message | [code]: message`
 
-Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`
+Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><br/>
+W celu przetestowania obsługi ostrzeżeń można przekazać nagłówek `X-Test-System-Warning`. Jego treść zostanie zwrócona w odpowiedzi jako `X-System-Warning`.
 body:
 {
   "continuationToken": "", // type: string; nullable: true; description: Token służący do pobrania kolejnej strony wyników. Jeśli jest pusty, to nie ma kolejnych stron.
@@ -648,6 +798,38 @@ Może zawierać wiele wpisów dla jednego kodu błędu.
       ]
     }
   ],
+  "timestamp": "", // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
+  "traceId": "" // required; type: string; description: Identyfikator śledzenia błędu.
+}
+
+
+
+response (429): application/json
+description: | | req / s | req / min | req / h | grupa
+| --- | --- | --- | --- | --- |
+| **Limity liczby żądań** | 20 | 120 | 240 | collectiveIdentifier
+
+headers:
+Retry-After: type: integer; format: int32; description: Liczba sekund po których można ponowić żądanie.
+body:
+{
+  "status": { // required; type: object; description: Informacje o błędzie związanym z przekroczeniem limitu żądań.
+  }
+}
+
+response (429): application/problem+json
+description: | | req / s | req / min | req / h | grupa
+| --- | --- | --- | --- | --- |
+| **Limity liczby żądań** | 20 | 120 | 240 | collectiveIdentifier
+
+headers:
+Retry-After: type: integer; format: int32; description: Liczba sekund po których można ponowić żądanie.
+body:
+{
+  "title": "", // required; type: string; description: Too Many Requests
+  "status": 0, // required; type: integer; format: int32; description: 429
+  "instance": "", // required; type: string; description: URI identyfikujące konkretne wystąpienie błędu.
+  "detail": "", // required; type: string; description: Informacja o przyczynie przekroczenia limitu żądań oraz wskazówki dotyczące ponowienia żądania.
   "timestamp": "", // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
   "traceId": "" // required; type: string; description: Identyfikator śledzenia błędu.
 }
