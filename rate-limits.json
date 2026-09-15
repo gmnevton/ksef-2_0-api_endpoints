@@ -34,10 +34,20 @@
                   "perMinute" : 30,
                   "perHour" : 120
                 },
+                "onlineSessionClose" : {
+                  "perSecond" : 20,
+                  "perMinute" : 60,
+                  "perHour" : 240
+                },
                 "batchSession" : {
                   "perSecond" : 10,
                   "perMinute" : 20,
                   "perHour" : 60
+                },
+                "batchSessionClose" : {
+                  "perSecond" : 20,
+                  "perMinute" : 40,
+                  "perHour" : 120
                 },
                 "invoiceSend" : {
                   "perSecond" : 10,
@@ -93,6 +103,16 @@
                   "perSecond" : 10,
                   "perMinute" : 30,
                   "perHour" : 120
+                },
+                "anonymous" : {
+                  "perSecond" : 60,
+                  "perMinute" : -1,
+                  "perHour" : -1
+                },
+                "global" : {
+                  "perSecond" : -1,
+                  "perMinute" : -1,
+                  "perHour" : -1
                 }
               }
             }
@@ -182,8 +202,11 @@
 
   "EffectiveApiRateLimits" : {
     "required" : [
+      "anonymous",
       "batchSession",
+      "batchSessionClose",
       "collectiveIdentifier",
+      "global",
       "invoiceDownload",
       "invoiceExport",
       "invoiceExportStatus",
@@ -191,6 +214,7 @@
       "invoiceSend",
       "invoiceStatus",
       "onlineSession",
+      "onlineSessionClose",
       "other",
       "sessionInvoiceList",
       "sessionList",
@@ -209,7 +233,20 @@
             "$ref" : "#/components/schemas/EffectiveApiRateLimitValues"
           }
         ],
-        "description" : "Limity dla otwierania/zamykania sesji interaktywnych."
+        "description" : "Limity dla otwierania sesji interaktywnych."
+      },
+      "onlineSessionClose" : {
+        "required" : [
+          "perSecond",
+          "perMinute",
+          "perHour"
+        ],
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/EffectiveApiRateLimitValues"
+          }
+        ],
+        "description" : "Limity dla zamykania sesji interaktywnych."
       },
       "batchSession" : {
         "required" : [
@@ -222,7 +259,20 @@
             "$ref" : "#/components/schemas/EffectiveApiRateLimitValues"
           }
         ],
-        "description" : "Limity dla otwierania/zamykania sesji wsadowych."
+        "description" : "Limity dla otwierania sesji wsadowych."
+      },
+      "batchSessionClose" : {
+        "required" : [
+          "perSecond",
+          "perMinute",
+          "perHour"
+        ],
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/EffectiveApiRateLimitValues"
+          }
+        ],
+        "description" : "Limity dla zamykania sesji wsadowych."
       },
       "invoiceSend" : {
         "required" : [
@@ -366,6 +416,32 @@
           }
         ],
         "description" : "Limity dla pozostałych operacji API."
+      },
+      "anonymous" : {
+        "required" : [
+          "perSecond",
+          "perMinute",
+          "perHour"
+        ],
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/EffectiveApiRateLimitValues"
+          }
+        ],
+        "description" : "Limity dla anonimowych operacji API (nieuwierzytelnionych)."
+      },
+      "global" : {
+        "required" : [
+          "perSecond",
+          "perMinute",
+          "perHour"
+        ],
+        "allOf" : [
+          {
+            "$ref" : "#/components/schemas/EffectiveApiRateLimitValues"
+          }
+        ],
+        "description" : "Limity globalne dla wszystkich operacji API (per adres IP)."
       }
     }
   }
@@ -709,7 +785,6 @@
       "detail",
       "reasonCode",
       "status",
-      "timestamp",
       "title"
     ],
     "type" : "object",
@@ -849,12 +924,22 @@ Regex pojedynczego ostrzeżenia: `\[(?<code>[^\]]+)\]: (?<message>[^|]+)`<br/><b
 W celu przetestowania obsługi ostrzeżeń można przekazać nagłówek `X-Test-System-Warning`. Jego treść zostanie zwrócona w odpowiedzi jako `X-System-Warning`.
 body:
 {
-  "onlineSession": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla otwierania/zamykania sesji interaktywnych.
+  "onlineSession": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla otwierania sesji interaktywnych.
     "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
     "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
     "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
   },
-  "batchSession": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla otwierania/zamykania sesji wsadowych.
+  "onlineSessionClose": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla zamykania sesji interaktywnych.
+    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
+    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
+    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
+  },
+  "batchSession": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla otwierania sesji wsadowych.
+    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
+    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
+    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
+  },
+  "batchSessionClose": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla zamykania sesji wsadowych.
     "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
     "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
     "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
@@ -910,6 +995,16 @@ body:
     "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
   },
   "other": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla pozostałych operacji API.
+    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
+    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
+    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
+  },
+  "anonymous": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity dla anonimowych operacji API (nieuwierzytelnionych).
+    "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
+    "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
+    "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
+  },
+  "global": { // required; type: object; items: #/components/schemas/EffectiveApiRateLimitValues; description: Limity globalne dla wszystkich operacji API (per adres IP).
     "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
     "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
     "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
@@ -1022,7 +1117,7 @@ body:
 | context-type-not-allowed | contextIdentifierType: string |
   },
   "traceId": "", // type: string; nullable: true; description: Identyfikator śledzenia błędu.
-  "timestamp": "" // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
+  "timestamp": "" // type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
 }
 
 

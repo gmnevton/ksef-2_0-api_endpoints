@@ -78,7 +78,7 @@
                 "collectiveIdentifiers" : [
                   {
                     "collectiveIdentifierNumber" : "1111111111-IZ202607-65ED02180000-E7",
-                    "dateCreated" : "2026-07-10T12:00:00+02:00",
+                    "dateCreated" : "2026-07-11T12:00:00+00:00",
                     "invoiceCount" : 16,
                     "createdInCurrentContext" : true
                   }
@@ -595,7 +595,6 @@
       "detail",
       "reasonCode",
       "status",
-      "timestamp",
       "title"
     ],
     "type" : "object",
@@ -864,7 +863,7 @@ body:
 | context-type-not-allowed | contextIdentifierType: string |
   },
   "traceId": "", // type: string; nullable: true; description: Identyfikator śledzenia błędu.
-  "timestamp": "" // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
+  "timestamp": "" // type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
 }
 
 

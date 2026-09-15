@@ -691,7 +691,12 @@
       "YER",
       "ZAR",
       "ZMW",
-      "ZWL"
+      "ZWL",
+      "CNH",
+      "VED",
+      "XTS",
+      "ZWG",
+      "SLE"
     ],
     "type" : "string"
   }
@@ -1081,7 +1086,6 @@
       "detail",
       "reasonCode",
       "status",
-      "timestamp",
       "title"
     ],
     "type" : "object",
@@ -1446,7 +1450,7 @@ body:
 | context-type-not-allowed | contextIdentifierType: string |
   },
   "traceId": "", // type: string; nullable: true; description: Identyfikator śledzenia błędu.
-  "timestamp": "" // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
+  "timestamp": "" // type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
 }
 
 

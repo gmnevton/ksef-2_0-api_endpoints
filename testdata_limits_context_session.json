@@ -133,7 +133,7 @@
           }
         },
         "400" : {
-          "description" : "",
+          "description" : "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -657,7 +657,6 @@
       "detail",
       "reasonCode",
       "status",
-      "timestamp",
       "title"
     ],
     "type" : "object",
@@ -909,7 +908,7 @@ body:
 | context-type-not-allowed | contextIdentifierType: string |
   },
   "traceId": "", // type: string; nullable: true; description: Identyfikator śledzenia błędu.
-  "timestamp": "" // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
+  "timestamp": "" // type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
 }
 
 
@@ -943,7 +942,9 @@ responses:
 
 
 response (400): application/json
-description: 
+description: | ExceptionCode | ExceptionDescription | Details |
+|-|-|-|
+| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
 {
   "exception": { // type: object; items: #/components/schemas/ExceptionInfo; nullable: true;
@@ -964,7 +965,9 @@ body:
 }
 
 response (400): application/problem+json
-description: 
+description: | ExceptionCode | ExceptionDescription | Details |
+|-|-|-|
+| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
 {
   "title": "", // required; type: string; description: Bad Request
@@ -1046,7 +1049,7 @@ body:
 | context-type-not-allowed | contextIdentifierType: string |
   },
   "traceId": "", // type: string; nullable: true; description: Identyfikator śledzenia błędu.
-  "timestamp": "" // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
+  "timestamp": "" // type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
 }
 
 

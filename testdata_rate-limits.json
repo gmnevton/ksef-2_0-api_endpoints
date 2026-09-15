@@ -131,7 +131,7 @@
           }
         },
         "400" : {
-          "description" : "",
+          "description" : "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -268,7 +268,7 @@
             "$ref" : "#/components/schemas/ApiRateLimitValuesOverride"
           }
         ],
-        "description" : "Limity dla otwierania/zamykania sesji interaktywnych."
+        "description" : "Limity dla otwierania sesji interaktywnych."
       },
       "batchSession" : {
         "required" : [
@@ -281,7 +281,7 @@
             "$ref" : "#/components/schemas/ApiRateLimitValuesOverride"
           }
         ],
-        "description" : "Limity dla otwierania/zamykania sesji wsadowych."
+        "description" : "Limity dla otwierania sesji wsadowych."
       },
       "invoiceSend" : {
         "required" : [
@@ -774,7 +774,6 @@
       "detail",
       "reasonCode",
       "status",
-      "timestamp",
       "title"
     ],
     "type" : "object",
@@ -898,12 +897,12 @@ Authorization: Bearer {securityToken}
 body:
 {
   "rateLimits": { // required; type: object; items: #/components/schemas/ApiRateLimitsOverride; description: Limity dla ilości żądań do API.
-    "onlineSession": { // required; type: object; items: #/components/schemas/ApiRateLimitValuesOverride; description: Limity dla otwierania/zamykania sesji interaktywnych.
+    "onlineSession": { // required; type: object; items: #/components/schemas/ApiRateLimitValuesOverride; description: Limity dla otwierania sesji interaktywnych.
       "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
       "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
       "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
     },
-    "batchSession": { // required; type: object; items: #/components/schemas/ApiRateLimitValuesOverride; description: Limity dla otwierania/zamykania sesji wsadowych.
+    "batchSession": { // required; type: object; items: #/components/schemas/ApiRateLimitValuesOverride; description: Limity dla otwierania sesji wsadowych.
       "perSecond": 0, // required; type: integer; format: int32; description: Limit na sekundę.
       "perMinute": 0, // required; type: integer; format: int32; description: Limit na minutę.
       "perHour": 0 // required; type: integer; format: int32; description: Limit na godzinę.
@@ -1080,7 +1079,7 @@ body:
 | context-type-not-allowed | contextIdentifierType: string |
   },
   "traceId": "", // type: string; nullable: true; description: Identyfikator śledzenia błędu.
-  "timestamp": "" // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
+  "timestamp": "" // type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
 }
 
 
@@ -1114,7 +1113,9 @@ responses:
 
 
 response (400): application/json
-description: 
+description: | ExceptionCode | ExceptionDescription | Details |
+|-|-|-|
+| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
 {
   "exception": { // type: object; items: #/components/schemas/ExceptionInfo; nullable: true;
@@ -1135,7 +1136,9 @@ body:
 }
 
 response (400): application/problem+json
-description: 
+description: | ExceptionCode | ExceptionDescription | Details |
+|-|-|-|
+| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
 {
   "title": "", // required; type: string; description: Bad Request
@@ -1217,7 +1220,7 @@ body:
 | context-type-not-allowed | contextIdentifierType: string |
   },
   "traceId": "", // type: string; nullable: true; description: Identyfikator śledzenia błędu.
-  "timestamp": "" // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
+  "timestamp": "" // type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
 }
 
 

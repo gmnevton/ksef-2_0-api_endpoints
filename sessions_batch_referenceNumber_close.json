@@ -52,7 +52,7 @@
           "x-summary" : "Bad Request"
         },
         "429" : {
-          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 10 | 20 | 60 | batchSession\n",
+          "description" : "| | req / s | req / min | req / h | grupa\n| --- | --- | --- | --- | --- |\n| **Limity liczby żądań** | 20 | 40 | 120 | batchSessionClose\n",
           "headers" : {
             "Retry-After" : {
               "schema" : {
@@ -103,9 +103,9 @@
         }
       ],
       "x-rate-limits" : {
-        "perSecond" : 10,
-        "perMinute" : 20,
-        "perHour" : 60
+        "perSecond" : 20,
+        "perMinute" : 40,
+        "perHour" : 120
       },
       "x-required-permissions" : [
         "InvoiceWrite",
@@ -432,7 +432,6 @@
       "detail",
       "reasonCode",
       "status",
-      "timestamp",
       "title"
     ],
     "type" : "object",
@@ -623,7 +622,7 @@ Może zawierać wiele wpisów dla jednego kodu błędu.
 response (429): application/json
 description: | | req / s | req / min | req / h | grupa
 | --- | --- | --- | --- | --- |
-| **Limity liczby żądań** | 10 | 20 | 60 | batchSession
+| **Limity liczby żądań** | 20 | 40 | 120 | batchSessionClose
 
 headers:
 Retry-After: type: integer; format: int32; description: Liczba sekund po których można ponowić żądanie.
@@ -636,7 +635,7 @@ body:
 response (429): application/problem+json
 description: | | req / s | req / min | req / h | grupa
 | --- | --- | --- | --- | --- |
-| **Limity liczby żądań** | 10 | 20 | 60 | batchSession
+| **Limity liczby żądań** | 20 | 40 | 120 | batchSessionClose
 
 headers:
 Retry-After: type: integer; format: int32; description: Liczba sekund po których można ponowić żądanie.
@@ -680,7 +679,7 @@ body:
 | context-type-not-allowed | contextIdentifierType: string |
   },
   "traceId": "", // type: string; nullable: true; description: Identyfikator śledzenia błędu.
-  "timestamp": "" // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
+  "timestamp": "" // type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
 }
 
 

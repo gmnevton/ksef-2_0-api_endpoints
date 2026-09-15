@@ -75,7 +75,7 @@
           }
         },
         "400" : {
-          "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                                                                    | \n|---------------------|-----------------------------------------------------|------------------------------------------------------------------------------------------------------------|\n| 21155               | Przekroczono dozwoloną liczbę faktur w sesji.       | Sesja o numerze referencyjnym {referenceNumber} osiągnęła dozwolony limit liczby faktur {invoiceLimit}.    |\n| 21166               | Korekta techniczna niedostępna.                     | Faktura posiada już przetworzoną prawidłowo korektę techniczną.                                            |\n| 21167               | Status faktury nie pozwala na korektę techniczną.   | Nie można wysłać korekty technicznej do prawidłowo przetworzonej faktury.                                  |\n| 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została odnaleziona.                                   |\n| 21180               | Status sesji nie pozwala na wykonanie operacji.     | Status sesji {code} uniemożliwia wysyłkę faktur.                                                           |\n| 21402               | Nieprawidłowy rozmiar pliku.                        | Długość treści nie zgadza się z rozmiarem pliku.                                                           |\n| 21403               | Nieprawidłowy skrót pliku.                          | Skrót treści nie zgadza się ze skrótem pliku.                                                              |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                                                                    | \n|---------------------|-----------------------------------------------------|------------------------------------------------------------------------------------------------------------|\n| 21155               | Przekroczono dozwoloną liczbę faktur w sesji.       | Sesja o numerze referencyjnym {referenceNumber} osiągnęła dozwolony limit liczby faktur {invoiceLimit}.    |\n| 21166               | Korekta techniczna niedostępna.                     | Faktura posiada już przetworzoną prawidłowo korektę techniczną.                                            |\n| 21167               | Status faktury nie pozwala na korektę techniczną.   | Nie można wysłać korekty technicznej do prawidłowo przetworzonej faktury.                                  |\n| 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została odnaleziona.                                   |\n| 21180               | Status sesji nie pozwala na wykonanie operacji.     | Status sesji {code} uniemożliwia wysyłkę faktur.                                                           |\n| 21184               | Sesja tymczasowo niedostępna.                       | Trwają prace serwisowe i sesja {referenceNumber} jest tymczasowo niedostępna. Spróbuj ponownie później lub otwórz nową sesję, aby wysłać kolejne faktury. |\n| 21402               | Nieprawidłowy rozmiar pliku.                        | Długość treści nie zgadza się z rozmiarem pliku.                                                           |\n| 21403               | Nieprawidłowy skrót pliku.                          | Skrót treści nie zgadza się ze skrótem pliku.                                                              |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -560,7 +560,6 @@
       "detail",
       "reasonCode",
       "status",
-      "timestamp",
       "title"
     ],
     "type" : "object",
@@ -721,6 +720,7 @@ description: | ExceptionCode       | ExceptionDescription                       
 | 21167               | Status faktury nie pozwala na korektę techniczną.   | Nie można wysłać korekty technicznej do prawidłowo przetworzonej faktury.                                  |
 | 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została odnaleziona.                                   |
 | 21180               | Status sesji nie pozwala na wykonanie operacji.     | Status sesji {code} uniemożliwia wysyłkę faktur.                                                           |
+| 21184               | Sesja tymczasowo niedostępna.                       | Trwają prace serwisowe i sesja {referenceNumber} jest tymczasowo niedostępna. Spróbuj ponownie później lub otwórz nową sesję, aby wysłać kolejne faktury. |
 | 21402               | Nieprawidłowy rozmiar pliku.                        | Długość treści nie zgadza się z rozmiarem pliku.                                                           |
 | 21403               | Nieprawidłowy skrót pliku.                          | Skrót treści nie zgadza się ze skrótem pliku.                                                              |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
@@ -751,6 +751,7 @@ description: | ExceptionCode       | ExceptionDescription                       
 | 21167               | Status faktury nie pozwala na korektę techniczną.   | Nie można wysłać korekty technicznej do prawidłowo przetworzonej faktury.                                  |
 | 21173               | Brak sesji o wskazanym numerze referencyjnym.       | Sesja o numerze referencyjnym {referenceNumber} nie została odnaleziona.                                   |
 | 21180               | Status sesji nie pozwala na wykonanie operacji.     | Status sesji {code} uniemożliwia wysyłkę faktur.                                                           |
+| 21184               | Sesja tymczasowo niedostępna.                       | Trwają prace serwisowe i sesja {referenceNumber} jest tymczasowo niedostępna. Spróbuj ponownie później lub otwórz nową sesję, aby wysłać kolejne faktury. |
 | 21402               | Nieprawidłowy rozmiar pliku.                        | Długość treści nie zgadza się z rozmiarem pliku.                                                           |
 | 21403               | Nieprawidłowy skrót pliku.                          | Skrót treści nie zgadza się ze skrótem pliku.                                                              |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
@@ -835,7 +836,7 @@ body:
 | context-type-not-allowed | contextIdentifierType: string |
   },
   "traceId": "", // type: string; nullable: true; description: Identyfikator śledzenia błędu.
-  "timestamp": "" // required; type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
+  "timestamp": "" // type: string; format: date-time; description: Data i czas wystąpienia błędu w UTC.
 }
 
 
