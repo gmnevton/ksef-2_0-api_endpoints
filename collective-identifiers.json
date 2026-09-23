@@ -71,7 +71,7 @@
           }
         },
         "400" : {
-          "description" : "| ExceptionCode       | ExceptionDescription                                                         | Details                                                | \n|---------------------|------------------------------------------------------------------------------|--------------------------------------------------------|\n| 71001               | Faktura nie może zostac przypisana do Identyfikatora Zbiorczego.                        | Faktura o numerze KSeF {ksefNumber} nie może zostac przypisana do Identyfikatora Zbiorczego. |\n| 71002               | Faktura jest już przypisana do maksymalnej liczby Identyfikatorów Zbiorczych.            | Faktura o numerze KSeF {ksefNumber} jest już przypisana do maksymalnej liczby Identyfikatorów Zbiorczych. |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode       | ExceptionDescription                                                         | Details                                                | \n|---------------------|------------------------------------------------------------------------------|--------------------------------------------------------|\n| 71001               | Faktura o podanym identyfikatorze nie istnieje.                        | Faktura o numerze KSeF {ksefNumber} nie została znaleziona. |\n| 71002               | Faktura jest już przypisana do maksymalnej liczby Identyfikatorów Zbiorczych.            | Faktura o numerze KSeF {ksefNumber} jest już przypisana do maksymalnej liczby Identyfikatorów Zbiorczych. |\n| 71004               | Faktury mają różnych sprzedawców.                       | Faktura o numerze KSeF {ksefNumber} ma innego sprzedawcę.   |\n| 71005               | Powtórzony numer KSeF w żądaniu.                       | Powtórzony numer KSeF {ksefNumber}. |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -942,8 +942,10 @@ Przykład:
 response (400): application/json
 description: | ExceptionCode       | ExceptionDescription                                                         | Details                                                | 
 |---------------------|------------------------------------------------------------------------------|--------------------------------------------------------|
-| 71001               | Faktura nie może zostac przypisana do Identyfikatora Zbiorczego.                        | Faktura o numerze KSeF {ksefNumber} nie może zostac przypisana do Identyfikatora Zbiorczego. |
+| 71001               | Faktura o podanym identyfikatorze nie istnieje.                        | Faktura o numerze KSeF {ksefNumber} nie została znaleziona. |
 | 71002               | Faktura jest już przypisana do maksymalnej liczby Identyfikatorów Zbiorczych.            | Faktura o numerze KSeF {ksefNumber} jest już przypisana do maksymalnej liczby Identyfikatorów Zbiorczych. |
+| 71004               | Faktury mają różnych sprzedawców.                       | Faktura o numerze KSeF {ksefNumber} ma innego sprzedawcę.   |
+| 71005               | Powtórzony numer KSeF w żądaniu.                       | Powtórzony numer KSeF {ksefNumber}. |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
 {
@@ -967,8 +969,10 @@ body:
 response (400): application/problem+json
 description: | ExceptionCode       | ExceptionDescription                                                         | Details                                                | 
 |---------------------|------------------------------------------------------------------------------|--------------------------------------------------------|
-| 71001               | Faktura nie może zostac przypisana do Identyfikatora Zbiorczego.                        | Faktura o numerze KSeF {ksefNumber} nie może zostac przypisana do Identyfikatora Zbiorczego. |
+| 71001               | Faktura o podanym identyfikatorze nie istnieje.                        | Faktura o numerze KSeF {ksefNumber} nie została znaleziona. |
 | 71002               | Faktura jest już przypisana do maksymalnej liczby Identyfikatorów Zbiorczych.            | Faktura o numerze KSeF {ksefNumber} jest już przypisana do maksymalnej liczby Identyfikatorów Zbiorczych. |
+| 71004               | Faktury mają różnych sprzedawców.                       | Faktura o numerze KSeF {ksefNumber} ma innego sprzedawcę.   |
+| 71005               | Powtórzony numer KSeF w żądaniu.                       | Powtórzony numer KSeF {ksefNumber}. |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
 {

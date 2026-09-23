@@ -71,7 +71,7 @@
           }
         },
         "400" : {
-          "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                     | \n|---------------------|-----------------------------------------------------|-------------------------------------------------------------|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                     | \n|---------------------|-----------------------------------------------------|-------------------------------------------------------------|\n| 21418               | Przesłany token kontynuacji jest nieprawidłowy.     |  |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -691,6 +691,7 @@ body:
 response (400): application/json
 description: | ExceptionCode       | ExceptionDescription                                | Details                                                     | 
 |---------------------|-----------------------------------------------------|-------------------------------------------------------------|
+| 21418               | Przesłany token kontynuacji jest nieprawidłowy.     |  |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
 {
@@ -714,6 +715,7 @@ body:
 response (400): application/problem+json
 description: | ExceptionCode       | ExceptionDescription                                | Details                                                     | 
 |---------------------|-----------------------------------------------------|-------------------------------------------------------------|
+| 21418               | Przesłany token kontynuacji jest nieprawidłowy.     |  |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
 {
