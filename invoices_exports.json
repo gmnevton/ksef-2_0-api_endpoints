@@ -70,7 +70,7 @@
           }
         },
         "400" : {
-          "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                       | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------|\n| 21181               | Nieprawidłowe żądanie eksportu faktur.              | Nie można wyeksportować paczki faktur dla wybranego podmiotu ({subjecttype}) i zalogowanego identyfikatora kontekstu ({type}). |\n| 21182               | Osiągnięto limit trwających eksportów.              | Dla uwierzytelnionego podmiotu w bieżącym kontekście osiągnięto maksymalny limit {count} równoczesnych eksportów faktur. Spróbuj ponownie później. |\n| 21470               | Przesłany identyfikator klucza jest nieznany lub wskazuje na wycofany klucz. | Klucz o identyfikatorze {keyId} nie jest wspierany. |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode       | ExceptionDescription                                | Details                                                       | \n|---------------------|-----------------------------------------------------|---------------------------------------------------------------|\n| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}                            |\n| 21181               | Nieprawidłowe żądanie eksportu faktur.              | Nie można wyeksportować paczki faktur dla wybranego podmiotu ({subjecttype}) i zalogowanego identyfikatora kontekstu ({type}). |\n| 21182               | Osiągnięto limit trwających eksportów.              | Dla uwierzytelnionego podmiotu w bieżącym kontekście osiągnięto maksymalny limit {count} równoczesnych eksportów faktur. Spróbuj ponownie później. |\n| 21470               | Przesłany identyfikator klucza jest nieznany lub wskazuje na wycofany klucz. | Klucz o identyfikatorze {keyId} nie jest wspierany. |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -1339,6 +1339,7 @@ body:
 response (400): application/json
 description: | ExceptionCode       | ExceptionDescription                                | Details                                                       | 
 |---------------------|-----------------------------------------------------|---------------------------------------------------------------|
+| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}                            |
 | 21181               | Nieprawidłowe żądanie eksportu faktur.              | Nie można wyeksportować paczki faktur dla wybranego podmiotu ({subjecttype}) i zalogowanego identyfikatora kontekstu ({type}). |
 | 21182               | Osiągnięto limit trwających eksportów.              | Dla uwierzytelnionego podmiotu w bieżącym kontekście osiągnięto maksymalny limit {count} równoczesnych eksportów faktur. Spróbuj ponownie później. |
 | 21470               | Przesłany identyfikator klucza jest nieznany lub wskazuje na wycofany klucz. | Klucz o identyfikatorze {keyId} nie jest wspierany. |
@@ -1365,6 +1366,7 @@ body:
 response (400): application/problem+json
 description: | ExceptionCode       | ExceptionDescription                                | Details                                                       | 
 |---------------------|-----------------------------------------------------|---------------------------------------------------------------|
+| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}                            |
 | 21181               | Nieprawidłowe żądanie eksportu faktur.              | Nie można wyeksportować paczki faktur dla wybranego podmiotu ({subjecttype}) i zalogowanego identyfikatora kontekstu ({type}). |
 | 21182               | Osiągnięto limit trwających eksportów.              | Dla uwierzytelnionego podmiotu w bieżącym kontekście osiągnięto maksymalny limit {count} równoczesnych eksportów faktur. Spróbuj ponownie później. |
 | 21470               | Przesłany identyfikator klucza jest nieznany lub wskazuje na wycofany klucz. | Klucz o identyfikatorze {keyId} nie jest wspierany. |

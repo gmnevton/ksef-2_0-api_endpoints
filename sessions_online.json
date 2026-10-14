@@ -65,7 +65,7 @@
           }
         },
         "400" : {
-          "description" : "| ExceptionCode       | ExceptionDescription                                                         | Details                                                | \n|---------------------|------------------------------------------------------------------------------|--------------------------------------------------------|\n| 21470               | Przesłany identyfikator klucza jest nieznany lub wskazuje na wycofany klucz. | Klucz o identyfikatorze {keyId} nie jest wspierany.    |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode       | ExceptionDescription                                                         | Details                                                | \n|---------------------|------------------------------------------------------------------------------|--------------------------------------------------------|\n| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}                            |\n| 21470               | Przesłany identyfikator klucza jest nieznany lub wskazuje na wycofany klucz. | Klucz o identyfikatorze {keyId} nie jest wspierany.    |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -745,6 +745,7 @@ body:
 response (400): application/json
 description: | ExceptionCode       | ExceptionDescription                                                         | Details                                                | 
 |---------------------|------------------------------------------------------------------------------|--------------------------------------------------------|
+| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}                            |
 | 21470               | Przesłany identyfikator klucza jest nieznany lub wskazuje na wycofany klucz. | Klucz o identyfikatorze {keyId} nie jest wspierany.    |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
@@ -769,6 +770,7 @@ body:
 response (400): application/problem+json
 description: | ExceptionCode       | ExceptionDescription                                                         | Details                                                | 
 |---------------------|------------------------------------------------------------------------------|--------------------------------------------------------|
+| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}                            |
 | 21470               | Przesłany identyfikator klucza jest nieznany lub wskazuje na wycofany klucz. | Klucz o identyfikatorze {keyId} nie jest wspierany.    |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:

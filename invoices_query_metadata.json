@@ -198,7 +198,7 @@
           }
         },
         "400" : {
-          "description" : "| ExceptionCode | ExceptionDescription                                      | Details                                                                                                                        | \n|---------------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|\n| 21183         | Zakres filtrowania wykracza poza dostępny zakres danych.  | Parametr dateRange.from jest późniejszy niż PermanentStorageHwmDate przy włączonym restrictToPermanentStorageHwmDate. |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode | ExceptionDescription                                      | Details                                                                                                                        | \n|---------------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|\n| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}                            |\n| 21183         | Zakres filtrowania wykracza poza dostępny zakres danych.  | Parametr dateRange.from jest późniejszy niż PermanentStorageHwmDate przy włączonym restrictToPermanentStorageHwmDate. |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -1706,6 +1706,7 @@ Obsługiwane schematy:
 response (400): application/json
 description: | ExceptionCode | ExceptionDescription                                      | Details                                                                                                                        | 
 |---------------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}                            |
 | 21183         | Zakres filtrowania wykracza poza dostępny zakres danych.  | Parametr dateRange.from jest późniejszy niż PermanentStorageHwmDate przy włączonym restrictToPermanentStorageHwmDate. |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
@@ -1730,6 +1731,7 @@ body:
 response (400): application/problem+json
 description: | ExceptionCode | ExceptionDescription                                      | Details                                                                                                                        | 
 |---------------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}                            |
 | 21183         | Zakres filtrowania wykracza poza dostępny zakres danych.  | Parametr dateRange.from jest późniejszy niż PermanentStorageHwmDate przy włączonym restrictToPermanentStorageHwmDate. |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:

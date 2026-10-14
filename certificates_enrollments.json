@@ -61,7 +61,7 @@
           }
         },
         "400" : {
-          "description" : "| ExceptionCode       | ExceptionDescription                                                                           | Details |\n|---------------------|------------------------------------------------------------------------------------------------|---------|\n| 25002               | Brak możliwości złożenia wniosku certyfikacyjnego dla wykorzystanego sposobu uwierzytelnienia. |         |\n| 25003               | Dane w CSR nie zgadzają się z danymi w użytym wektorze uwierzytelniającym.                     |         |\n| 25004               | Niepoprawny format CSR lub niepoprawny podpis CSR.                                             |         |\n| 25006               | Osiągnięto limit możliwych do złożenia wniosków certyfikacyjnych.                              |         |\n| 25007               | Osiągnięto limit dopuszczalnej liczby posiadanych certyfikatów.                                |         |\n| 25010               | Nieprawidłowy typ lub długość klucza.                                                          |         |\n| 25011               | Nieprawidłowy algorytm podpisu CSR.                                                            |         |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode       | ExceptionDescription                                                                           | Details |\n|---------------------|------------------------------------------------------------------------------------------------|---------|\n| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}  |\n| 25002               | Brak możliwości złożenia wniosku certyfikacyjnego dla wykorzystanego sposobu uwierzytelnienia. |         |\n| 25003               | Dane w CSR nie zgadzają się z danymi w użytym wektorze uwierzytelniającym.                     |         |\n| 25004               | Niepoprawny format CSR lub niepoprawny podpis CSR.                                             |         |\n| 25006               | Osiągnięto limit możliwych do złożenia wniosków certyfikacyjnych.                              |         |\n| 25007               | Osiągnięto limit dopuszczalnej liczby posiadanych certyfikatów.                                |         |\n| 25010               | Nieprawidłowy typ lub długość klucza.                                                          |         |\n| 25011               | Nieprawidłowy algorytm podpisu CSR.                                                            |         |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -683,6 +683,7 @@ body:
 response (400): application/json
 description: | ExceptionCode       | ExceptionDescription                                                                           | Details |
 |---------------------|------------------------------------------------------------------------------------------------|---------|
+| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}  |
 | 25002               | Brak możliwości złożenia wniosku certyfikacyjnego dla wykorzystanego sposobu uwierzytelnienia. |         |
 | 25003               | Dane w CSR nie zgadzają się z danymi w użytym wektorze uwierzytelniającym.                     |         |
 | 25004               | Niepoprawny format CSR lub niepoprawny podpis CSR.                                             |         |
@@ -713,6 +714,7 @@ body:
 response (400): application/problem+json
 description: | ExceptionCode       | ExceptionDescription                                                                           | Details |
 |---------------------|------------------------------------------------------------------------------------------------|---------|
+| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}  |
 | 25002               | Brak możliwości złożenia wniosku certyfikacyjnego dla wykorzystanego sposobu uwierzytelnienia. |         |
 | 25003               | Dane w CSR nie zgadzają się z danymi w użytym wektorze uwierzytelniającym.                     |         |
 | 25004               | Niepoprawny format CSR lub niepoprawny podpis CSR.                                             |         |

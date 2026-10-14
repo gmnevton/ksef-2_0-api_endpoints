@@ -101,7 +101,7 @@
           }
         },
         "400" : {
-          "description" : "| ExceptionCode | ExceptionDescription | Details |\n|-|-|-|\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
+          "description" : "| ExceptionCode       | ExceptionDescription                                                                           | Details |\n|---------------------|------------------------------------------------------------------------------------------------|---------|\n| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}  |\n| 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |",
           "content" : {
             "application/json" : {
               "schema" : {
@@ -351,6 +351,14 @@
         },
         "description" : "Lista odczytanych uprawnień."
       },
+      "ownerPermissions" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/OwnerPermissionScope"
+        },
+        "description" : "Lista uprawnień właścicielskich.",
+        "nullable" : true
+      },
       "hasMore" : {
         "type" : "boolean",
         "description" : "Flaga informująca o dostępności kolejnej strony wyników."
@@ -483,6 +491,21 @@
     "minLength" : 36,
     "type" : "string",
     "description" : "Techniczny identyfikator nadanego uprawnienia – wymagany m.in. przy operacjach odbierania."
+  }
+
+
+  "OwnerPermissionScope" : {
+    "enum" : [
+      "CredentialsManage",
+      "CredentialsRead",
+      "InvoiceWrite",
+      "InvoiceRead",
+      "Introspection",
+      "SubunitManage",
+      "EnforcementOperations",
+      "CollectiveIdentifierManage"
+    ],
+    "type" : "string"
   }
 
 
@@ -1024,14 +1047,17 @@ body:
       "canDelegate": true/false // required; type: boolean; description: Flaga określająca, czy uprawnienie ma być możliwe do dalszego przekazywania.
     }
   ],
+  "ownerPermissions": [ // type: array; nullable: true; description: Lista uprawnień właścicielskich.
+type: string;  ],
   "hasMore": true/false // required; type: boolean; description: Flaga informująca o dostępności kolejnej strony wyników.
 }
 
 
 
 response (400): application/json
-description: | ExceptionCode | ExceptionDescription | Details |
-|-|-|-|
+description: | ExceptionCode       | ExceptionDescription                                                                           | Details |
+|---------------------|------------------------------------------------------------------------------------------------|---------|
+| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}  |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
 {
@@ -1053,8 +1079,9 @@ body:
 }
 
 response (400): application/problem+json
-description: | ExceptionCode | ExceptionDescription | Details |
-|-|-|-|
+description: | ExceptionCode       | ExceptionDescription                                                                           | Details |
+|---------------------|------------------------------------------------------------------------------------------------|---------|
+| 21001               | Nieczytelna treść.                                                           | {szczegółowy opis błędu}  |
 | 21405 | Błąd walidacji danych wejściowych. | {treść błędu z walidatora} |
 body:
 {
